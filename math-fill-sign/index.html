@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>เติมเครื่องหมายตัวเลข</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+  <script src="models/tfjs-inline/model.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
   <style>
@@ -263,6 +265,164 @@
     } catch (_) {}
   }
 
+  // --- TensorFlow.js model loading ---
+  let mnistModel = null;
+  let modelLoading = false;
+
+  function base64ToUint8Array(base64) {
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes;
+  }
+
+  function decodeWeights(weightsManifest) {
+    const entries = [];
+    for (const group of weightsManifest) {
+      const buffers = group.paths.map(p => {
+        if (p.startsWith('data:application/octet-stream;base64,')) {
+          return base64ToUint8Array(p.replace('data:application/octet-stream;base64,', '')).buffer;
+        }
+        throw new Error('Unsupported weight path: ' + p);
+      });
+      // TF.js expects weights grouped by spec; we have a single buffer per group.
+      entries.push({ paths: group.paths, weights: group.weights, data: buffers[0] });
+    }
+    return entries;
+  }
+
+  function normalizeModelTopology(topology) {
+    // Deep clone and fix Keras 3 exported keys that TF.js 4.x doesn't understand.
+    const fixed = JSON.parse(JSON.stringify(topology));
+    const layers = fixed?.model_config?.config?.layers;
+    if (layers && Array.isArray(layers)) {
+      const newLayers = [];
+      let inputShape = null;
+      for (const layer of layers) {
+        if (layer.class_name === 'InputLayer') {
+          inputShape = layer.config.batch_shape || layer.config.batch_input_shape;
+          continue;
+        }
+        newLayers.push(layer);
+      }
+      if (inputShape && newLayers.length > 0) {
+        newLayers[0].config.batch_input_shape = inputShape;
+      }
+      // Normalize dtype object to plain string
+      for (const layer of newLayers) {
+        if (layer.config && typeof layer.config.dtype === 'object' && layer.config.dtype?.config?.name) {
+          layer.config.dtype = layer.config.dtype.config.name;
+        }
+      }
+      fixed.model_config.config.layers = newLayers;
+    }
+    return fixed;
+  }
+
+  async function loadModel() {
+    if (mnistModel || modelLoading) return;
+    modelLoading = true;
+    try {
+      if (typeof window.MNIST_MODEL_JSON === 'undefined') {
+        throw new Error('MNIST_MODEL_JSON not embedded');
+      }
+      const modelJSON = window.MNIST_MODEL_JSON;
+      const weightSpecs = [];
+      const weightData = [];
+      for (const group of modelJSON.weightsManifest) {
+        weightSpecs.push(...group.weights);
+        const b64 = group.paths[0].replace('data:application/octet-stream;base64,', '');
+        const binary = atob(b64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        weightData.push(bytes.buffer);
+      }
+      const modelArtifacts = {
+        modelTopology: normalizeModelTopology(modelJSON.modelTopology),
+        weightSpecs,
+        weightData,
+        format: modelJSON.format,
+        generatedBy: modelJSON.generatedBy,
+        convertedBy: modelJSON.convertedBy
+      };
+      mnistModel = await tf.loadLayersModel(tf.io.fromMemory(modelArtifacts));
+    } catch (e) {
+      console.error('TF.js model load failed:', e);
+    } finally {
+      modelLoading = false;
+    }
+  }
+
+  function padBoxToSquare(points, padding = 0.12) {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const s of points) {
+      for (const p of s) {
+        minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
+        minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
+      }
+    }
+    const w = maxX - minX, h = maxY - minY;
+    const size = Math.max(w, h) * (1 + padding * 2);
+    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+    return { minX: cx - size / 2, minY: cy - size / 2, size };
+  }
+
+  function strokesToMNIST(strokes, box) {
+    const tmp = document.createElement('canvas');
+    tmp.width = 28; tmp.height = 28;
+    const tCtx = tmp.getContext('2d', { willReadFrequently: true });
+    tCtx.fillStyle = '#000000';
+    tCtx.fillRect(0, 0, 28, 28);
+    tCtx.strokeStyle = '#ffffff';
+    tCtx.lineCap = 'round';
+    tCtx.lineJoin = 'round';
+    tCtx.lineWidth = 2.0;
+
+    // MNIST-style: fit the digit into 20x20 box and center in 28x28
+    const targetSize = 20;
+    const offsetX = (28 - targetSize) / 2;
+    const offsetY = (28 - targetSize) / 2;
+    const scale = targetSize / box.size;
+
+    for (const stroke of strokes) {
+      if (stroke.length < 2) continue;
+      tCtx.beginPath();
+      for (let i = 0; i < stroke.length; i++) {
+        const nx = (stroke[i].x - box.minX) * scale + offsetX;
+        const ny = (stroke[i].y - box.minY) * scale + offsetY;
+        if (i === 0) tCtx.moveTo(nx, ny);
+        else tCtx.lineTo(nx, ny);
+      }
+      tCtx.stroke();
+    }
+    const imgData = tCtx.getImageData(0, 0, 28, 28).data;
+    const arr = new Float32Array(28 * 28);
+    for (let i = 0; i < 28 * 28; i++) {
+      arr[i] = imgData[i * 4] / 255.0;
+    }
+    return arr;
+  }
+
+  function predictDigit(strokes) {
+    if (!mnistModel || strokes.length === 0) return { recognized: false };
+    const box = padBoxToSquare(strokes);
+    const input = strokesToMNIST(strokes, box);
+    const tensor = tf.tensor4d(input, [1, 28, 28, 1]);
+    let prediction;
+    try {
+      prediction = mnistModel.predict(tensor).dataSync();
+    } finally {
+      tensor.dispose();
+    }
+    let bestIdx = 0, bestProb = 0, second = 0;
+    for (let i = 0; i < 10; i++) {
+      if (prediction[i] > bestProb) { second = bestProb; bestProb = prediction[i]; bestIdx = i; }
+      else if (prediction[i] > second) { second = prediction[i]; }
+    }
+    const recognized = bestProb > 0.5 && (bestProb - second) > 0.15;
+    return { recognized, label: String(bestIdx), score: bestProb, second };
+  }
+
   // --- Confetti ---
   let particles = [];
   function resizeConfetti() {
@@ -516,20 +676,7 @@
 
   function recognizeDigit(strokes) {
     if (!strokes || strokes.length === 0) return { recognized: false };
-    const norm = normalizeStrokes(strokes);
-    const flat = norm.flat();
-    if (flat.length < 2) return { recognized: false };
-    const input = normalizeGesture(flat, 64, 1);
-    let best = null, bestScore = Infinity, second = Infinity;
-    for (const [label, tpls] of Object.entries(digitTemplates)) {
-      let classBest = Infinity;
-      for (const tpl of tpls) {
-        classBest = Math.min(classBest, distanceAtBestAngle(input, tpl));
-      }
-      if (classBest < bestScore) { second = bestScore; bestScore = classBest; best = label; }
-      else if (classBest < second) { second = classBest; }
-    }
-    return { recognized: bestScore < 0.45 && (second - bestScore) > 0.05, label: best, score: bestScore };
+    return predictDigit(strokes);
   }
 
   function recognizeOperator(strokes) {
@@ -835,6 +982,7 @@
     score = 0;
     busy = false;
     await initAudio();
+    await loadModel();
     nextQuestion();
   }
 
