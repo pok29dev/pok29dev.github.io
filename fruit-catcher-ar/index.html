@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>เกมตะกร้ารับของ AR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #87CEEB; touch-action: none; font-family: 'Kanit', sans-serif; }
+        #gameCanvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10; }
+        #videoElement { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; transform: scaleX(-1); z-index: 1; opacity: 0.6; }
+        .ui-layer { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .hidden { display: none !important; }
+        .kid-btn {
+            background: linear-gradient(to bottom, #FFD700, #FFA500);
+            border: 4px solid #FFF;
+            border-radius: 9999px;
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #d35400;
+            box-shadow: 0 6px 0 #d35400, 0 10px 10px rgba(0,0,0,0.2);
+            transition: transform 0.1s, box-shadow 0.1s;
+            cursor: pointer;
+        }
+        .kid-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #d35400, 0 4px 4px rgba(0,0,0,0.2);
+        }
+        #scoreDisplay {
+            position: absolute; top: 20px; left: 20px; z-index: 15;
+            font-size: 2rem; font-weight: bold; color: #FFF;
+            text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+        #livesDisplay {
+            position: absolute; top: 20px; right: 20px; z-index: 15;
+            font-size: 2rem; font-weight: bold; color: #FF4136;
+            text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+    </style>
+</head>
+<body>
+
+    <video id="videoElement" playsinline></video>
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="scoreDisplay" class="hidden">คะแนน: 0</div>
+    <div id="livesDisplay" class="hidden">❤️❤️❤️</div>
+
+    <!-- Permission Screen -->
+    <div id="permissionScreen" class="ui-layer bg-blue-400/90 backdrop-blur-sm">
+        <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 text-center drop-shadow-lg">เกมตะกร้ารับของ 🧺</h1>
+        <p class="text-xl text-white mb-8 text-center max-w-md px-4">ขออนุญาตใช้กล้องเพื่อติดตามการเคลื่อนไหวของมือนะครับ</p>
+        <button id="startBtn" class="kid-btn">เริ่มเกม</button>
+        <p id="errorMsg" class="text-red-200 mt-4 text-center hidden">ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาต</p>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="resultScreen" class="ui-layer bg-black/70 backdrop-blur-sm hidden">
+        <h2 class="text-5xl font-bold text-yellow-300 mb-4 drop-shadow-lg">จบเกม!</h2>
+        <p id="finalScore" class="text-3xl text-white mb-8">คะแนนรวม: 0</p>
+        <button id="restartBtn" class="kid-btn">เล่นอีกครั้ง</button>
+    </div>
+
+    <script>
+        // --- Audio Setup (Tone.js) ---
+        let synthCatch, synthMiss;
+        let audioInitialized = false;
+
+        async function initAudio() {
+            if (audioInitialized) return;
+            await Tone.start();
+            synthCatch = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: "triangle" },
+                envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.5 }
+            }).toDestination();
+            synthMiss = new Tone.MembraneSynth().toDestination();
+            audioInitialized = true;
+        }
+
+        function playCatchSound() {
+            if (audioInitialized) synthCatch.triggerAttackRelease(["C5", "E5"], "8n");
+        }
+
+        function playMissSound() {
+            if (audioInitialized) synthMiss.triggerAttackRelease("C2", "8n");
+        }
+
+        // --- Game State ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const videoElement = document.getElementById('videoElement');
+        
+        let gameState = 'permission'; // permission, playing, gameover
+        let score = 0;
+        let lives = 3;
+        let items = [];
+        let basketX = 0.5; // 0.0 to 1.0 (normalized)
+        let targetBasketX = 0.5;
+        let lastSpawnTime = 0;
+        let spawnInterval = 1500; // ms
+        let gameSpeed = 3; // pixels per frame
+
+        const itemTypes = ['🍎', '🍌', '🍇', '🎈', '⭐'];
+        const basketEmoji = '🧺';
+
+        // --- Resize Handling ---
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            basketX = 0.5;
+            targetBasketX = 0.5;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // --- MediaPipe Hands Setup ---
+        const hands = new Hands({locateFile: (file) => {
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        }});
+
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults((results) => {
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                // Landmark 8 is index finger tip. 
+                // x is normalized 0-1. Since video is mirrored (scaleX(-1)), we need to invert x.
+                const handX = 1.0 - landmarks[8].x;
+                targetBasketX = Math.max(0.1, Math.min(0.9, handX));
+            }
+        });
+
+        const camera = new Camera(videoElement, {
+            onFrame: async () => {
+                await hands.send({image: videoElement});
+            },
+            width: 640,
+            height: 480
+        });
+
+        // --- Fallback: Mouse/Touch Control ---
+        function handleInput(clientX) {
+            if (gameState !== 'playing') return;
+            targetBasketX = clientX / window.innerWidth;
+            targetBasketX = Math.max(0.1, Math.min(0.9, targetBasketX));
+        }
+
+        window.addEventListener('mousemove', (e) => handleInput(e.clientX));
+        window.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // Prevent scrolling
+            handleInput(e.touches[0].clientX);
+        }, { passive: false });
+
+        // --- Game Logic ---
+        function spawnItem() {
+            const type = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+            items.push({
+                x: Math.random() * (canvas.width - 60) + 30,
+                y: -50,
+                type: type,
+                speed: gameSpeed + Math.random() * 2,
+                size: 40
+            });
+        }
+
+        function update(deltaTime) {
+            if (gameState !== 'playing') return;
+
+            // Smooth basket movement
+            basketX += (targetBasketX - basketX) * 0.2;
+
+            // Spawn items
+            const now = Date.now();
+            if (now - lastSpawnTime > spawnInterval) {
+                spawnItem();
+                lastSpawnTime = now;
+                // Gradually increase difficulty
+                if (spawnInterval > 600) spawnInterval -= 10;
+                if (gameSpeed < 8) gameSpeed += 0.05;
+            }
+
+            // Update items
+            const basketWidth = 240;
+            const basketHeight = 180;
+            const basketY = canvas.height - basketHeight - 20;
+            const basketScreenX = basketX * canvas.width;
+
+            for (let i = items.length - 1; i >= 0; i--) {
+                const item = items[i];
+                item.y += item.speed;
+
+                // Collision detection with basket
+                if (
+                    item.y + item.size/2 >= basketY &&
+                    item.y - item.size/2 <= basketY + basketHeight &&
+                    item.x >= basketScreenX - basketWidth/2 &&
+                    item.x <= basketScreenX + basketWidth/2
+                ) {
+                    // Caught!
+                    score += 10;
+                    playCatchSound();
+                    items.splice(i, 1);
+                    updateUI();
+                    continue;
+                }
+
+                // Missed (hit bottom)
+                if (item.y > canvas.height) {
+                    lives--;
+                    playMissSound();
+                    items.splice(i, 1);
+                    updateUI();
+                    if (lives <= 0) {
+                        endGame();
+                    }
+                }
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (gameState === 'playing' || gameState === 'gameover') {
+                // Draw basket
+                const basketWidth = 240;
+                const basketHeight = 180;
+                const basketY = canvas.height - basketHeight - 20;
+                const basketScreenX = basketX * canvas.width;
+                
+                ctx.font = `${basketWidth}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(basketEmoji, basketScreenX, basketY + basketHeight/2);
+
+                // Draw items
+                for (const item of items) {
+                    ctx.font = `${item.size}px Arial`;
+                    ctx.fillText(item.type, item.x, item.y);
+                }
+            }
+
+            requestAnimationFrame(() => {
+                update();
+                draw();
+            });
+        }
+
+        function updateUI() {
+            document.getElementById('scoreDisplay').textContent = `คะแนน: ${score}`;
+            let hearts = '';
+            for (let i = 0; i < lives; i++) hearts += '❤️';
+            document.getElementById('livesDisplay').textContent = hearts;
+        }
+
+        function startGame() {
+            gameState = 'playing';
+            score = 0;
+            lives = 3;
+            items = [];
+            gameSpeed = 3;
+            spawnInterval = 1500;
+            lastSpawnTime = Date.now();
+            
+            document.getElementById('permissionScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('scoreDisplay').classList.remove('hidden');
+            document.getElementById('livesDisplay').classList.remove('hidden');
+            
+            updateUI();
+        }
+
+        function endGame() {
+            gameState = 'gameover';
+            document.getElementById('finalScore').textContent = `คะแนนรวม: ${score}`;
+            document.getElementById('resultScreen').classList.remove('hidden');
+            document.getElementById('scoreDisplay').classList.add('hidden');
+            document.getElementById('livesDisplay').classList.add('hidden');
+        }
+
+        // --- Event Listeners ---
+        document.getElementById('startBtn').addEventListener('click', async () => {
+            await initAudio();
+            try {
+                await camera.start();
+                startGame();
+            } catch (err) {
+                console.error("Camera error:", err);
+                document.getElementById('errorMsg').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            startGame();
+        });
+
+        // Start render loop
+        requestAnimationFrame(draw);
+
+    </script>
+</body>
+</html>
