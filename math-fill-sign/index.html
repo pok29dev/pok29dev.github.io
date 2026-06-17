@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>เติมเครื่องหมายตัวเลข</title>
+  <title>เขียนเลขกันเถอะ</title>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
   <script src="models/tfjs-inline/model.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -62,8 +62,19 @@
       touch-action: none;
       cursor: crosshair;
     }
-    .equation { font-size: clamp(2rem, 8vw, 4rem); font-weight: 800; letter-spacing: 0.05em; }
-    .blank { display: inline-block; min-width: 3ch; background: #f1f5f9; border-radius: 0.75rem; border-bottom: 6px solid #93c5fd; text-align: center; }
+    .big-digit {
+      font-size: clamp(4rem, 16vw, 7rem);
+      font-weight: 900;
+      color: #4f46e5;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .mode-badge {
+      display: inline-block; padding: 0.35rem 1rem; border-radius: 9999px;
+      font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem;
+    }
+    .mode-badge.play { background: #dcfce7; color: #166534; }
+    .mode-badge.record { background: #fef3c7; color: #92400e; }
     .star { font-size: 2.5rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.15)); }
     .star.empty { filter: grayscale(1) opacity(0.25); }
     .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 50; }
@@ -73,22 +84,23 @@
       border-radius: 9999px; font-size: 1.25rem; font-weight: 700;
       box-shadow: 0 8px 24px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 40;
     }
-    .help-modal {
+    .toast.show { opacity: 1; }
+    .modal {
       position: fixed; inset: 0; z-index: 100;
       background: rgba(0,0,0,0.35);
       display: none; align-items: center; justify-content: center;
       padding: 1rem;
     }
-    .help-modal.active { display: flex; }
-    .help-card {
-      background: #fff; border-radius: 1.5rem; padding: 1.25rem;
+    .modal.active { display: flex; }
+    .modal-card {
+      background: #fff; border-radius: 1.5rem; padding: 1.5rem;
       max-width: 680px; width: 100%; max-height: 90vh;
       box-shadow: 0 20px 50px rgba(0,0,0,0.2);
       display: flex; flex-direction: column;
     }
-    .help-scroll { overflow-y: auto; padding-right: 0.5rem; }
     .help-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem;
+      overflow-y: auto; padding-right: 0.5rem;
     }
     .help-item {
       background: #f8fafc; border-radius: 1rem; padding: 0.75rem; text-align: center;
@@ -98,19 +110,32 @@
     .help-item svg { width: 100%; height: 90px; }
     .help-item path { fill: none; stroke: #1f2937; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
     .help-item .stroke-dot { fill: #ef4444; stroke: none; }
-    .help-close {
-      align-self: center; margin-top: 1rem;
-      min-width: 120px;
-    }
-    .help-btn {
-      position: absolute; top: 1rem; right: 1rem;
+    .corner-btn {
+      position: absolute; top: 1rem;
       width: 48px; height: 48px; border-radius: 50%;
-      background: var(--kid-purple); color: white; font-size: 1.5rem;
-      box-shadow: 0 4px 0 #7c3aed; display: inline-flex;
-      align-items: center; justify-content: center;
+      display: inline-flex; align-items: center; justify-content: center;
       user-select: none;
     }
+    .help-btn { right: 1rem; background: var(--kid-purple); color: white; font-size: 1.5rem; box-shadow: 0 4px 0 #7c3aed; }
     .help-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #7c3aed; }
+    .settings-btn { left: 1rem; background: #94a3b8; color: white; font-size: 1.25rem; }
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;
+    }
+    .toggle-switch {
+      width: 52px; height: 30px; border-radius: 999px;
+      background: #cbd5e1; position: relative; transition: background 0.2s;
+      cursor: pointer;
+    }
+    .toggle-switch.on { background: var(--kid-green); }
+    .toggle-switch::after {
+      content: ''; position: absolute; top: 3px; left: 3px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: white; transition: transform 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    .toggle-switch.on::after { transform: translateX(22px); }
   </style>
 </head>
 <body>
@@ -122,23 +147,28 @@
 <section id="screen-start" class="screen active">
   <div class="kid-card text-center">
     <div class="text-6xl mb-4">✏️</div>
-    <h1 class="text-4xl font-extrabold text-indigo-600 mb-2">เติมเครื่องหมายตัวเลข</h1>
-    <p class="text-xl text-slate-600 mb-6">เขียนคำตอบที่ถูกต้องด้วย Apple Pencil<br>เล่น 5 ข้อ สะสมดาวให้เต็ม!</p>
-    <button id="btn-start" class="btn-kid btn-green text-2xl px-8 py-4">เริ่มเล่น 🎮</button>
+    <h1 class="text-4xl font-extrabold text-indigo-600 mb-2">เขียนเลขกันเถอะ</h1>
+    <p class="text-xl text-slate-600 mb-6">ฝึกเขียนตัวเลข 0-9 ด้วย Apple Pencil<br>เลือกโหมดที่อยากเล่น!</p>
+    <div class="flex flex-col gap-3">
+      <button id="btn-start-play" class="btn-kid btn-green text-2xl px-8 py-4">เล่นเกมส์ ⭐</button>
+      <button id="btn-start-record" class="btn-kid btn-yellow text-2xl px-8 py-4">บันทึกลายมือ 📝</button>
+    </div>
   </div>
 </section>
 
 <!-- Game Screen -->
 <section id="screen-game" class="screen">
-  <button id="btn-help" class="help-btn" aria-label="วิธีเขียน">❓</button>
+  <button id="btn-settings" class="corner-btn settings-btn" aria-label="ตั้งค่า">⚙️</button>
+  <button id="btn-help" class="corner-btn help-btn" aria-label="วิธีเขียน">❓</button>
   <div class="kid-card flex flex-col items-center">
-    <div class="w-full flex items-center justify-between mb-4">
-      <div class="text-xl font-bold text-slate-500">ข้อที่ <span id="round-num">1</span>/5</div>
+    <div class="w-full flex items-center justify-between mb-2">
+      <div class="text-xl font-bold text-slate-500">ข้อที่ <span id="round-num">1</span>/<span id="total-rounds">10</span></div>
       <div id="score-stars" class="flex gap-1"></div>
     </div>
 
-    <div id="equation" class="equation mb-4 text-slate-800"></div>
-    <p id="hint" class="text-lg text-slate-500 mb-3 text-center"></p>
+    <div id="mode-badge" class="mode-badge play">เล่นเกมส์ ⭐</div>
+    <p id="hint" class="text-xl text-slate-600 mb-2 text-center font-bold">เขียนเลขนี้ในช่อง</p>
+    <div id="target-digit" class="big-digit">0</div>
 
     <canvas id="drawPad"></canvas>
     <p class="text-sm text-slate-400 mt-2">เขียนในช่องด้วย Apple Pencil หรือนิ้ว</p>
@@ -147,34 +177,47 @@
       <button id="btn-clear" class="btn-kid btn-yellow text-lg px-4">ลบ ✏️</button>
       <button id="btn-check" class="btn-kid btn-green text-lg px-6">ตรวจคำตอบ ✅</button>
     </div>
-
-    <div id="fallback" class="mt-5 w-full"></div>
   </div>
 </section>
 
 <!-- Help Modal -->
-<div id="help-modal" class="help-modal">
-  <div class="help-card">
+<div id="help-modal" class="modal">
+  <div class="modal-card">
     <h3 class="text-2xl font-extrabold text-center text-indigo-600 mb-3">วิธีเขียนให้ระบบอ่านถูก ✏️</h3>
     <p class="text-center text-slate-500 mb-3">ลากตามเส้นสีดำ เริ่มจากจุดสีแดง</p>
-    <div class="help-scroll">
-      <div class="help-grid">
-        <div class="help-item"><div class="label">0</div><svg viewBox="0 0 100 100"><path d="M50 15 Q80 15 80 50 Q80 85 50 85 Q20 85 20 50 Q20 15 50 15Z"/><circle cx="50" cy="15" r="4" class="stroke-dot"/></svg></div>
-        <div class="help-item"><div class="label">1</div><svg viewBox="0 0 100 100"><path d="M40 25 L50 15 L50 85"/><circle cx="40" cy="25" r="4" class="stroke-dot"/></svg></div>
-        <div class="help-item"><div class="label">2</div><svg viewBox="0 0 100 100"><path d="M25 30 Q40 10 70 10 Q85 10 85 35 Q85 50 60 70 L25 90 L85 90"/><circle cx="25" cy="30" r="4" class="stroke-dot"/></svg></div>
-        <div class="help-item"><div class="label">3</div><svg viewBox="0 0 100 100"><path d="M20 20 L70 20 Q85 20 85 35 Q85 50 55 50 Q85 50 85 70 Q85 85 65 85 L20 85"/><circle cx="20" cy="20" r="4" class="stroke-dot"/></svg></div>
-        <div class="help-item"><div class="label">4</div><svg viewBox="0 0 100 100"><path d="M75 15 L75 55 L20 55 M75 55 L75 90"/><circle cx="75" cy="15" r="4" class="stroke-dot"/></svg></div>
-        <div class="help-item"><div class="label">5</div><svg viewBox="0 0 100 100"><path d="M85 15 L30 15 L25 45 L70 45 Q85 45 85 65 Q85 85 60 85 L15 85"/><circle cx="85" cy="15" r="4" class="stroke-dot"/></svg></div>
-        <div class="help-item"><div class="label">6</div><svg viewBox="0 0 100 100"><path d="M70 15 Q30 25 20 55 Q20 75 40 85 Q65 85 75 65 Q80 45 50 40 Q30 40 25 55"/><circle cx="70" cy="15" r="4" class="stroke-dot"/></svg></div>
-        <div class="help-item"><div class="label">7</div><svg viewBox="0 0 100 100"><path d="M15 15 L85 15 L40 90"/><circle cx="15" cy="15" r="4" class="stroke-dot"/></svg></div>
-        <div class="help-item"><div class="label">8</div><svg viewBox="0 0 100 100"><path d="M50 10 Q80 20 80 40 Q80 50 50 55 Q20 50 20 40 Q20 20 50 10 M50 55 Q20 65 20 85 Q20 95 50 95 Q80 95 80 85 Q80 65 50 55"/><circle cx="50" cy="10" r="4" class="stroke-dot"/></svg></div>
-        <div class="help-item"><div class="label">9</div><svg viewBox="0 0 100 100"><path d="M50 55 Q25 60 25 40 Q25 15 50 15 Q75 15 75 40 Q75 55 50 55 L50 95"/><circle cx="50" cy="55" r="4" class="stroke-dot"/></svg></div>
-        <div class="help-item"><div class="label">&lt;</div><svg viewBox="0 0 100 100"><path d="M85 15 L15 50 L85 85"/><circle cx="85" cy="15" r="4" class="stroke-dot"/></svg></div>
-        <div class="help-item"><div class="label">&gt;</div><svg viewBox="0 0 100 100"><path d="M15 15 L85 50 L15 85"/><circle cx="15" cy="15" r="4" class="stroke-dot"/></svg></div>
-        <div class="help-item"><div class="label">=</div><svg viewBox="0 0 100 100"><path d="M15 35 L85 35 M15 65 L85 65"/><circle cx="15" cy="35" r="4" class="stroke-dot"/></svg></div>
-      </div>
+    <div class="help-grid">
+      <div class="help-item"><div class="label">0</div><svg viewBox="0 0 100 100"><path d="M50 15 Q80 15 80 50 Q80 85 50 85 Q20 85 20 50 Q20 15 50 15Z"/><circle cx="50" cy="15" r="4" class="stroke-dot"/></svg></div>
+      <div class="help-item"><div class="label">1</div><svg viewBox="0 0 100 100"><path d="M40 25 L50 15 L50 85"/><circle cx="40" cy="25" r="4" class="stroke-dot"/></svg></div>
+      <div class="help-item"><div class="label">2</div><svg viewBox="0 0 100 100"><path d="M25 30 Q40 10 70 10 Q85 10 85 35 Q85 50 60 70 L25 90 L85 90"/><circle cx="25" cy="30" r="4" class="stroke-dot"/></svg></div>
+      <div class="help-item"><div class="label">3</div><svg viewBox="0 0 100 100"><path d="M20 20 L70 20 Q85 20 85 35 Q85 50 55 50 Q85 50 85 70 Q85 85 65 85 L20 85"/><circle cx="20" cy="20" r="4" class="stroke-dot"/></svg></div>
+      <div class="help-item"><div class="label">4</div><svg viewBox="0 0 100 100"><path d="M75 15 L75 55 L20 55 M75 55 L75 90"/><circle cx="75" cy="15" r="4" class="stroke-dot"/></svg></div>
+      <div class="help-item"><div class="label">5</div><svg viewBox="0 0 100 100"><path d="M85 15 L30 15 L25 45 L70 45 Q85 45 85 65 Q85 85 60 85 L15 85"/><circle cx="85" cy="15" r="4" class="stroke-dot"/></svg></div>
+      <div class="help-item"><div class="label">6</div><svg viewBox="0 0 100 100"><path d="M70 15 Q30 25 20 55 Q20 75 40 85 Q65 85 75 65 Q80 45 50 40 Q30 40 25 55"/><circle cx="70" cy="15" r="4" class="stroke-dot"/></svg></div>
+      <div class="help-item"><div class="label">7</div><svg viewBox="0 0 100 100"><path d="M15 15 L85 15 L40 90"/><circle cx="15" cy="15" r="4" class="stroke-dot"/></svg></div>
+      <div class="help-item"><div class="label">8</div><svg viewBox="0 0 100 100"><path d="M50 10 Q80 20 80 40 Q80 50 50 55 Q20 50 20 40 Q20 20 50 10 M50 55 Q20 65 20 85 Q20 95 50 95 Q80 95 80 85 Q80 65 50 55"/><circle cx="50" cy="10" r="4" class="stroke-dot"/></svg></div>
+      <div class="help-item"><div class="label">9</div><svg viewBox="0 0 100 100"><path d="M50 55 Q25 60 25 40 Q25 15 50 15 Q75 15 75 40 Q75 55 50 55 L50 95"/><circle cx="50" cy="55" r="4" class="stroke-dot"/></svg></div>
     </div>
-    <button id="btn-help-close" class="btn-kid btn-purple help-close text-lg">ปิด ❌</button>
+    <button id="btn-help-close" class="btn-kid btn-purple mt-4 text-lg w-full">ปิด ❌</button>
+  </div>
+</div>
+
+<!-- Settings / Privacy Modal -->
+<div id="settings-modal" class="modal">
+  <div class="modal-card">
+    <h3 class="text-2xl font-extrabold text-indigo-600 mb-2">ตั้งค่า 🔒</h3>
+    <p class="text-slate-500 mb-4">
+      เก็บลายมือของลูกไว้ฝึกระบบจดจำลายมือ ข้อมูลอยู่บนเครื่องนี้เท่านั้น ไม่ส่งออกไปไหน
+    </p>
+    <div class="toggle-row">
+      <span class="text-lg font-bold text-slate-700">บันทึกลายมือ</span>
+      <div id="toggle-save" class="toggle-switch" role="switch" aria-checked="false"></div>
+    </div>
+    <div id="saved-stats" class="text-slate-500 text-sm mb-4"></div>
+    <div class="flex gap-3">
+      <button id="btn-export" class="btn-kid text-lg flex-1" style="background:var(--kid-blue); box-shadow:0 6px 0 #2563eb;" disabled>ส่งออกข้อมูล 📤</button>
+      <button id="btn-delete-data" class="btn-kid btn-pink text-lg flex-1" disabled>ลบข้อมูล 🗑️</button>
+    </div>
+    <button id="btn-settings-close" class="btn-kid btn-purple w-full mt-4 text-lg">ปิด ❌</button>
   </div>
 </div>
 
@@ -186,7 +229,11 @@
     <p class="text-xl text-slate-600 mb-4">คะแนนของเธอ</p>
     <div id="final-stars" class="flex justify-center gap-2 mb-6"></div>
     <p id="final-score" class="text-2xl font-bold text-slate-700 mb-6"></p>
-    <button id="btn-replay" class="btn-kid btn-purple text-2xl px-8 py-4">เล่นอีกครั้ง 🔄</button>
+    <div class="flex flex-col gap-3">
+      <button id="btn-replay" class="btn-kid btn-purple text-2xl px-8 py-4">เล่นอีกครั้ง 🔄</button>
+      <button id="btn-replay-record" class="btn-kid btn-yellow text-2xl px-8 py-4">บันทึกลายมือต่อ 📝</button>
+      <button id="btn-home" class="btn-kid text-2xl px-8 py-4" style="background:var(--kid-blue); box-shadow:0 6px 0 #2563eb;">หน้าแรก 🏠</button>
+    </div>
   </div>
 </section>
 
@@ -194,10 +241,11 @@
 (() => {
   'use strict';
 
-  const TOTAL_ROUNDS = 5;
+  const TOTAL_ROUNDS = 10;
   let round = 0;
   let score = 0;
-  let currentQ = null;
+  let currentDigit = null;
+  let gameMode = 'play'; // 'play' | 'record'
   let strokes = [];
   let isDrawing = false;
   let activePointerId = null;
@@ -211,104 +259,122 @@
     complete: document.getElementById('screen-complete')
   };
   const roundEl = document.getElementById('round-num');
-  const equationEl = document.getElementById('equation');
+  const totalRoundsEl = document.getElementById('total-rounds');
   const hintEl = document.getElementById('hint');
   const scoreStarsEl = document.getElementById('score-stars');
-  const fallbackEl = document.getElementById('fallback');
+  const targetDigitEl = document.getElementById('target-digit');
+  const modeBadgeEl = document.getElementById('mode-badge');
   const pad = document.getElementById('drawPad');
   const ctx = pad.getContext('2d');
   const confettiCanvas = document.getElementById('confetti');
   const cCtx = confettiCanvas.getContext('2d');
   const toastEl = document.getElementById('toast');
 
-  // --- Audio (Tone.js) ---
+  let saveStrokesEnabled = false;
+  const STORAGE_KEY = 'math-fill-sign-strokes';
+  let savedStrokeStore = [];
+
+  function loadStrokeSettings() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) savedStrokeStore = JSON.parse(raw);
+      saveStrokesEnabled = localStorage.getItem(STORAGE_KEY + '-enabled') === 'true';
+    } catch (_) {
+      savedStrokeStore = [];
+      saveStrokesEnabled = false;
+    }
+  }
+
+  function persistStrokeStore() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(savedStrokeStore));
+      localStorage.setItem(STORAGE_KEY + '-enabled', String(saveStrokesEnabled));
+    } catch (_) {}
+  }
+
+  function recordStroke(label, force) {
+    if ((!saveStrokesEnabled && !force) || !label || strokes.length === 0) return;
+    const box = padBoxToSquare(strokes);
+    const input = strokesToMNIST(strokes, box);
+    savedStrokeStore.push({ label, ts: Date.now(), input: Array.from(input) });
+    persistStrokeStore();
+    updateSettingsUI();
+  }
+
+  function updateSettingsUI() {
+    const toggle = document.getElementById('toggle-save');
+    const exportBtn = document.getElementById('btn-export');
+    const deleteBtn = document.getElementById('btn-delete-data');
+    const stats = document.getElementById('saved-stats');
+    if (!toggle) return;
+    toggle.classList.toggle('on', saveStrokesEnabled);
+    toggle.setAttribute('aria-checked', String(saveStrokesEnabled));
+    const count = savedStrokeStore.length;
+    stats.textContent = count > 0 ? `เก็บลายมือไว้ ${count} ตัวอย่าง` : 'ยังไม่มีลายมือที่บันทึกไว้';
+    exportBtn.disabled = count === 0;
+    deleteBtn.disabled = count === 0;
+  }
+
+  function exportStrokes() {
+    const data = { exportedAt: new Date().toISOString(), count: savedStrokeStore.length, samples: savedStrokeStore };
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'math-fill-sign-samples.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 100);
+  }
+
+  function deleteStrokes() {
+    savedStrokeStore = [];
+    persistStrokeStore();
+    updateSettingsUI();
+    showToast('ลบข้อมูลแล้ว 🗑️');
+  }
+
+  // --- Audio ---
   async function initAudio() {
     if (audioStarted) return;
     try {
       await Tone.start();
-      synth = new Tone.PolySynth(Tone.Synth, {
-        oscillator: { type: 'triangle' },
-        envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.3 }
-      }).toDestination();
+      synth = new Tone.PolySynth(Tone.Synth, { oscillator: { type: 'triangle' }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.3 } }).toDestination();
       membrane = new Tone.MembraneSynth().toDestination();
       metal = new Tone.MetalSynth({ harmonicity: 12, resonance: 800, modulationIndex: 20, envelope: { decay: 0.05 } }).toDestination();
       metal.volume.value = -12;
       audioStarted = true;
-    } catch (e) {
-      // Audio not critical; continue silently.
-    }
+    } catch (e) {}
   }
 
   function playCorrect() {
     if (!audioStarted) return;
-    try {
-      const now = Tone.now();
-      synth.triggerAttackRelease(['C5', 'E5', 'G5'], '8n', now);
-      metal.triggerAttackRelease('32n', now + 0.15);
-    } catch (_) {}
+    try { const now = Tone.now(); synth.triggerAttackRelease(['C5','E5','G5'], '8n', now); metal.triggerAttackRelease('32n', now + 0.15); } catch (_) {}
   }
-
   function playWrong() {
     if (!audioStarted) return;
-    try {
-      membrane.triggerAttackRelease('A2', '8n');
-    } catch (_) {}
+    try { membrane.triggerAttackRelease('A2', '8n'); } catch (_) {}
   }
-
   function playComplete() {
     if (!audioStarted) return;
-    try {
-      const now = Tone.now();
-      ['C4','E4','G4','C5','E5','G5','C6'].forEach((n,i) => {
-        synth.triggerAttackRelease(n, '8n', now + i * 0.12);
-      });
-    } catch (_) {}
+    try { const now = Tone.now(); ['C4','E4','G4','C5','E5','G5','C6'].forEach((n,i) => synth.triggerAttackRelease(n, '8n', now + i * 0.12)); } catch (_) {}
   }
 
-  // --- TensorFlow.js model loading ---
+  // --- TensorFlow.js ---
   let mnistModel = null;
   let modelLoading = false;
 
-  function base64ToUint8Array(base64) {
-    const binary = atob(base64);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    return bytes;
-  }
-
-  function decodeWeights(weightsManifest) {
-    const entries = [];
-    for (const group of weightsManifest) {
-      const buffers = group.paths.map(p => {
-        if (p.startsWith('data:application/octet-stream;base64,')) {
-          return base64ToUint8Array(p.replace('data:application/octet-stream;base64,', '')).buffer;
-        }
-        throw new Error('Unsupported weight path: ' + p);
-      });
-      // TF.js expects weights grouped by spec; we have a single buffer per group.
-      entries.push({ paths: group.paths, weights: group.weights, data: buffers[0] });
-    }
-    return entries;
-  }
-
   function normalizeModelTopology(topology) {
-    // Deep clone and fix Keras 3 exported keys that TF.js 4.x doesn't understand.
     const fixed = JSON.parse(JSON.stringify(topology));
     const layers = fixed?.model_config?.config?.layers;
     if (layers && Array.isArray(layers)) {
       const newLayers = [];
       let inputShape = null;
       for (const layer of layers) {
-        if (layer.class_name === 'InputLayer') {
-          inputShape = layer.config.batch_shape || layer.config.batch_input_shape;
-          continue;
-        }
+        if (layer.class_name === 'InputLayer') { inputShape = layer.config.batch_shape || layer.config.batch_input_shape; continue; }
         newLayers.push(layer);
       }
-      if (inputShape && newLayers.length > 0) {
-        newLayers[0].config.batch_input_shape = inputShape;
-      }
-      // Normalize dtype object to plain string
+      if (inputShape && newLayers.length > 0) newLayers[0].config.batch_input_shape = inputShape;
       for (const layer of newLayers) {
         if (layer.config && typeof layer.config.dtype === 'object' && layer.config.dtype?.config?.name) {
           layer.config.dtype = layer.config.dtype.config.name;
@@ -323,9 +389,7 @@
     if (mnistModel || modelLoading) return;
     modelLoading = true;
     try {
-      if (typeof window.MNIST_MODEL_JSON === 'undefined') {
-        throw new Error('MNIST_MODEL_JSON not embedded');
-      }
+      if (typeof window.MNIST_MODEL_JSON === 'undefined') throw new Error('MNIST_MODEL_JSON not embedded');
       const modelJSON = window.MNIST_MODEL_JSON;
       const weightSpecs = [];
       const weightData = [];
@@ -337,32 +401,25 @@
         for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
         weightData.push(bytes.buffer);
       }
-      const modelArtifacts = {
+      mnistModel = await tf.loadLayersModel(tf.io.fromMemory({
         modelTopology: normalizeModelTopology(modelJSON.modelTopology),
-        weightSpecs,
-        weightData,
+        weightSpecs, weightData,
         format: modelJSON.format,
         generatedBy: modelJSON.generatedBy,
         convertedBy: modelJSON.convertedBy
-      };
-      mnistModel = await tf.loadLayersModel(tf.io.fromMemory(modelArtifacts));
-    } catch (e) {
-      console.error('TF.js model load failed:', e);
-    } finally {
-      modelLoading = false;
-    }
+      }));
+    } catch (e) { console.error('TF.js model load failed:', e); }
+    finally { modelLoading = false; }
   }
 
-  function padBoxToSquare(points, padding = 0.12) {
+  // --- MNIST preprocessing ---
+  function padBoxToSquare(points, padding) {
+    padding = padding || 0.12;
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     for (const s of points) {
-      for (const p of s) {
-        minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
-        minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
-      }
+      for (const p of s) { minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y); }
     }
-    const w = maxX - minX, h = maxY - minY;
-    const size = Math.max(w, h) * (1 + padding * 2);
+    const size = Math.max(maxX - minX, maxY - minY) * (1 + padding * 2);
     const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
     return { minX: cx - size / 2, minY: cy - size / 2, size };
   }
@@ -371,35 +428,22 @@
     const tmp = document.createElement('canvas');
     tmp.width = 28; tmp.height = 28;
     const tCtx = tmp.getContext('2d', { willReadFrequently: true });
-    tCtx.fillStyle = '#000000';
-    tCtx.fillRect(0, 0, 28, 28);
-    tCtx.strokeStyle = '#ffffff';
-    tCtx.lineCap = 'round';
-    tCtx.lineJoin = 'round';
-    tCtx.lineWidth = 2.0;
-
-    // MNIST-style: fit the digit into 20x20 box and center in 28x28
-    const targetSize = 20;
-    const offsetX = (28 - targetSize) / 2;
-    const offsetY = (28 - targetSize) / 2;
-    const scale = targetSize / box.size;
-
+    tCtx.fillStyle = '#000000'; tCtx.fillRect(0, 0, 28, 28);
+    tCtx.strokeStyle = '#ffffff'; tCtx.lineCap = 'round'; tCtx.lineJoin = 'round'; tCtx.lineWidth = 2.2;
+    const targetSize = 20, offsetX = 4, offsetY = 4, scale = targetSize / box.size;
     for (const stroke of strokes) {
       if (stroke.length < 2) continue;
       tCtx.beginPath();
       for (let i = 0; i < stroke.length; i++) {
         const nx = (stroke[i].x - box.minX) * scale + offsetX;
         const ny = (stroke[i].y - box.minY) * scale + offsetY;
-        if (i === 0) tCtx.moveTo(nx, ny);
-        else tCtx.lineTo(nx, ny);
+        if (i === 0) tCtx.moveTo(nx, ny); else tCtx.lineTo(nx, ny);
       }
       tCtx.stroke();
     }
     const imgData = tCtx.getImageData(0, 0, 28, 28).data;
     const arr = new Float32Array(28 * 28);
-    for (let i = 0; i < 28 * 28; i++) {
-      arr[i] = imgData[i * 4] / 255.0;
-    }
+    for (let i = 0; i < 28 * 28; i++) arr[i] = imgData[i * 4] / 255.0;
     return arr;
   }
 
@@ -409,11 +453,8 @@
     const input = strokesToMNIST(strokes, box);
     const tensor = tf.tensor4d(input, [1, 28, 28, 1]);
     let prediction;
-    try {
-      prediction = mnistModel.predict(tensor).dataSync();
-    } finally {
-      tensor.dispose();
-    }
+    try { prediction = mnistModel.predict(tensor).dataSync(); }
+    finally { tensor.dispose(); }
     let bestIdx = 0, bestProb = 0, second = 0;
     for (let i = 0; i < 10; i++) {
       if (prediction[i] > bestProb) { second = bestProb; bestProb = prediction[i]; bestIdx = i; }
@@ -430,38 +471,19 @@
     confettiCanvas.height = window.innerHeight * window.devicePixelRatio;
     cCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
   }
-  function burst(x, y, count = 40) {
+  function burst(x, y, count) {
+    count = count || 40;
     const colors = ['#60a5fa','#34d399','#fbbf24','#f472b6','#a78bfa','#f87171'];
     for (let i = 0; i < count; i++) {
-      particles.push({
-        x, y,
-        vx: (Math.random() - 0.5) * 14,
-        vy: (Math.random() - 1) * 14 - 2,
-        rot: Math.random() * 360,
-        vRot: (Math.random() - 0.5) * 20,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        size: 6 + Math.random() * 8,
-        life: 1.0,
-        decay: 0.01 + Math.random() * 0.015
-      });
+      particles.push({ x, y, vx: (Math.random() - 0.5) * 14, vy: (Math.random() - 1) * 14 - 2, rot: Math.random() * 360, vRot: (Math.random() - 0.5) * 20, color: colors[Math.floor(Math.random() * colors.length)], size: 6 + Math.random() * 8, life: 1.0, decay: 0.01 + Math.random() * 0.015 });
     }
     if (particles.length <= count) requestAnimationFrame(loopConfetti);
   }
   function loopConfetti() {
     cCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
     particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += 0.4;
-      p.rot += p.vRot;
-      p.life -= p.decay;
-      cCtx.save();
-      cCtx.translate(p.x, p.y);
-      cCtx.rotate(p.rot * Math.PI / 180);
-      cCtx.fillStyle = p.color;
-      cCtx.globalAlpha = Math.max(0, p.life);
-      cCtx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
-      cCtx.restore();
+      p.x += p.vx; p.y += p.vy; p.vy += 0.4; p.rot += p.vRot; p.life -= p.decay;
+      cCtx.save(); cCtx.translate(p.x, p.y); cCtx.rotate(p.rot * Math.PI / 180); cCtx.fillStyle = p.color; cCtx.globalAlpha = Math.max(0, p.life); cCtx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2); cCtx.restore();
     });
     particles = particles.filter(p => p.life > 0);
     if (particles.length) requestAnimationFrame(loopConfetti);
@@ -473,13 +495,11 @@
     toastEl.classList.add('show');
     setTimeout(() => toastEl.classList.remove('show'), 1600);
   }
-
   function show(name) {
     Object.values(screens).forEach(s => s.classList.remove('active'));
     screens[name].classList.add('active');
   }
-
-  function renderStars(container, count, total = 5) {
+  function renderStars(container, count, total) {
     container.innerHTML = '';
     for (let i = 0; i < total; i++) {
       const s = document.createElement('span');
@@ -487,235 +507,6 @@
       s.textContent = '⭐';
       container.appendChild(s);
     }
-  }
-
-  // --- Handwriting recognizer ($P point-cloud multi-stroke) ---
-  const CLOUD_POINTS = 64;
-
-  // --- Math helpers (shared) ---
-  function dist(a, b) {
-    const dx = a.x - b.x, dy = a.y - b.y;
-    return Math.hypot(dx, dy);
-  }
-
-  function pathLength(pts) {
-    let len = 0;
-    for (let i = 1; i < pts.length; i++) len += dist(pts[i - 1], pts[i]);
-    return len;
-  }
-
-  function resample(pts, n) {
-    if (pts.length === 0) return [];
-    if (pts.length === 1) return Array(n).fill(pts[0]);
-    const step = pathLength(pts) / (n - 1);
-    const out = [pts[0]];
-    let prev = pts[0];
-    let pos = 0;
-    let i = 1;
-    while (i < pts.length && out.length < n) {
-      const d = dist(prev, pts[i]);
-      if (pos + d >= step) {
-        const t = (step - pos) / d;
-        const q = {
-          x: prev.x + t * (pts[i].x - prev.x),
-          y: prev.y + t * (pts[i].y - prev.y)
-        };
-        out.push(q);
-        prev = q;
-        pos = 0;
-      } else {
-        pos += d;
-        prev = pts[i];
-        i++;
-      }
-    }
-    while (out.length < n) out.push(pts[pts.length - 1]);
-    return out;
-  }
-
-  function centroid(pts) {
-    let x = 0, y = 0;
-    for (const p of pts) { x += p.x; y += p.y; }
-    return { x: x / pts.length, y: y / pts.length };
-  }
-
-  function indicativeAngle(pts) {
-    const c = centroid(pts);
-    return Math.atan2(c.y - pts[0].y, c.x - pts[0].x);
-  }
-
-  function rotateBy(pts, radians) {
-    const c = centroid(pts);
-    const cos = Math.cos(radians), sin = Math.sin(radians);
-    return pts.map(p => ({
-      x: (p.x - c.x) * cos - (p.y - c.y) * sin + c.x,
-      y: (p.x - c.x) * sin + (p.y - c.y) * cos + c.y
-    }));
-  }
-
-  function scaleTo(pts, size) {
-    let minX = 9, minY = 9, maxX = -9, maxY = -9;
-    for (const p of pts) {
-      minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
-      minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
-    }
-    const w = maxX - minX || 1, h = maxY - minY || 1;
-    return pts.map(p => ({ x: p.x * (size / w), y: p.y * (size / h) }));
-  }
-
-  function translateTo(pts, pt) {
-    const c = centroid(pts);
-    return pts.map(p => ({ x: p.x + pt.x - c.x, y: p.y + pt.y - c.y }));
-  }
-
-  function normalizeGesture(pts, n = 64, size = 1) {
-    return translateTo(scaleTo(rotateBy(resample(pts, n), -indicativeAngle(pts)), size), { x: 0, y: 0 });
-  }
-
-  function pathDistance(A, B) {
-    let sum = 0;
-    for (let i = 0; i < A.length; i++) sum += dist(A[i], B[i]);
-    return sum / A.length;
-  }
-
-  function distanceAtBestAngle(pts, template, a = -Math.PI / 4, b = Math.PI / 4, threshold = Math.PI / 90) {
-    let x1 = a + (1 - 0.618033988749895) * (b - a);
-    let x2 = a + 0.618033988749895 * (b - a);
-    let f1 = distanceAtAngle(pts, template, x1);
-    let f2 = distanceAtAngle(pts, template, x2);
-    while (Math.abs(b - a) > threshold) {
-      if (f1 < f2) {
-        b = x2; x2 = x1; f2 = f1;
-        x1 = a + (1 - 0.618033988749895) * (b - a);
-        f1 = distanceAtAngle(pts, template, x1);
-      } else {
-        a = x1; x1 = x2; f1 = f2;
-        x2 = a + 0.618033988749895 * (b - a);
-        f2 = distanceAtAngle(pts, template, x2);
-      }
-    }
-    return Math.min(f1, f2);
-  }
-
-  function distanceAtAngle(pts, template, radians) {
-    return pathDistance(normalizeGesture(rotateBy(pts, radians), 64, 1), template);
-  }
-
-  function makeTemplate(points) {
-    return normalizeGesture(points.map(p => ({ x: p[0], y: p[1] })), 64, 1);
-  }
-
-  // --- Digit templates ($1 Unistroke style, multiple per class) ---
-  const digitTemplates = {
-    '0': [makeTemplate([[0.5,0.1],[0.75,0.2],[0.85,0.5],[0.75,0.8],[0.5,0.9],[0.25,0.8],[0.15,0.5],[0.25,0.2],[0.5,0.1]])],
-    '1': [
-      makeTemplate([[0.35,0.25],[0.5,0.15],[0.5,0.85]]),
-      makeTemplate([[0.5,0.15],[0.5,0.85]])
-    ],
-    '2': [makeTemplate([[0.2,0.25],[0.4,0.1],[0.7,0.1],[0.85,0.3],[0.8,0.5],[0.5,0.7],[0.2,0.85],[0.8,0.85]])],
-    '3': [
-      makeTemplate([[0.2,0.15],[0.7,0.15],[0.8,0.35],[0.6,0.5],[0.8,0.6],[0.75,0.8],[0.2,0.85]]),
-      makeTemplate([[0.15,0.1],[0.75,0.1],[0.85,0.3],[0.5,0.5],[0.85,0.7],[0.7,0.9],[0.15,0.9]])
-    ],
-    '4': [
-      makeTemplate([[0.8,0.15],[0.5,0.15],[0.2,0.5],[0.8,0.5],[0.8,0.85]]),
-      makeTemplate([[0.5,0.15],[0.5,0.5],[0.2,0.5],[0.8,0.5],[0.8,0.85]])
-    ],
-    '5': [
-      makeTemplate([[0.8,0.15],[0.3,0.15],[0.25,0.45],[0.7,0.45],[0.8,0.65],[0.7,0.85],[0.2,0.85]]),
-      makeTemplate([[0.75,0.1],[0.25,0.1],[0.2,0.45],[0.65,0.45],[0.75,0.7],[0.55,0.9],[0.15,0.9]])
-    ],
-    '6': [
-      makeTemplate([[0.7,0.15],[0.35,0.25],[0.2,0.5],[0.2,0.7],[0.45,0.85],[0.7,0.75],[0.75,0.55],[0.5,0.45],[0.25,0.55]]),
-      makeTemplate([[0.65,0.1],[0.3,0.2],[0.15,0.45],[0.15,0.75],[0.4,0.9],[0.75,0.8],[0.8,0.55],[0.55,0.45],[0.3,0.55]])
-    ],
-    '7': [makeTemplate([[0.15,0.15],[0.85,0.15],[0.4,0.85]])],
-    '8': [
-      makeTemplate([[0.5,0.05],[0.75,0.15],[0.85,0.4],[0.75,0.5],[0.5,0.45],[0.25,0.5],[0.15,0.4],[0.25,0.15],[0.5,0.05],[0.5,0.5],[0.25,0.65],[0.15,0.9],[0.5,0.95],[0.85,0.9],[0.75,0.65],[0.5,0.5]]),
-      makeTemplate([[0.5,0.1],[0.25,0.25],[0.2,0.45],[0.35,0.55],[0.65,0.55],[0.8,0.45],[0.75,0.25],[0.5,0.1],[0.5,0.55],[0.2,0.75],[0.3,0.9],[0.7,0.9],[0.8,0.75],[0.5,0.55]])
-    ],
-    '9': [
-      makeTemplate([[0.5,0.1],[0.75,0.2],[0.85,0.45],[0.7,0.55],[0.45,0.5],[0.25,0.35],[0.35,0.15],[0.6,0.1],[0.5,0.5],[0.5,0.9]]),
-      makeTemplate([[0.5,0.1],[0.2,0.3],[0.2,0.5],[0.45,0.6],[0.75,0.55],[0.85,0.35],[0.7,0.15],[0.45,0.1],[0.5,0.5],[0.5,0.9]])
-    ]
-  };
-
-  function normalizeStrokes(strokes) {
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    for (const s of strokes) {
-      for (const p of s) {
-        minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
-        minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
-      }
-    }
-    const s = Math.max(maxX - minX, maxY - minY, 1);
-    return strokes.map(stroke => stroke.map(p => ({ x: (p.x - minX) / s, y: (p.y - minY) / s })));
-  }
-
-  function pathLen(stroke) {
-    let len = 0;
-    for (let i = 1; i < stroke.length; i++) len += dist(stroke[i - 1], stroke[i]);
-    return len;
-  }
-
-  function pointAtLength(stroke, targetLen) {
-    let len = 0;
-    for (let i = 1; i < stroke.length; i++) {
-      const d = dist(stroke[i - 1], stroke[i]);
-      if (len + d >= targetLen) {
-        const t = (targetLen - len) / d;
-        return {
-          x: stroke[i - 1].x + t * (stroke[i].x - stroke[i - 1].x),
-          y: stroke[i - 1].y + t * (stroke[i].y - stroke[i - 1].y)
-        };
-      }
-      len += d;
-    }
-    return stroke[stroke.length - 1];
-  }
-
-  function recognizeDigit(strokes) {
-    if (!strokes || strokes.length === 0) return { recognized: false };
-    return predictDigit(strokes);
-  }
-
-  function recognizeOperator(strokes) {
-    if (!strokes || strokes.length === 0) return { recognized: false };
-    const norm = normalizeStrokes(strokes);
-
-    const isHorizontal = s => {
-      const start = s[0], end = s[s.length - 1];
-      return pathLen(s) > 0.15 && Math.abs(end.y - start.y) < 0.12;
-    };
-
-    let horizCount = 0;
-    for (const s of norm) if (isHorizontal(s)) horizCount++;
-
-    if (horizCount >= 2) return { recognized: true, label: '=' };
-    if (norm.length === 1 && isHorizontal(norm[0])) return { recognized: true, label: '=' };
-
-    if (norm.length === 1) {
-      const s = norm[0];
-      const start = s[0], end = s[s.length - 1];
-      const halfLen = pathLen(s) / 2;
-      const mid = pointAtLength(s, halfLen);
-      const leftness = (start.x + end.x) / 2 - mid.x;
-      const rightness = mid.x - (start.x + end.x) / 2;
-      const spanY = Math.abs(start.y - end.y);
-      if (spanY > 0.25 && pathLen(s) > 0.4) {
-        if (leftness > 0.15) return { recognized: true, label: '<' };
-        if (rightness > 0.15) return { recognized: true, label: '>' };
-      }
-    }
-
-    return { recognized: false };
-  }
-
-  function recognize(inputStrokes, candidates) {
-    if (!inputStrokes || inputStrokes.length === 0) return { recognized: false };
-    const isOperators = candidates.length > 0 && candidates.every(c => '<>='.includes(c));
-    if (isOperators) return recognizeOperator(inputStrokes);
-    return recognizeDigit(inputStrokes);
   }
 
   // --- Drawing pad ---
@@ -727,241 +518,117 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     redrawPad();
   }
-
-  function clearPad() {
-    strokes = [];
-    redrawPad();
-  }
-
+  function clearPad() { strokes = []; redrawPad(); }
   function redrawPad() {
     const rect = pad.getBoundingClientRect();
     ctx.clearRect(0, 0, rect.width, rect.height);
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     for (const stroke of strokes) {
       for (let i = 1; i < stroke.length; i++) {
         const p = stroke[i], prev = stroke[i - 1];
-        ctx.beginPath();
-        ctx.moveTo(prev.x, prev.y);
-        ctx.lineTo(p.x, p.y);
-        ctx.strokeStyle = p.color || '#1f2937';
-        ctx.lineWidth = p.width || 4;
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(prev.x, prev.y); ctx.lineTo(p.x, p.y);
+        ctx.strokeStyle = p.color || '#1f2937'; ctx.lineWidth = p.width || 4; ctx.stroke();
       }
     }
   }
-
   function getPoint(e) {
     const rect = pad.getBoundingClientRect();
     return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
+      x: e.clientX - rect.left, y: e.clientY - rect.top,
       pressure: e.pointerType === 'pen' ? (e.pressure || 0.5) : 0.5,
-      tiltX: e.tiltX || 0,
-      tiltY: e.tiltY || 0,
       color: e.pointerType === 'pen' ? '#1e40af' : '#334155',
       width: e.pointerType === 'pen' ? 3 + (e.pressure || 0.5) * 5 : 4
     };
   }
-
   function startStroke(e) {
     if (e.target !== pad) return;
     e.preventDefault();
     if (isDrawing) return;
     if (!audioStarted) initAudio();
-    isDrawing = true;
-    activePointerId = e.pointerId;
-    const p = getPoint(e);
-    strokes.push([p]);
+    isDrawing = true; activePointerId = e.pointerId;
+    strokes.push([getPoint(e)]);
   }
-
   function moveStroke(e) {
     if (!isDrawing || e.pointerId !== activePointerId) return;
     e.preventDefault();
     const p = getPoint(e);
     const stroke = strokes[strokes.length - 1];
     const last = stroke[stroke.length - 1];
-    if (dist(p, last) < 2) return;
+    if (Math.hypot(p.x - last.x, p.y - last.y) < 2) return;
     stroke.push(p);
-    ctx.beginPath();
-    ctx.moveTo(last.x, last.y);
-    ctx.lineTo(p.x, p.y);
-    ctx.strokeStyle = p.color;
-    ctx.lineWidth = p.width;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = p.color; ctx.lineWidth = p.width; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
   }
-
   function endStroke(e) {
     if (!isDrawing || e.pointerId !== activePointerId) return;
     e.preventDefault();
-    isDrawing = false;
-    activePointerId = null;
+    isDrawing = false; activePointerId = null;
   }
-
   pad.addEventListener('pointerdown', startStroke);
   window.addEventListener('pointermove', moveStroke);
   window.addEventListener('pointerup', endStroke);
   window.addEventListener('pointercancel', endStroke);
 
   // --- Game logic ---
-  function rand(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+  function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+  function generateDigitRound() { return String(rand(0, 9)); }
 
-  function generateQuestion() {
-    const r = Math.random();
-    if (r < 0.45) {
-      const a = rand(0, 20);
-      const b = rand(0, 20);
-      const ans = a < b ? '<' : a > b ? '>' : '=';
-      return {
-        type: 'op',
-        left: a, right: b,
-        answer: ans,
-        candidates: ['<', '>', '='],
-        hint: 'เติมเครื่องหมาย < หรือ > หรือ ='
-      };
-    } else if (r < 0.75) {
-      const n = rand(2, 9);
-      return {
-        type: 'num-less',
-        n,
-        answer: null,
-        candidates: Array.from({ length: n }, (_, i) => String(i)),
-        hint: `ใส่ตัวเลขที่น้อยกว่า ${n}`
-      };
-    } else {
-      const n = rand(0, 9);
-      return {
-        type: 'num-equal',
-        n,
-        answer: String(n),
-        candidates: Array.from({ length: 10 }, (_, i) => String(i)),
-        hint: `ใส่ตัวเลขที่เท่ากับ ${n}`
-      };
-    }
-  }
-
-  function renderEquation(q) {
-    let text = '';
-    if (q.type === 'op') {
-      text = `${q.left} <span class="blank">&nbsp;</span> ${q.right}`;
-    } else if (q.type === 'num-less') {
-      text = `<span class="blank">&nbsp;</span> < ${q.n}`;
-    } else {
-      text = `${q.n} = <span class="blank">&nbsp;</span>`;
-    }
-    equationEl.innerHTML = text;
-  }
-
-  function renderFallback(q) {
-    fallbackEl.innerHTML = '';
-    const wrap = document.createElement('div');
-    wrap.className = 'flex flex-wrap justify-center gap-3';
-    for (const c of q.candidates) {
-      const btn = document.createElement('button');
-      btn.className = 'btn-kid text-2xl px-4 py-2';
-      btn.textContent = c;
-      btn.addEventListener('pointerdown', (e) => {
-        e.preventDefault();
-        if (busy) return;
-        if (!audioStarted) initAudio();
-        checkAnswer(c);
-      });
-      wrap.appendChild(btn);
-    }
-    fallbackEl.appendChild(wrap);
+  function renderGameScreen() {
+    roundEl.textContent = round;
+    totalRoundsEl.textContent = TOTAL_ROUNDS;
+    targetDigitEl.textContent = currentDigit;
+    modeBadgeEl.textContent = gameMode === 'record' ? 'บันทึกลายมือ 📝' : 'เล่นเกมส์ ⭐';
+    modeBadgeEl.className = 'mode-badge ' + gameMode;
+    hintEl.textContent = gameMode === 'record' ? `เขียนเลข ${currentDigit} ให้ชัดที่สุด` : `เขียนเลข ${currentDigit} ให้ถูกต้อง`;
   }
 
   function nextQuestion() {
     busy = false;
-    if (round >= TOTAL_ROUNDS) {
-      endGame();
-      return;
-    }
+    if (round >= TOTAL_ROUNDS) { endGame(); return; }
     round++;
-    currentQ = generateQuestion();
-    roundEl.textContent = round;
+    currentDigit = generateDigitRound();
     renderStars(scoreStarsEl, score, TOTAL_ROUNDS);
-    renderEquation(currentQ);
-    resetBlankStyle();
-    hintEl.textContent = currentQ.hint;
+    renderGameScreen();
     show('game');
     resizePad();
-    renderFallback(currentQ);
     clearPad();
   }
 
-  function isCorrect(answer) {
-    if (!currentQ) return false;
-    if (currentQ.type === 'op') return answer === currentQ.answer;
-    if (currentQ.type === 'num-less') return parseInt(answer, 10) < currentQ.n;
-    if (currentQ.type === 'num-equal') return parseInt(answer, 10) === currentQ.n;
-    return false;
-  }
+  function onCheckDrawing() {
+    if (!currentDigit || strokes.length === 0) { showToast('เขียนคำตอบในช่องก่อนนะ'); return; }
+    const result = predictDigit(strokes);
+    if (!result.recognized) {
+      playWrong();
+      showToast('ลองเขียนให้ชัดขึ้น ✏️');
+      setTimeout(() => clearPad(), 700);
+      return;
+    }
 
-  function showBlankAnswer(value, isCorrect = true) {
-    const blanks = equationEl.querySelectorAll('.blank');
-    blanks.forEach(b => {
-      b.textContent = value;
-      b.style.background = isCorrect ? '#dcfce7' : '#fee2e2';
-      b.style.color = isCorrect ? '#166534' : '#991b1b';
-      b.style.borderBottomColor = isCorrect ? '#22c55e' : '#ef4444';
-    });
-  }
+    if (gameMode === 'record') {
+      // Record mode: save the handwriting labeled with the target digit, then advance.
+      recordStroke(currentDigit, true);
+      busy = true;
+      playCorrect();
+      showToast('บันทึกลายมือแล้ว 📝');
+      setTimeout(nextQuestion, 900);
+      return;
+    }
 
-  function resetBlankStyle() {
-    const blanks = equationEl.querySelectorAll('.blank');
-    blanks.forEach(b => {
-      b.textContent = '\u00a0';
-      b.style.background = '';
-      b.style.color = '';
-      b.style.borderBottomColor = '';
-    });
-  }
-
-  function getCorrectValue() {
-    if (!currentQ) return '';
-    if (currentQ.type === 'op') return currentQ.answer;
-    if (currentQ.type === 'num-equal') return currentQ.answer;
-    if (currentQ.type === 'num-less') return String(currentQ.n - 1);
-    return '';
-  }
-
-  function checkAnswer(answer) {
-    if (!currentQ || busy) return;
-    const correct = isCorrect(answer);
-    showBlankAnswer(answer, correct);
+    const correct = result.label === currentDigit;
     if (correct) {
       score++;
       busy = true;
       playCorrect();
       burst(window.innerWidth / 2, window.innerHeight / 2, 35);
       showToast('ถูกต้อง! 🎉');
+      // Also save correct samples if parent enabled storage (for this device only).
+      recordStroke(currentDigit, false);
       setTimeout(nextQuestion, 900);
     } else {
       playWrong();
-      showToast('เกือบแล้ว! ลองใหม่ ✏️');
-      setTimeout(() => { resetBlankStyle(); clearPad(); }, 500);
+      showToast(`ระบบอ่านเป็น ${result.label} ลองใหม่ ✏️`);
+      setTimeout(() => clearPad(), 700);
     }
-  }
-
-  function onCheckDrawing() {
-    if (!currentQ || strokes.length === 0) {
-      showToast('เขียนคำตอบในช่องก่อนนะ');
-      return;
-    }
-    const result = recognize(strokes, currentQ.candidates);
-    if (!result.recognized) {
-      playWrong();
-      showToast('ลองเขียนให้ชัดขึ้น ✏️');
-      showBlankAnswer('?', false);
-      setTimeout(() => { resetBlankStyle(); clearPad(); }, 700);
-      return;
-    }
-    checkAnswer(result.label);
   }
 
   function endGame() {
@@ -977,56 +644,54 @@
     show('complete');
   }
 
-  async function startGame() {
-    round = 0;
-    score = 0;
-    busy = false;
+  async function startGame(mode) {
+    gameMode = mode || 'play';
+    round = 0; score = 0; busy = false;
     await initAudio();
     await loadModel();
     nextQuestion();
   }
 
-  // --- Help modal ---
+  function goHome() {
+    show('start');
+  }
+
+  // --- Modals ---
   const helpModal = document.getElementById('help-modal');
-  function openHelp() {
-    helpModal.classList.add('active');
+  const settingsModal = document.getElementById('settings-modal');
+  function toggleModal(modal, open) {
+    if (open) { updateSettingsUI(); modal.classList.add('active'); }
+    else modal.classList.remove('active');
   }
-  function closeHelp() {
-    helpModal.classList.remove('active');
-  }
-  document.getElementById('btn-help').addEventListener('pointerdown', (e) => {
+
+  document.getElementById('btn-help').addEventListener('pointerdown', e => { e.preventDefault(); toggleModal(helpModal, true); });
+  document.getElementById('btn-help-close').addEventListener('pointerdown', e => { e.preventDefault(); toggleModal(helpModal, false); });
+  helpModal.addEventListener('pointerdown', e => { if (e.target === helpModal) toggleModal(helpModal, false); });
+
+  document.getElementById('btn-settings').addEventListener('pointerdown', e => { e.preventDefault(); toggleModal(settingsModal, true); });
+  document.getElementById('btn-settings-close').addEventListener('pointerdown', e => { e.preventDefault(); toggleModal(settingsModal, false); });
+  document.getElementById('toggle-save').addEventListener('pointerdown', e => {
     e.preventDefault();
-    openHelp();
+    saveStrokesEnabled = !saveStrokesEnabled;
+    persistStrokeStore();
+    updateSettingsUI();
+    showToast(saveStrokesEnabled ? 'บันทึกลายมือเปิดแล้ว ✏️' : 'ปิดบันทึกลายมือแล้ว 🔒');
   });
-  document.getElementById('btn-help-close').addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    closeHelp();
-  });
-  helpModal.addEventListener('pointerdown', (e) => {
-    if (e.target === helpModal) closeHelp();
-  });
+  document.getElementById('btn-export').addEventListener('pointerdown', e => { e.preventDefault(); exportStrokes(); });
+  document.getElementById('btn-delete-data').addEventListener('pointerdown', e => { e.preventDefault(); if (confirm('ลบลายมือที่บันทึกไว้ทั้งหมด?')) deleteStrokes(); });
+  settingsModal.addEventListener('pointerdown', e => { if (e.target === settingsModal) toggleModal(settingsModal, false); });
 
   // --- Buttons ---
-  document.getElementById('btn-start').addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    startGame();
-  });
-  document.getElementById('btn-replay').addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    startGame();
-  });
-  document.getElementById('btn-clear').addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    clearPad();
-  });
-  document.getElementById('btn-check').addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    if (busy) return;
-    if (!audioStarted) initAudio();
-    onCheckDrawing();
-  });
+  document.getElementById('btn-start-play').addEventListener('pointerdown', e => { e.preventDefault(); startGame('play'); });
+  document.getElementById('btn-start-record').addEventListener('pointerdown', e => { e.preventDefault(); startGame('record'); });
+  document.getElementById('btn-replay').addEventListener('pointerdown', e => { e.preventDefault(); startGame('play'); });
+  document.getElementById('btn-replay-record').addEventListener('pointerdown', e => { e.preventDefault(); startGame('record'); });
+  document.getElementById('btn-home').addEventListener('pointerdown', e => { e.preventDefault(); goHome(); });
+  document.getElementById('btn-clear').addEventListener('pointerdown', e => { e.preventDefault(); clearPad(); });
+  document.getElementById('btn-check').addEventListener('pointerdown', e => { e.preventDefault(); if (busy) return; if (!audioStarted) initAudio(); onCheckDrawing(); });
 
   // --- Init ---
+  loadStrokeSettings();
   resizePad();
   resizeConfetti();
   window.addEventListener('resize', () => { resizePad(); resizeConfetti(); });
