@@ -19,3 +19,5 @@ Here are some ideas to get you started:
 Git source push test at Wed Jun 17 08:20:12 +07 2026
 
 ## Multi-project test
+
+## repo_path from config test
