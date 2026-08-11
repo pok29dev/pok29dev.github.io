@@ -38,14 +38,16 @@
 
 ไฟล์ใน [`thclaws-2hr-course/samples/`](thclaws-2hr-course/samples/README.md) ใช้กับกิจกรรมลงมือทำของบท 3–5 — คัดลอกไปวางใน working directory (`~/thclaws-2hr`) ก่อนเริ่ม
 
+**⬇️ ดาวน์โหลด:** [รวมทุกไฟล์ `samples.zip`](thclaws-2hr-course/samples/samples.zip)
+
 | ไฟล์ | ชนิด | ใช้ในบท | เนื้อหา |
 |------|------|---------|---------|
-| `meeting_notes.txt` | ข้อความ | 3, 4 | บันทึกประชุมวางแผนเปิดตัวสินค้า — สรุป/แยก action items |
-| `notes.txt` | ข้อความ | 3 | บันทึกงานประจำวัน — สรุปงาน/เตือนงานค้าง |
-| `monthly-sales.csv` | CSV | 4 | ยอดขาย 6 เดือน 3 สินค้า — สร้าง Excel/วิเคราะห์ |
-| `customer-contacts.csv` | CSV | 4 | รายชื่อลูกค้า — สร้างสเปรดชีต/จัดประเภท |
-| `meeting-transcript.docx` | Word | 4 | บันทึกประชุมทีมขาย — ทดสอบอ่าน/สรุปเอกสาร Word |
-| `company-policy.pdf` | PDF | 4 | นโยบายบริษัท — ทดสอบอ่าน/สรุป PDF |
+| [⬇️ `meeting_notes.txt`](thclaws-2hr-course/samples/meeting_notes.txt) | ข้อความ | 3, 4 | บันทึกประชุมวางแผนเปิดตัวสินค้า — สรุป/แยก action items |
+| [⬇️ `notes.txt`](thclaws-2hr-course/samples/notes.txt) | ข้อความ | 3 | บันทึกงานประจำวัน — สรุปงาน/เตือนงานค้าง |
+| [⬇️ `monthly-sales.csv`](thclaws-2hr-course/samples/monthly-sales.csv) | CSV | 4 | ยอดขาย 6 เดือน 3 สินค้า — สร้าง Excel/วิเคราะห์ |
+| [⬇️ `customer-contacts.csv`](thclaws-2hr-course/samples/customer-contacts.csv) | CSV | 4 | รายชื่อลูกค้า — สร้างสเปรดชีต/จัดประเภท |
+| [⬇️ `meeting-transcript.docx`](thclaws-2hr-course/samples/meeting-transcript.docx) | Word | 4 | บันทึกประชุมทีมขาย — ทดสอบอ่าน/สรุปเอกสาร Word |
+| [⬇️ `company-policy.pdf`](thclaws-2hr-course/samples/company-policy.pdf) | PDF | 4 | นโยบายบริษัท — ทดสอบอ่าน/สรุป PDF |
 
 > ดูวิธีใช้ต่อบทได้ใน [`samples/README.md`](thclaws-2hr-course/samples/README.md)
 
