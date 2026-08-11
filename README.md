@@ -27,3 +27,28 @@
 | [บท 6 — ทบทวนและก้าวต่อไป](thclaws-2hr-course/chapter-06-ทบทวน-และ-ก้าวต่อไป.md) | เช็กลิสต์คำสั่ง, งานปฏิบัติรวม, แบบตรวจความเข้าใจ, เส้นทางไปต่อ | 40 นาที |
 
 > 💡 แนะนำให้อ่านตามลำดับ บทนำ → บท 6 เพราะแต่ละบทต่อยอดจากบทก่อนหน้า แต่ละบทจบด้วย "ลงมือทำเอง" และ "ตรวจความเข้าใจ" ที่ทำได้คนเดียว
+
+---
+
+## 📁 ไฟล์ตัวอย่าง / Demo Data
+
+ชุดข้อมูลสมมติ (fictional) สำหรับฝึกอบรมและลองทำ Hands-on กับ AI Agent — แบ่งเป็น 2 กลุ่ม
+
+### 1. ไฟล์ตัวอย่างสำหรับหนังสือ (Self-Study)
+
+ไฟล์ใน [`thclaws-2hr-course/samples/`](thclaws-2hr-course/samples/README.md) ใช้กับกิจกรรมลงมือทำของบท 3–5 — คัดลอกไปวางใน working directory (`~/thclaws-2hr`) ก่อนเริ่ม
+
+| ไฟล์ | ชนิด | ใช้ในบท | เนื้อหา |
+|------|------|---------|---------|
+| `meeting_notes.txt` | ข้อความ | 3, 4 | บันทึกประชุมวางแผนเปิดตัวสินค้า — สรุป/แยก action items |
+| `notes.txt` | ข้อความ | 3 | บันทึกงานประจำวัน — สรุปงาน/เตือนงานค้าง |
+| `monthly-sales.csv` | CSV | 4 | ยอดขาย 6 เดือน 3 สินค้า — สร้าง Excel/วิเคราะห์ |
+| `customer-contacts.csv` | CSV | 4 | รายชื่อลูกค้า — สร้างสเปรดชีต/จัดประเภท |
+| `meeting-transcript.docx` | Word | 4 | บันทึกประชุมทีมขาย — ทดสอบอ่าน/สรุปเอกสาร Word |
+| `company-policy.pdf` | PDF | 4 | นโยบายบริษัท — ทดสอบอ่าน/สรุป PDF |
+
+> ดูวิธีใช้ต่อบทได้ใน [`samples/README.md`](thclaws-2hr-course/samples/README.md)
+
+### 2. ชุดข้อมูลอบรม (Workshop)
+
+ข้อมูลใน [`demo-files/`](demo-files/README.md) สำหรับอบรม **AI Agent & Work Automation Prompting** — ประกอบด้วยใบงาน PDF + ไฟล์ข้อมูลที่ใช้ทดสอบ (workshop + cafe) ดูรายละเอียดได้ที่ [`demo-files/README.md`](demo-files/README.md)

@@ -1,0 +1,43 @@
+Category,Product,ThaiName,UnitPrice
+Cakes & Desserts,Banoffee Pie,บานอฟฟี่พาย,100
+Cakes & Desserts,Carrot Cake,เค้กแครอท,110
+Cakes & Desserts,Chocolate Fudge Cake,เค้กช็อกโกแลตฟัดจ์,105
+Cakes & Desserts,New York Cheesecake,นิวยอร์กชีสเค้ก,120
+Cakes & Desserts,Red Velvet Cake,เค้กเรดเวลเวท,110
+Cakes & Desserts,Tiramisu,ทีรามิสุ,125
+Hot Beverages,Chamomile Tea,ชาคาโมมายล์ร้อน,55
+Hot Beverages,Earl Grey Tea,ชาเอิร์ลเกรย์ร้อน,55
+Hot Beverages,Espresso,เอสเพรสโซ่,60
+Hot Beverages,Flat White,แฟลตไวท์,75
+Hot Beverages,Hot Americano,อเมริกาโน่ร้อน,65
+Hot Beverages,Hot Cappuccino,คาปูชิโน่ร้อน,75
+Hot Beverages,Hot Caramel Macchiato,คาราเมลมัคคิอาโต้ร้อน,80
+Hot Beverages,Hot Chocolate,ช็อกโกแลตร้อน,70
+Hot Beverages,Hot Latte,ลาเต้ร้อน,75
+Hot Beverages,Hot Matcha Latte,มัทฉะลาเต้ร้อน,80
+Hot Beverages,Hot Mocha,มอคค่าร้อน,80
+Hot Beverages,Hot Thai Tea,ชาไทยร้อน,60
+Iced & Blended Beverages,Coffee Frappe,กาแฟปั่น,95
+Iced & Blended Beverages,Cold Brew,กาแฟสกัดเย็น,90
+Iced & Blended Beverages,Iced Americano,อเมริกาโน่เย็น,70
+Iced & Blended Beverages,Iced Caramel Macchiato,คาราเมลมัคคิอาโต้เย็น,90
+Iced & Blended Beverages,Iced Chocolate,ช็อกโกแลตเย็น,80
+Iced & Blended Beverages,Iced Latte,ลาเต้เย็น,80
+Iced & Blended Beverages,Iced Lemon Tea,ชามะนาวเย็น,65
+Iced & Blended Beverages,Iced Matcha Latte,มัทฉะลาเต้เย็น,90
+Iced & Blended Beverages,Iced Mocha,มอคค่าเย็น,85
+Iced & Blended Beverages,Iced Thai Tea,ชาไทยเย็น,70
+Iced & Blended Beverages,Peach Tea,ชาพีช,65
+Iced & Blended Beverages,Strawberry Italian Soda,อิตาเลียนโซดาสตรอว์เบอร์รี,60
+Iced & Blended Beverages,Yuzu Soda,ยูซุโซดา,70
+Pastries & Bakery,Almond Croissant,ครัวซองต์อัลมอนด์,85
+Pastries & Bakery,Blueberry Muffin,มัฟฟินบลูเบอร์รี,60
+Pastries & Bakery,Butter Croissant,ครัวซองต์เนยสด,65
+Pastries & Bakery,Chocolate Chip Cookie,คุกกี้ช็อกโกแลตชิป,45
+Pastries & Bakery,Fudgy Brownie,บราวนี่เนื้อหนึบ,75
+Pastries & Bakery,Pain au Chocolat,ครัวซองต์ช็อกโกแลต,80
+Savory & Light Meals,Chicken Pie,พายไก่,85
+Savory & Light Meals,Club Sandwich,คลับแซนด์วิช,110
+Savory & Light Meals,Ham & Cheese Sandwich,แซนด์วิชแฮมชีส,85
+Savory & Light Meals,Sausage Roll,พายไส้กรอก,75
+Savory & Light Meals,Spinach Quiche,คีชผักขม,95

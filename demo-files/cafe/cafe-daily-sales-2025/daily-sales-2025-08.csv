@@ -1,0 +1,811 @@
+Date,Product,UnitPrice,Quantity,TotalSales
+2025-08-01,Blueberry Muffin,60,1,60
+2025-08-01,Chamomile Tea,55,4,220
+2025-08-01,Chicken Pie,85,1,85
+2025-08-01,Chocolate Chip Cookie,45,1,45
+2025-08-01,Chocolate Fudge Cake,105,1,105
+2025-08-01,Club Sandwich,110,1,110
+2025-08-01,Coffee Frappe,95,1,95
+2025-08-01,Espresso,60,1,60
+2025-08-01,Flat White,75,2,150
+2025-08-01,Fudgy Brownie,75,1,75
+2025-08-01,Ham & Cheese Sandwich,85,2,170
+2025-08-01,Hot Americano,65,2,130
+2025-08-01,Hot Cappuccino,75,1,75
+2025-08-01,Hot Caramel Macchiato,80,1,80
+2025-08-01,Hot Thai Tea,60,2,120
+2025-08-01,Iced Caramel Macchiato,90,2,180
+2025-08-01,Iced Lemon Tea,65,1,65
+2025-08-01,Iced Matcha Latte,90,3,270
+2025-08-01,Iced Mocha,85,1,85
+2025-08-01,Iced Thai Tea,70,1,70
+2025-08-01,Peach Tea,65,1,65
+2025-08-01,Red Velvet Cake,110,1,110
+2025-08-01,Sausage Roll,75,1,75
+2025-08-01,Spinach Quiche,95,1,95
+2025-08-01,Tiramisu,125,3,375
+2025-08-01,Yuzu Soda,70,2,140
+2025-08-02,Almond Croissant,85,1,85
+2025-08-02,Banoffee Pie,100,1,100
+2025-08-02,Blueberry Muffin,60,3,180
+2025-08-02,Butter Croissant,65,1,65
+2025-08-02,Chamomile Tea,55,1,55
+2025-08-02,Chocolate Chip Cookie,45,2,90
+2025-08-02,Chocolate Fudge Cake,105,4,420
+2025-08-02,Coffee Frappe,95,3,285
+2025-08-02,Cold Brew,90,1,90
+2025-08-02,Espresso,60,1,60
+2025-08-02,Flat White,75,2,150
+2025-08-02,Fudgy Brownie,75,1,75
+2025-08-02,Ham & Cheese Sandwich,85,1,85
+2025-08-02,Hot Americano,65,1,65
+2025-08-02,Hot Cappuccino,75,1,75
+2025-08-02,Hot Chocolate,70,3,210
+2025-08-02,Hot Latte,75,1,75
+2025-08-02,Hot Matcha Latte,80,3,240
+2025-08-02,Iced Latte,80,3,240
+2025-08-02,Iced Matcha Latte,90,2,180
+2025-08-02,Iced Mocha,85,3,255
+2025-08-02,New York Cheesecake,120,1,120
+2025-08-02,Peach Tea,65,1,65
+2025-08-02,Red Velvet Cake,110,1,110
+2025-08-02,Sausage Roll,75,2,150
+2025-08-02,Strawberry Italian Soda,60,1,60
+2025-08-02,Tiramisu,125,1,125
+2025-08-02,Yuzu Soda,70,1,70
+2025-08-03,Almond Croissant,85,1,85
+2025-08-03,Banoffee Pie,100,1,100
+2025-08-03,Blueberry Muffin,60,2,120
+2025-08-03,Butter Croissant,65,2,130
+2025-08-03,Carrot Cake,110,1,110
+2025-08-03,Chocolate Chip Cookie,45,1,45
+2025-08-03,Chocolate Fudge Cake,105,1,105
+2025-08-03,Coffee Frappe,95,2,190
+2025-08-03,Cold Brew,90,1,90
+2025-08-03,Espresso,60,1,60
+2025-08-03,Flat White,75,3,225
+2025-08-03,Ham & Cheese Sandwich,85,1,85
+2025-08-03,Hot Americano,65,1,65
+2025-08-03,Hot Cappuccino,75,1,75
+2025-08-03,Hot Caramel Macchiato,80,1,80
+2025-08-03,Hot Matcha Latte,80,3,240
+2025-08-03,Hot Mocha,80,1,80
+2025-08-03,Iced Americano,70,1,70
+2025-08-03,Iced Caramel Macchiato,90,2,180
+2025-08-03,Iced Latte,80,4,320
+2025-08-03,Iced Matcha Latte,90,3,270
+2025-08-03,Iced Mocha,85,2,170
+2025-08-03,Iced Thai Tea,70,1,70
+2025-08-03,New York Cheesecake,120,1,120
+2025-08-03,Pain au Chocolat,80,2,160
+2025-08-03,Peach Tea,65,1,65
+2025-08-03,Spinach Quiche,95,2,190
+2025-08-03,Strawberry Italian Soda,60,2,120
+2025-08-03,Tiramisu,125,1,125
+2025-08-03,Yuzu Soda,70,1,70
+2025-08-04,Blueberry Muffin,60,1,60
+2025-08-04,Butter Croissant,65,2,130
+2025-08-04,Chocolate Chip Cookie,45,2,90
+2025-08-04,Cold Brew,90,1,90
+2025-08-04,Espresso,60,2,120
+2025-08-04,Flat White,75,2,150
+2025-08-04,Hot Americano,65,5,325
+2025-08-04,Hot Cappuccino,75,1,75
+2025-08-04,Hot Caramel Macchiato,80,3,240
+2025-08-04,Hot Chocolate,70,2,140
+2025-08-04,Hot Latte,75,1,75
+2025-08-04,Iced Chocolate,80,1,80
+2025-08-04,Iced Mocha,85,2,170
+2025-08-04,Iced Thai Tea,70,1,70
+2025-08-04,New York Cheesecake,120,1,120
+2025-08-04,Pain au Chocolat,80,1,80
+2025-08-04,Peach Tea,65,1,65
+2025-08-04,Red Velvet Cake,110,1,110
+2025-08-04,Sausage Roll,75,1,75
+2025-08-04,Spinach Quiche,95,3,285
+2025-08-04,Strawberry Italian Soda,60,1,60
+2025-08-04,Yuzu Soda,70,1,70
+2025-08-05,Almond Croissant,85,1,85
+2025-08-05,Blueberry Muffin,60,2,120
+2025-08-05,Butter Croissant,65,3,195
+2025-08-05,Chicken Pie,85,1,85
+2025-08-05,Chocolate Chip Cookie,45,1,45
+2025-08-05,Chocolate Fudge Cake,105,1,105
+2025-08-05,Club Sandwich,110,1,110
+2025-08-05,Coffee Frappe,95,5,475
+2025-08-05,Earl Grey Tea,55,3,165
+2025-08-05,Espresso,60,1,60
+2025-08-05,Flat White,75,3,225
+2025-08-05,Fudgy Brownie,75,1,75
+2025-08-05,Ham & Cheese Sandwich,85,1,85
+2025-08-05,Hot Americano,65,2,130
+2025-08-05,Hot Cappuccino,75,1,75
+2025-08-05,Hot Chocolate,70,1,70
+2025-08-05,Hot Latte,75,1,75
+2025-08-05,Hot Matcha Latte,80,2,160
+2025-08-05,Hot Mocha,80,2,160
+2025-08-05,Hot Thai Tea,60,1,60
+2025-08-05,Iced Latte,80,1,80
+2025-08-05,Iced Matcha Latte,90,3,270
+2025-08-05,Iced Mocha,85,2,170
+2025-08-05,Iced Thai Tea,70,2,140
+2025-08-05,New York Cheesecake,120,1,120
+2025-08-05,Pain au Chocolat,80,1,80
+2025-08-05,Peach Tea,65,1,65
+2025-08-05,Tiramisu,125,2,250
+2025-08-05,Yuzu Soda,70,1,70
+2025-08-06,Almond Croissant,85,1,85
+2025-08-06,Blueberry Muffin,60,3,180
+2025-08-06,Chamomile Tea,55,3,165
+2025-08-06,Chocolate Chip Cookie,45,1,45
+2025-08-06,Chocolate Fudge Cake,105,1,105
+2025-08-06,Club Sandwich,110,1,110
+2025-08-06,Coffee Frappe,95,1,95
+2025-08-06,Flat White,75,1,75
+2025-08-06,Ham & Cheese Sandwich,85,1,85
+2025-08-06,Hot Caramel Macchiato,80,2,160
+2025-08-06,Hot Chocolate,70,1,70
+2025-08-06,Hot Matcha Latte,80,1,80
+2025-08-06,Iced Americano,70,2,140
+2025-08-06,Iced Caramel Macchiato,90,2,180
+2025-08-06,Iced Latte,80,2,160
+2025-08-06,Iced Matcha Latte,90,1,90
+2025-08-06,Iced Mocha,85,1,85
+2025-08-06,New York Cheesecake,120,2,240
+2025-08-06,Peach Tea,65,1,65
+2025-08-06,Spinach Quiche,95,1,95
+2025-08-06,Strawberry Italian Soda,60,1,60
+2025-08-06,Tiramisu,125,1,125
+2025-08-06,Yuzu Soda,70,3,210
+2025-08-07,Blueberry Muffin,60,1,60
+2025-08-07,Butter Croissant,65,1,65
+2025-08-07,Carrot Cake,110,2,220
+2025-08-07,Chamomile Tea,55,1,55
+2025-08-07,Chocolate Chip Cookie,45,1,45
+2025-08-07,Coffee Frappe,95,2,190
+2025-08-07,Cold Brew,90,1,90
+2025-08-07,Espresso,60,4,240
+2025-08-07,Fudgy Brownie,75,1,75
+2025-08-07,Ham & Cheese Sandwich,85,1,85
+2025-08-07,Hot Cappuccino,75,2,150
+2025-08-07,Hot Caramel Macchiato,80,1,80
+2025-08-07,Hot Chocolate,70,1,70
+2025-08-07,Hot Latte,75,2,150
+2025-08-07,Hot Matcha Latte,80,2,160
+2025-08-07,Hot Thai Tea,60,2,120
+2025-08-07,Iced Americano,70,2,140
+2025-08-07,Iced Chocolate,80,1,80
+2025-08-07,Iced Latte,80,1,80
+2025-08-07,Iced Lemon Tea,65,1,65
+2025-08-07,Iced Matcha Latte,90,1,90
+2025-08-07,Iced Thai Tea,70,2,140
+2025-08-07,New York Cheesecake,120,4,480
+2025-08-07,Pain au Chocolat,80,2,160
+2025-08-07,Red Velvet Cake,110,1,110
+2025-08-07,Sausage Roll,75,4,300
+2025-08-07,Spinach Quiche,95,2,190
+2025-08-07,Strawberry Italian Soda,60,1,60
+2025-08-07,Tiramisu,125,1,125
+2025-08-07,Yuzu Soda,70,2,140
+2025-08-08,Almond Croissant,85,1,85
+2025-08-08,Blueberry Muffin,60,1,60
+2025-08-08,Butter Croissant,65,1,65
+2025-08-08,Carrot Cake,110,1,110
+2025-08-08,Chamomile Tea,55,1,55
+2025-08-08,Chicken Pie,85,2,170
+2025-08-08,Chocolate Chip Cookie,45,4,180
+2025-08-08,Chocolate Fudge Cake,105,1,105
+2025-08-08,Club Sandwich,110,1,110
+2025-08-08,Coffee Frappe,95,1,95
+2025-08-08,Cold Brew,90,1,90
+2025-08-08,Earl Grey Tea,55,1,55
+2025-08-08,Flat White,75,1,75
+2025-08-08,Fudgy Brownie,75,1,75
+2025-08-08,Ham & Cheese Sandwich,85,3,255
+2025-08-08,Hot Chocolate,70,3,210
+2025-08-08,Hot Thai Tea,60,2,120
+2025-08-08,Iced Americano,70,1,70
+2025-08-08,Iced Caramel Macchiato,90,1,90
+2025-08-08,Iced Chocolate,80,1,80
+2025-08-08,Iced Lemon Tea,65,1,65
+2025-08-08,Iced Matcha Latte,90,2,180
+2025-08-08,New York Cheesecake,120,1,120
+2025-08-08,Pain au Chocolat,80,1,80
+2025-08-08,Red Velvet Cake,110,1,110
+2025-08-08,Sausage Roll,75,1,75
+2025-08-08,Spinach Quiche,95,1,95
+2025-08-08,Strawberry Italian Soda,60,1,60
+2025-08-08,Tiramisu,125,4,500
+2025-08-08,Yuzu Soda,70,1,70
+2025-08-09,Butter Croissant,65,1,65
+2025-08-09,Chamomile Tea,55,1,55
+2025-08-09,Chicken Pie,85,1,85
+2025-08-09,Chocolate Fudge Cake,105,2,210
+2025-08-09,Club Sandwich,110,2,220
+2025-08-09,Coffee Frappe,95,2,190
+2025-08-09,Espresso,60,1,60
+2025-08-09,Flat White,75,2,150
+2025-08-09,Ham & Cheese Sandwich,85,1,85
+2025-08-09,Hot Americano,65,1,65
+2025-08-09,Hot Cappuccino,75,1,75
+2025-08-09,Hot Caramel Macchiato,80,2,160
+2025-08-09,Hot Chocolate,70,1,70
+2025-08-09,Hot Latte,75,1,75
+2025-08-09,Hot Matcha Latte,80,2,160
+2025-08-09,Hot Thai Tea,60,1,60
+2025-08-09,Iced Americano,70,1,70
+2025-08-09,Iced Caramel Macchiato,90,1,90
+2025-08-09,Iced Chocolate,80,1,80
+2025-08-09,Iced Latte,80,2,160
+2025-08-09,Iced Lemon Tea,65,1,65
+2025-08-09,Iced Matcha Latte,90,1,90
+2025-08-09,Iced Mocha,85,2,170
+2025-08-09,Iced Thai Tea,70,1,70
+2025-08-09,Pain au Chocolat,80,2,160
+2025-08-09,Red Velvet Cake,110,2,220
+2025-08-09,Sausage Roll,75,2,150
+2025-08-09,Strawberry Italian Soda,60,2,120
+2025-08-09,Tiramisu,125,1,125
+2025-08-10,Almond Croissant,85,1,85
+2025-08-10,Butter Croissant,65,1,65
+2025-08-10,Chamomile Tea,55,2,110
+2025-08-10,Chicken Pie,85,1,85
+2025-08-10,Chocolate Chip Cookie,45,3,135
+2025-08-10,Chocolate Fudge Cake,105,2,210
+2025-08-10,Club Sandwich,110,2,220
+2025-08-10,Earl Grey Tea,55,1,55
+2025-08-10,Flat White,75,1,75
+2025-08-10,Hot Caramel Macchiato,80,4,320
+2025-08-10,Hot Chocolate,70,1,70
+2025-08-10,Hot Matcha Latte,80,2,160
+2025-08-10,Hot Mocha,80,2,160
+2025-08-10,Hot Thai Tea,60,1,60
+2025-08-10,Iced Americano,70,1,70
+2025-08-10,Iced Caramel Macchiato,90,1,90
+2025-08-10,Iced Chocolate,80,1,80
+2025-08-10,Iced Latte,80,1,80
+2025-08-10,Iced Mocha,85,2,170
+2025-08-10,Iced Thai Tea,70,1,70
+2025-08-10,New York Cheesecake,120,2,240
+2025-08-10,Pain au Chocolat,80,1,80
+2025-08-10,Peach Tea,65,2,130
+2025-08-10,Red Velvet Cake,110,3,330
+2025-08-10,Sausage Roll,75,1,75
+2025-08-10,Spinach Quiche,95,1,95
+2025-08-10,Tiramisu,125,1,125
+2025-08-10,Yuzu Soda,70,1,70
+2025-08-11,Almond Croissant,85,2,170
+2025-08-11,Banoffee Pie,100,1,100
+2025-08-11,Blueberry Muffin,60,1,60
+2025-08-11,Butter Croissant,65,4,260
+2025-08-11,Carrot Cake,110,1,110
+2025-08-11,Chamomile Tea,55,2,110
+2025-08-11,Chocolate Chip Cookie,45,3,135
+2025-08-11,Chocolate Fudge Cake,105,2,210
+2025-08-11,Coffee Frappe,95,2,190
+2025-08-11,Ham & Cheese Sandwich,85,1,85
+2025-08-11,Hot Americano,65,1,65
+2025-08-11,Hot Caramel Macchiato,80,1,80
+2025-08-11,Hot Chocolate,70,4,280
+2025-08-11,Hot Matcha Latte,80,1,80
+2025-08-11,Hot Mocha,80,1,80
+2025-08-11,Iced Latte,80,1,80
+2025-08-11,Iced Mocha,85,2,170
+2025-08-11,Iced Thai Tea,70,1,70
+2025-08-11,Pain au Chocolat,80,3,240
+2025-08-11,Sausage Roll,75,1,75
+2025-08-11,Spinach Quiche,95,3,285
+2025-08-11,Strawberry Italian Soda,60,2,120
+2025-08-11,Tiramisu,125,1,125
+2025-08-12,Blueberry Muffin,60,3,180
+2025-08-12,Butter Croissant,65,2,130
+2025-08-12,Chicken Pie,85,1,85
+2025-08-12,Chocolate Chip Cookie,45,2,90
+2025-08-12,Chocolate Fudge Cake,105,3,315
+2025-08-12,Cold Brew,90,2,180
+2025-08-12,Espresso,60,1,60
+2025-08-12,Flat White,75,3,225
+2025-08-12,Ham & Cheese Sandwich,85,1,85
+2025-08-12,Hot Cappuccino,75,1,75
+2025-08-12,Hot Caramel Macchiato,80,1,80
+2025-08-12,Hot Chocolate,70,2,140
+2025-08-12,Hot Latte,75,1,75
+2025-08-12,Hot Matcha Latte,80,4,320
+2025-08-12,Hot Mocha,80,1,80
+2025-08-12,Hot Thai Tea,60,1,60
+2025-08-12,Iced Americano,70,1,70
+2025-08-12,Iced Caramel Macchiato,90,1,90
+2025-08-12,Iced Chocolate,80,2,160
+2025-08-12,Iced Latte,80,1,80
+2025-08-12,Iced Matcha Latte,90,2,180
+2025-08-12,Iced Mocha,85,1,85
+2025-08-12,New York Cheesecake,120,2,240
+2025-08-12,Pain au Chocolat,80,3,240
+2025-08-12,Red Velvet Cake,110,1,110
+2025-08-12,Sausage Roll,75,2,150
+2025-08-12,Spinach Quiche,95,2,190
+2025-08-12,Strawberry Italian Soda,60,1,60
+2025-08-12,Tiramisu,125,1,125
+2025-08-13,Blueberry Muffin,60,1,60
+2025-08-13,Chamomile Tea,55,1,55
+2025-08-13,Chocolate Chip Cookie,45,1,45
+2025-08-13,Club Sandwich,110,2,220
+2025-08-13,Coffee Frappe,95,1,95
+2025-08-13,Cold Brew,90,1,90
+2025-08-13,Earl Grey Tea,55,1,55
+2025-08-13,Flat White,75,3,225
+2025-08-13,Hot Americano,65,2,130
+2025-08-13,Hot Caramel Macchiato,80,2,160
+2025-08-13,Hot Matcha Latte,80,2,160
+2025-08-13,Iced Americano,70,1,70
+2025-08-13,Iced Chocolate,80,3,240
+2025-08-13,Iced Latte,80,1,80
+2025-08-13,Iced Matcha Latte,90,2,180
+2025-08-13,Iced Mocha,85,2,170
+2025-08-13,Iced Thai Tea,70,1,70
+2025-08-13,Pain au Chocolat,80,1,80
+2025-08-13,Red Velvet Cake,110,1,110
+2025-08-13,Sausage Roll,75,3,225
+2025-08-13,Spinach Quiche,95,1,95
+2025-08-13,Tiramisu,125,1,125
+2025-08-13,Yuzu Soda,70,3,210
+2025-08-14,Almond Croissant,85,1,85
+2025-08-14,Banoffee Pie,100,2,200
+2025-08-14,Blueberry Muffin,60,3,180
+2025-08-14,Chamomile Tea,55,1,55
+2025-08-14,Chocolate Chip Cookie,45,1,45
+2025-08-14,Club Sandwich,110,1,110
+2025-08-14,Coffee Frappe,95,2,190
+2025-08-14,Flat White,75,2,150
+2025-08-14,Ham & Cheese Sandwich,85,2,170
+2025-08-14,Hot Cappuccino,75,1,75
+2025-08-14,Hot Caramel Macchiato,80,2,160
+2025-08-14,Hot Chocolate,70,1,70
+2025-08-14,Hot Latte,75,3,225
+2025-08-14,Hot Matcha Latte,80,1,80
+2025-08-14,Iced Americano,70,2,140
+2025-08-14,Iced Caramel Macchiato,90,1,90
+2025-08-14,Iced Chocolate,80,1,80
+2025-08-14,Iced Lemon Tea,65,1,65
+2025-08-14,Iced Mocha,85,1,85
+2025-08-14,Iced Thai Tea,70,2,140
+2025-08-14,New York Cheesecake,120,1,120
+2025-08-14,Pain au Chocolat,80,2,160
+2025-08-14,Red Velvet Cake,110,3,330
+2025-08-14,Spinach Quiche,95,1,95
+2025-08-14,Yuzu Soda,70,4,280
+2025-08-15,Blueberry Muffin,60,1,60
+2025-08-15,Butter Croissant,65,3,195
+2025-08-15,Chicken Pie,85,2,170
+2025-08-15,Chocolate Chip Cookie,45,2,90
+2025-08-15,Chocolate Fudge Cake,105,1,105
+2025-08-15,Club Sandwich,110,1,110
+2025-08-15,Earl Grey Tea,55,1,55
+2025-08-15,Espresso,60,1,60
+2025-08-15,Fudgy Brownie,75,1,75
+2025-08-15,Ham & Cheese Sandwich,85,2,170
+2025-08-15,Hot Cappuccino,75,1,75
+2025-08-15,Hot Caramel Macchiato,80,2,160
+2025-08-15,Hot Chocolate,70,1,70
+2025-08-15,Hot Latte,75,1,75
+2025-08-15,Hot Matcha Latte,80,1,80
+2025-08-15,Hot Thai Tea,60,2,120
+2025-08-15,Iced Chocolate,80,2,160
+2025-08-15,Iced Latte,80,1,80
+2025-08-15,Iced Matcha Latte,90,1,90
+2025-08-15,Iced Mocha,85,1,85
+2025-08-15,Iced Thai Tea,70,1,70
+2025-08-15,New York Cheesecake,120,1,120
+2025-08-15,Pain au Chocolat,80,1,80
+2025-08-15,Red Velvet Cake,110,2,220
+2025-08-15,Tiramisu,125,2,250
+2025-08-15,Yuzu Soda,70,2,140
+2025-08-16,Banoffee Pie,100,1,100
+2025-08-16,Butter Croissant,65,1,65
+2025-08-16,Carrot Cake,110,1,110
+2025-08-16,Chamomile Tea,55,2,110
+2025-08-16,Chicken Pie,85,1,85
+2025-08-16,Chocolate Fudge Cake,105,2,210
+2025-08-16,Espresso,60,1,60
+2025-08-16,Flat White,75,1,75
+2025-08-16,Ham & Cheese Sandwich,85,1,85
+2025-08-16,Hot Americano,65,3,195
+2025-08-16,Hot Cappuccino,75,1,75
+2025-08-16,Hot Caramel Macchiato,80,1,80
+2025-08-16,Hot Latte,75,2,150
+2025-08-16,Hot Thai Tea,60,1,60
+2025-08-16,Iced Americano,70,1,70
+2025-08-16,Iced Caramel Macchiato,90,1,90
+2025-08-16,Iced Chocolate,80,1,80
+2025-08-16,Iced Latte,80,1,80
+2025-08-16,Iced Matcha Latte,90,2,180
+2025-08-16,Iced Mocha,85,4,340
+2025-08-16,Iced Thai Tea,70,2,140
+2025-08-16,New York Cheesecake,120,1,120
+2025-08-16,Pain au Chocolat,80,1,80
+2025-08-16,Red Velvet Cake,110,3,330
+2025-08-16,Sausage Roll,75,1,75
+2025-08-16,Spinach Quiche,95,1,95
+2025-08-16,Strawberry Italian Soda,60,5,300
+2025-08-16,Yuzu Soda,70,1,70
+2025-08-17,Blueberry Muffin,60,4,240
+2025-08-17,Butter Croissant,65,1,65
+2025-08-17,Chamomile Tea,55,3,165
+2025-08-17,Club Sandwich,110,1,110
+2025-08-17,Coffee Frappe,95,1,95
+2025-08-17,Cold Brew,90,1,90
+2025-08-17,Earl Grey Tea,55,1,55
+2025-08-17,Espresso,60,1,60
+2025-08-17,Fudgy Brownie,75,1,75
+2025-08-17,Ham & Cheese Sandwich,85,3,255
+2025-08-17,Hot Caramel Macchiato,80,2,160
+2025-08-17,Hot Chocolate,70,2,140
+2025-08-17,Hot Latte,75,2,150
+2025-08-17,Hot Mocha,80,2,160
+2025-08-17,Iced Chocolate,80,1,80
+2025-08-17,Iced Latte,80,1,80
+2025-08-17,Iced Mocha,85,1,85
+2025-08-17,Iced Thai Tea,70,4,280
+2025-08-17,Peach Tea,65,1,65
+2025-08-17,Sausage Roll,75,1,75
+2025-08-17,Spinach Quiche,95,2,190
+2025-08-17,Strawberry Italian Soda,60,3,180
+2025-08-17,Tiramisu,125,1,125
+2025-08-17,Yuzu Soda,70,1,70
+2025-08-18,Almond Croissant,85,2,170
+2025-08-18,Banoffee Pie,100,1,100
+2025-08-18,Blueberry Muffin,60,2,120
+2025-08-18,Butter Croissant,65,2,130
+2025-08-18,Chamomile Tea,55,4,220
+2025-08-18,Chicken Pie,85,1,85
+2025-08-18,Chocolate Chip Cookie,45,3,135
+2025-08-18,Chocolate Fudge Cake,105,1,105
+2025-08-18,Espresso,60,1,60
+2025-08-18,Flat White,75,1,75
+2025-08-18,Hot Americano,65,3,195
+2025-08-18,Hot Cappuccino,75,1,75
+2025-08-18,Hot Caramel Macchiato,80,6,480
+2025-08-18,Hot Chocolate,70,2,140
+2025-08-18,Hot Matcha Latte,80,1,80
+2025-08-18,Hot Thai Tea,60,1,60
+2025-08-18,Iced Americano,70,1,70
+2025-08-18,Iced Caramel Macchiato,90,1,90
+2025-08-18,Iced Chocolate,80,3,240
+2025-08-18,Iced Latte,80,1,80
+2025-08-18,Iced Lemon Tea,65,1,65
+2025-08-18,Iced Matcha Latte,90,3,270
+2025-08-18,Iced Mocha,85,1,85
+2025-08-18,Iced Thai Tea,70,4,280
+2025-08-18,New York Cheesecake,120,2,240
+2025-08-18,Pain au Chocolat,80,1,80
+2025-08-18,Red Velvet Cake,110,1,110
+2025-08-18,Strawberry Italian Soda,60,1,60
+2025-08-18,Tiramisu,125,1,125
+2025-08-18,Yuzu Soda,70,2,140
+2025-08-19,Almond Croissant,85,1,85
+2025-08-19,Blueberry Muffin,60,3,180
+2025-08-19,Butter Croissant,65,2,130
+2025-08-19,Carrot Cake,110,1,110
+2025-08-19,Chocolate Fudge Cake,105,1,105
+2025-08-19,Club Sandwich,110,1,110
+2025-08-19,Coffee Frappe,95,1,95
+2025-08-19,Flat White,75,1,75
+2025-08-19,Hot Americano,65,2,130
+2025-08-19,Hot Cappuccino,75,3,225
+2025-08-19,Hot Caramel Macchiato,80,1,80
+2025-08-19,Hot Chocolate,70,2,140
+2025-08-19,Hot Latte,75,1,75
+2025-08-19,Hot Thai Tea,60,4,240
+2025-08-19,Iced Americano,70,1,70
+2025-08-19,Iced Latte,80,2,160
+2025-08-19,Iced Matcha Latte,90,3,270
+2025-08-19,Iced Mocha,85,2,170
+2025-08-19,Iced Thai Tea,70,1,70
+2025-08-19,Pain au Chocolat,80,1,80
+2025-08-19,Peach Tea,65,1,65
+2025-08-19,Red Velvet Cake,110,5,550
+2025-08-19,Tiramisu,125,1,125
+2025-08-20,Banoffee Pie,100,1,100
+2025-08-20,Butter Croissant,65,3,195
+2025-08-20,Carrot Cake,110,1,110
+2025-08-20,Chicken Pie,85,1,85
+2025-08-20,Chocolate Chip Cookie,45,1,45
+2025-08-20,Club Sandwich,110,1,110
+2025-08-20,Coffee Frappe,95,3,285
+2025-08-20,Cold Brew,90,1,90
+2025-08-20,Espresso,60,1,60
+2025-08-20,Flat White,75,2,150
+2025-08-20,Ham & Cheese Sandwich,85,1,85
+2025-08-20,Hot Americano,65,2,130
+2025-08-20,Hot Cappuccino,75,1,75
+2025-08-20,Hot Chocolate,70,2,140
+2025-08-20,Hot Latte,75,1,75
+2025-08-20,Iced Chocolate,80,1,80
+2025-08-20,Iced Latte,80,2,160
+2025-08-20,Iced Matcha Latte,90,2,180
+2025-08-20,Iced Thai Tea,70,1,70
+2025-08-20,Pain au Chocolat,80,1,80
+2025-08-20,Peach Tea,65,1,65
+2025-08-20,Red Velvet Cake,110,1,110
+2025-08-20,Spinach Quiche,95,2,190
+2025-08-20,Strawberry Italian Soda,60,1,60
+2025-08-20,Tiramisu,125,1,125
+2025-08-20,Yuzu Soda,70,2,140
+2025-08-21,Banoffee Pie,100,1,100
+2025-08-21,Blueberry Muffin,60,1,60
+2025-08-21,Butter Croissant,65,1,65
+2025-08-21,Chamomile Tea,55,1,55
+2025-08-21,Chocolate Chip Cookie,45,2,90
+2025-08-21,Club Sandwich,110,2,220
+2025-08-21,Coffee Frappe,95,3,285
+2025-08-21,Earl Grey Tea,55,1,55
+2025-08-21,Espresso,60,1,60
+2025-08-21,Hot Americano,65,3,195
+2025-08-21,Hot Chocolate,70,3,210
+2025-08-21,Hot Latte,75,1,75
+2025-08-21,Iced Americano,70,1,70
+2025-08-21,Iced Caramel Macchiato,90,3,270
+2025-08-21,Iced Latte,80,1,80
+2025-08-21,Iced Matcha Latte,90,1,90
+2025-08-21,Iced Thai Tea,70,3,210
+2025-08-21,New York Cheesecake,120,1,120
+2025-08-21,Pain au Chocolat,80,3,240
+2025-08-21,Red Velvet Cake,110,1,110
+2025-08-21,Spinach Quiche,95,1,95
+2025-08-21,Strawberry Italian Soda,60,3,180
+2025-08-22,Almond Croissant,85,1,85
+2025-08-22,Banoffee Pie,100,2,200
+2025-08-22,Blueberry Muffin,60,1,60
+2025-08-22,Butter Croissant,65,3,195
+2025-08-22,Chocolate Chip Cookie,45,4,180
+2025-08-22,Chocolate Fudge Cake,105,2,210
+2025-08-22,Coffee Frappe,95,1,95
+2025-08-22,Earl Grey Tea,55,1,55
+2025-08-22,Flat White,75,1,75
+2025-08-22,Ham & Cheese Sandwich,85,2,170
+2025-08-22,Hot Americano,65,3,195
+2025-08-22,Hot Chocolate,70,1,70
+2025-08-22,Hot Latte,75,1,75
+2025-08-22,Hot Matcha Latte,80,2,160
+2025-08-22,Iced Americano,70,3,210
+2025-08-22,Iced Caramel Macchiato,90,1,90
+2025-08-22,Iced Matcha Latte,90,3,270
+2025-08-22,Iced Mocha,85,2,170
+2025-08-22,Iced Thai Tea,70,1,70
+2025-08-22,Pain au Chocolat,80,1,80
+2025-08-22,Peach Tea,65,1,65
+2025-08-22,Sausage Roll,75,1,75
+2025-08-22,Spinach Quiche,95,2,190
+2025-08-22,Tiramisu,125,1,125
+2025-08-22,Yuzu Soda,70,2,140
+2025-08-23,Almond Croissant,85,2,170
+2025-08-23,Banoffee Pie,100,1,100
+2025-08-23,Blueberry Muffin,60,1,60
+2025-08-23,Butter Croissant,65,1,65
+2025-08-23,Carrot Cake,110,2,220
+2025-08-23,Chamomile Tea,55,2,110
+2025-08-23,Chicken Pie,85,1,85
+2025-08-23,Chocolate Chip Cookie,45,1,45
+2025-08-23,Coffee Frappe,95,2,190
+2025-08-23,Flat White,75,1,75
+2025-08-23,Hot Americano,65,1,65
+2025-08-23,Hot Cappuccino,75,1,75
+2025-08-23,Hot Matcha Latte,80,3,240
+2025-08-23,Hot Thai Tea,60,2,120
+2025-08-23,Iced Americano,70,1,70
+2025-08-23,Iced Caramel Macchiato,90,2,180
+2025-08-23,Iced Chocolate,80,1,80
+2025-08-23,Iced Latte,80,2,160
+2025-08-23,Iced Mocha,85,2,170
+2025-08-23,Iced Thai Tea,70,4,280
+2025-08-23,Pain au Chocolat,80,1,80
+2025-08-23,Red Velvet Cake,110,1,110
+2025-08-23,Sausage Roll,75,3,225
+2025-08-23,Spinach Quiche,95,1,95
+2025-08-23,Tiramisu,125,2,250
+2025-08-23,Yuzu Soda,70,1,70
+2025-08-24,Almond Croissant,85,1,85
+2025-08-24,Banoffee Pie,100,1,100
+2025-08-24,Blueberry Muffin,60,2,120
+2025-08-24,Chamomile Tea,55,1,55
+2025-08-24,Chocolate Chip Cookie,45,4,180
+2025-08-24,Club Sandwich,110,1,110
+2025-08-24,Coffee Frappe,95,2,190
+2025-08-24,Hot Americano,65,2,130
+2025-08-24,Hot Caramel Macchiato,80,1,80
+2025-08-24,Hot Chocolate,70,1,70
+2025-08-24,Hot Matcha Latte,80,1,80
+2025-08-24,Iced Chocolate,80,1,80
+2025-08-24,Iced Latte,80,1,80
+2025-08-24,Iced Matcha Latte,90,2,180
+2025-08-24,Iced Mocha,85,2,170
+2025-08-24,Iced Thai Tea,70,2,140
+2025-08-24,Pain au Chocolat,80,1,80
+2025-08-24,Peach Tea,65,2,130
+2025-08-24,Sausage Roll,75,2,150
+2025-08-24,Spinach Quiche,95,3,285
+2025-08-24,Strawberry Italian Soda,60,1,60
+2025-08-24,Tiramisu,125,1,125
+2025-08-24,Yuzu Soda,70,2,140
+2025-08-25,Banoffee Pie,100,1,100
+2025-08-25,Blueberry Muffin,60,1,60
+2025-08-25,Chocolate Chip Cookie,45,1,45
+2025-08-25,Club Sandwich,110,2,220
+2025-08-25,Coffee Frappe,95,1,95
+2025-08-25,Flat White,75,4,300
+2025-08-25,Fudgy Brownie,75,1,75
+2025-08-25,Hot Americano,65,2,130
+2025-08-25,Hot Caramel Macchiato,80,3,240
+2025-08-25,Hot Chocolate,70,2,140
+2025-08-25,Hot Matcha Latte,80,2,160
+2025-08-25,Iced Americano,70,1,70
+2025-08-25,Iced Caramel Macchiato,90,2,180
+2025-08-25,Iced Chocolate,80,1,80
+2025-08-25,Iced Latte,80,2,160
+2025-08-25,Iced Matcha Latte,90,6,540
+2025-08-25,Iced Thai Tea,70,2,140
+2025-08-25,New York Cheesecake,120,1,120
+2025-08-25,Pain au Chocolat,80,1,80
+2025-08-25,Peach Tea,65,1,65
+2025-08-25,Red Velvet Cake,110,2,220
+2025-08-25,Sausage Roll,75,1,75
+2025-08-25,Spinach Quiche,95,2,190
+2025-08-25,Strawberry Italian Soda,60,1,60
+2025-08-25,Tiramisu,125,1,125
+2025-08-25,Yuzu Soda,70,2,140
+2025-08-26,Almond Croissant,85,1,85
+2025-08-26,Blueberry Muffin,60,1,60
+2025-08-26,Butter Croissant,65,2,130
+2025-08-26,Carrot Cake,110,1,110
+2025-08-26,Chamomile Tea,55,2,110
+2025-08-26,Club Sandwich,110,1,110
+2025-08-26,Coffee Frappe,95,1,95
+2025-08-26,Cold Brew,90,1,90
+2025-08-26,Earl Grey Tea,55,1,55
+2025-08-26,Espresso,60,1,60
+2025-08-26,Flat White,75,3,225
+2025-08-26,Fudgy Brownie,75,1,75
+2025-08-26,Hot Americano,65,1,65
+2025-08-26,Hot Cappuccino,75,2,150
+2025-08-26,Hot Caramel Macchiato,80,1,80
+2025-08-26,Hot Chocolate,70,2,140
+2025-08-26,Hot Latte,75,1,75
+2025-08-26,Hot Matcha Latte,80,2,160
+2025-08-26,Hot Mocha,80,1,80
+2025-08-26,Hot Thai Tea,60,2,120
+2025-08-26,Iced Americano,70,2,140
+2025-08-26,Iced Caramel Macchiato,90,3,270
+2025-08-26,Iced Latte,80,1,80
+2025-08-26,Iced Matcha Latte,90,1,90
+2025-08-26,Iced Mocha,85,1,85
+2025-08-26,Iced Thai Tea,70,3,210
+2025-08-26,Red Velvet Cake,110,1,110
+2025-08-26,Sausage Roll,75,2,150
+2025-08-26,Spinach Quiche,95,1,95
+2025-08-26,Strawberry Italian Soda,60,2,120
+2025-08-26,Yuzu Soda,70,4,280
+2025-08-27,Almond Croissant,85,2,170
+2025-08-27,Blueberry Muffin,60,1,60
+2025-08-27,Chamomile Tea,55,1,55
+2025-08-27,Chicken Pie,85,1,85
+2025-08-27,Chocolate Chip Cookie,45,2,90
+2025-08-27,Chocolate Fudge Cake,105,2,210
+2025-08-27,Coffee Frappe,95,2,190
+2025-08-27,Cold Brew,90,1,90
+2025-08-27,Espresso,60,1,60
+2025-08-27,Ham & Cheese Sandwich,85,1,85
+2025-08-27,Hot Cappuccino,75,2,150
+2025-08-27,Hot Chocolate,70,1,70
+2025-08-27,Hot Thai Tea,60,2,120
+2025-08-27,Iced Caramel Macchiato,90,2,180
+2025-08-27,Iced Chocolate,80,1,80
+2025-08-27,Iced Latte,80,2,160
+2025-08-27,Iced Mocha,85,1,85
+2025-08-27,Peach Tea,65,1,65
+2025-08-27,Red Velvet Cake,110,2,220
+2025-08-27,Sausage Roll,75,2,150
+2025-08-27,Strawberry Italian Soda,60,2,120
+2025-08-27,Tiramisu,125,1,125
+2025-08-27,Yuzu Soda,70,3,210
+2025-08-28,Almond Croissant,85,1,85
+2025-08-28,Banoffee Pie,100,1,100
+2025-08-28,Blueberry Muffin,60,1,60
+2025-08-28,Butter Croissant,65,2,130
+2025-08-28,Carrot Cake,110,1,110
+2025-08-28,Chamomile Tea,55,2,110
+2025-08-28,Chicken Pie,85,2,170
+2025-08-28,Chocolate Chip Cookie,45,4,180
+2025-08-28,Coffee Frappe,95,2,190
+2025-08-28,Cold Brew,90,1,90
+2025-08-28,Earl Grey Tea,55,1,55
+2025-08-28,Espresso,60,1,60
+2025-08-28,Flat White,75,1,75
+2025-08-28,Ham & Cheese Sandwich,85,2,170
+2025-08-28,Hot Americano,65,1,65
+2025-08-28,Hot Chocolate,70,2,140
+2025-08-28,Hot Latte,75,1,75
+2025-08-28,Hot Thai Tea,60,1,60
+2025-08-28,Iced Chocolate,80,1,80
+2025-08-28,Iced Matcha Latte,90,2,180
+2025-08-28,Iced Mocha,85,2,170
+2025-08-28,Iced Thai Tea,70,1,70
+2025-08-28,New York Cheesecake,120,3,360
+2025-08-28,Pain au Chocolat,80,3,240
+2025-08-28,Red Velvet Cake,110,1,110
+2025-08-28,Strawberry Italian Soda,60,1,60
+2025-08-28,Tiramisu,125,1,125
+2025-08-29,Almond Croissant,85,1,85
+2025-08-29,Blueberry Muffin,60,1,60
+2025-08-29,Butter Croissant,65,1,65
+2025-08-29,Carrot Cake,110,1,110
+2025-08-29,Chicken Pie,85,1,85
+2025-08-29,Chocolate Chip Cookie,45,1,45
+2025-08-29,Chocolate Fudge Cake,105,2,210
+2025-08-29,Club Sandwich,110,1,110
+2025-08-29,Coffee Frappe,95,2,190
+2025-08-29,Flat White,75,2,150
+2025-08-29,Ham & Cheese Sandwich,85,1,85
+2025-08-29,Hot Cappuccino,75,1,75
+2025-08-29,Hot Caramel Macchiato,80,4,320
+2025-08-29,Hot Chocolate,70,1,70
+2025-08-29,Hot Latte,75,1,75
+2025-08-29,Hot Matcha Latte,80,1,80
+2025-08-29,Hot Thai Tea,60,1,60
+2025-08-29,Iced Americano,70,1,70
+2025-08-29,Iced Caramel Macchiato,90,1,90
+2025-08-29,Iced Mocha,85,2,170
+2025-08-29,Iced Thai Tea,70,2,140
+2025-08-29,Peach Tea,65,1,65
+2025-08-29,Sausage Roll,75,2,150
+2025-08-29,Spinach Quiche,95,1,95
+2025-08-29,Strawberry Italian Soda,60,3,180
+2025-08-29,Yuzu Soda,70,1,70
+2025-08-30,Almond Croissant,85,1,85
+2025-08-30,Banoffee Pie,100,1,100
+2025-08-30,Blueberry Muffin,60,2,120
+2025-08-30,Butter Croissant,65,2,130
+2025-08-30,Chamomile Tea,55,1,55
+2025-08-30,Chocolate Fudge Cake,105,2,210
+2025-08-30,Coffee Frappe,95,2,190
+2025-08-30,Flat White,75,4,300
+2025-08-30,Fudgy Brownie,75,1,75
+2025-08-30,Hot Americano,65,1,65
+2025-08-30,Hot Caramel Macchiato,80,2,160
+2025-08-30,Hot Chocolate,70,2,140
+2025-08-30,Hot Matcha Latte,80,2,160
+2025-08-30,Hot Thai Tea,60,1,60
+2025-08-30,Iced Americano,70,1,70
+2025-08-30,Iced Chocolate,80,1,80
+2025-08-30,Iced Latte,80,1,80
+2025-08-30,Iced Lemon Tea,65,1,65
+2025-08-30,Iced Matcha Latte,90,1,90
+2025-08-30,Iced Thai Tea,70,1,70
+2025-08-30,New York Cheesecake,120,1,120
+2025-08-30,Sausage Roll,75,1,75
+2025-08-30,Spinach Quiche,95,2,190
+2025-08-30,Strawberry Italian Soda,60,2,120
+2025-08-30,Tiramisu,125,2,250
+2025-08-31,Blueberry Muffin,60,1,60
+2025-08-31,Butter Croissant,65,3,195
+2025-08-31,Chicken Pie,85,2,170
+2025-08-31,Coffee Frappe,95,3,285
+2025-08-31,Cold Brew,90,1,90
+2025-08-31,Espresso,60,1,60
+2025-08-31,Flat White,75,1,75
+2025-08-31,Fudgy Brownie,75,1,75
+2025-08-31,Ham & Cheese Sandwich,85,1,85
+2025-08-31,Hot Caramel Macchiato,80,1,80
+2025-08-31,Hot Chocolate,70,1,70
+2025-08-31,Hot Latte,75,2,150
+2025-08-31,Hot Matcha Latte,80,3,240
+2025-08-31,Iced Latte,80,1,80
+2025-08-31,Iced Matcha Latte,90,1,90
+2025-08-31,Iced Mocha,85,3,255
+2025-08-31,Iced Thai Tea,70,1,70
+2025-08-31,New York Cheesecake,120,3,360
+2025-08-31,Pain au Chocolat,80,1,80
+2025-08-31,Red Velvet Cake,110,2,220
+2025-08-31,Spinach Quiche,95,1,95
+2025-08-31,Strawberry Italian Soda,60,1,60
+2025-08-31,Tiramisu,125,1,125
+2025-08-31,Yuzu Soda,70,4,280
