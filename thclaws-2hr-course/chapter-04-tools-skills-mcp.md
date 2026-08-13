@@ -17,9 +17,11 @@
 
 ## 1. Built-in Tools คือ "มือ" ของ Agent
 
-thClaws มี **built-in tools ประมาณ 30 ตัว** ที่ Agent เลือกใช้เองอัตโนมัติ — สังเกตเห็นได้จากเครื่องหมาย `[tool: Name: …]` ตามด้วย ✓ (สำเร็จ) หรือ ✗ (error) ในคำตอบ
+thClaws มี **built-in tools 75+ tools** ครอบคลุมการทำงานตั้งแต่เขียนโค้ด, สร้างเอกสาร, ท่องเว็บ, สร้างสื่อ AI, จัดการความรู้, ไปจนถึง automation แบบเต็มรูปแบบ** ที่ Agent เลือกใช้เองอัตโนมัติ — สังเกตเห็นได้จากเครื่องหมาย `[tool: Name: …]` ตามด้วย ✓ (สำเร็จ) หรือ ✗ (error) ในคำตอบ
 
-> 📷 **รูปที่ 4-1 — ตัวอย่างเครื่องหมาย `[tool: …]` ในคำตอบ** *(screenshot: หน้าจอคำตอบที่แสดง `[tool: Read: …] ✓` / `[tool: Write: …] ✓` — จุดที่ "เห็นว่า Agent ทำงาน" — แทรกทีหลัง)*
+![รูปที่ 4-1 — ตัวอย่างเครื่องหมาย `[tool: …]` ในคำตอบ"](screenshots/ss-4-1.png)
+
+> 📷 **รูปที่ 4-1 — ตัวอย่างเครื่องหมาย `[tool: …]` ในคำตอบ** *(screenshot: หน้าจอคำตอบที่แสดง `[tool: Read: …] ✓` / `[tool: Write: …] ✓` — จุดที่ "เห็นว่า Agent ทำงาน")*
 
 > 🔑 นี่คือหัวใจที่ทำให้ **ต่างจาก Chat AI** — Chat "ตอบ" แต่ Agent "ลงมือ" ผ่าน tools เหล่านี้ จนได้ผลลัพธ์จริง
 
@@ -75,8 +77,6 @@ thClaws มี **built-in tools ประมาณ 30 ตัว** ที่ Agen
 | ค้นข้อมูลล่าสุด + สรุป | WebSearch/WebFetch | ✅ แต่ไม่รับประกันถูก |
 | สร้างสไลด์จากหัวข้อ | Pptx | ⚠️ ทำได้ครึ่งๆ |
 
-> 📷 **รูปที่ 4-5 — ตัวอย่างผลลัพธ์ `sales-report.xlsx`** *(screenshot: ไฟล์ Excel ที่เปิดแล้วเห็นยอดแยกตามสินค้า + ยอดรวม — แทรกทีหลัง)*
-
 ---
 
 ## 3. Skills — "วิธีทำงานแบบสำเร็จรูป"
@@ -103,6 +103,25 @@ Skill คือ ชุดกระบวนการทำงานสำเร�
 > /skill marketplace               # ดู skill ที่มีใน marketplace
 > /skill install frontend-design   # ติดตั้ง skill "frontend-design"
 ```
+**การติดตั้ง skills จาก git repo**
+สำหรับ skill ที่ไม่ได้อยู่ใน marketplace ใส่ git URL ใด ๆ ก็ได้:
+
+```
+❯ /skill install https://github.com/some-user/some-skill.git
+  cloned https://github.com/some-user/some-skill.git → .thclaws/skills/some-skill
+  installed skill 'some-skill' (single)
+```
+
+ค้นหา skills ที่อยู่ใน github ที่ต้องการ ตัวอย่างเช่น https://github.com/anthropics/skills
+
+ถ้า repo เป็น bundle (มี skill หลายตัวใน subdirectory) thClaws จะตรวจจับและเลื่อน sub-skill แต่ละตัวขึ้นมาเป็น sibling ที่ .thclaws/skills/<sub-name>/
+
+Subpath syntax (ดึง skill เดียวออกจาก repo ที่มีหลาย skill)
+ใช้ extension #<branch>:<subpath> เพื่อติดตั้งเฉพาะ directory หนึ่งใน repo:
+
+```
+❯ /skill install https://github.com/anthropics/skills.git#main:skills/canvas-design
+```
 
 **เรียกใช้:**
 - **อัตโนมัติ:** พิมพ์คำขอที่ตรงกับ trigger ของ skill → Agent ใช้เอง
@@ -119,7 +138,7 @@ output_cafe_2025_products-price-sheet-th.csv สำหรับแนะนำ�
 > 📷 **รูปที่ 4-3 — หน้าจอ Skills panel / ผลลัพธ์ `/skills`** *(screenshot: รายการ skill ที่มีใน workspace)*
 
 ![รูปที่ 4-3 — รายการ skill ที่มีอยู่ใน workspace"](screenshots/ss-4-3-1.png)
-
+`code`
 ---
 
 ## 4. MCP — "สะพานเชื่อมต่อบริการภายนอก"
