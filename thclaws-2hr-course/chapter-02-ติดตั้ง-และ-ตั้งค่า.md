@@ -150,6 +150,8 @@ mkdir -p ~/thclaws-2hr && cd ~/thclaws-2hr
 
 > 📷 **รูปที่ 2-4 — หน้าตั้งค่า Provider DashScope/Qwen ใน thClaws** *(screenshot: หน้าจอ Settings → Provider — ชี้ช่องวาง Key และปุ่ม Save)*
 
+[![การตั้งค่า API Key บน thClaws GUI Windows - Youtube](https://youtu.be/X6-gYFGd7CM)](https://youtu.be/X6-gYFGd7CM)
+
 **ผ่าน Chat UI:**
 ```bash
 > /provider dashscope
