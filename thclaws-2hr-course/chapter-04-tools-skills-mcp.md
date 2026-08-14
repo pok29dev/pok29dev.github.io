@@ -17,7 +17,7 @@
 
 ## 1. Built-in Tools คือ "มือ" ของ Agent
 
-thClaws มี **built-in tools 75+ tools** ครอบคลุมการทำงานตั้งแต่เขียนโค้ด, สร้างเอกสาร, ท่องเว็บ, สร้างสื่อ AI, จัดการความรู้, ไปจนถึง automation แบบเต็มรูปแบบ** ที่ Agent เลือกใช้เองอัตโนมัติ — สังเกตเห็นได้จากเครื่องหมาย `[tool: Name: …]` ตามด้วย ✓ (สำเร็จ) หรือ ✗ (error) ในคำตอบ
+thClaws มี **built-in tools 38+ tools** ครอบคลุมการทำงานตั้งแต่เขียนโค้ด, สร้างเอกสาร, ท่องเว็บ, สร้างสื่อ AI, จัดการความรู้, ไปจนถึง automation แบบเต็มรูปแบบ** ที่ Agent เลือกใช้เองอัตโนมัติ — สังเกตเห็นได้จากเครื่องหมาย `[tool: Name: …]` ตามด้วย ✓ (สำเร็จ) หรือ ✗ (error) ในคำตอบ
 
 ![รูปที่ 4-1 — ตัวอย่างเครื่องหมาย `[tool: …]` ในคำตอบ"](screenshots/ss-4-1.png)
 
@@ -53,9 +53,10 @@ thClaws มี **built-in tools 75+ tools** ครอบคลุมการท
 
 ## 2. ตัวอย่างการใช้งาน Built-in Tools (งานออฟฟิศจริง)
 
-### 2.1 ตัวอย่างโจทย์ที่เห็น "มือ" ทำงาน
+### 2.1 ตัวอย่างโจทย์ที่เห็น "เครื่องมือ" ทำงาน
 
-ลองโจทย์นี้ (ใช้ไฟล์ตัวอย่างในโฟลเดอร์ `samples/`):
+ลองโจทย์นี้ (ใช้ไฟล์ตัวอย่างในโฟลเดอร์ `samples/`): ดาวน์โหลดจาก link ที่หน้าหลัก
+
 > "อ่านไฟล์ `meeting_notes.txt` ในนี้ แล้วสรุปเป็น bullet 3 ข้อ แล้วเขียนลงไฟล์ `summary.md`"
 
 สิ่งที่ควรสังเกต:
@@ -103,45 +104,51 @@ Skill คือ ชุดกระบวนการทำงานสำเร�
 > /skill marketplace               # ดู skill ที่มีใน marketplace
 > /skill install frontend-design   # ติดตั้ง skill "frontend-design"
 ```
+!["รูปที่ 4-3 — รายการ skill ที่มีอยู่ใน workspace"](screenshots/ss-4-3-1.png)
+รูปที่ 4-3 — รายการ skill ที่มีอยู่ใน workspace และการติดตั้งจาก marketplace
+
 **การติดตั้ง skills จาก git repo**
+
 สำหรับ skill ที่ไม่ได้อยู่ใน marketplace ใส่ git URL ใด ๆ ก็ได้:
 
-```
-❯ /skill install https://github.com/some-user/some-skill.git
-  cloned https://github.com/some-user/some-skill.git → .thclaws/skills/some-skill
-  installed skill 'some-skill' (single)
-```
+
+> /skill install https://github.com/some-user/some-skill.git
+> 
+>   cloned https://github.com/some-user/some-skill.git → .thclaws/skills/some-skill
+>  installed skill 'some-skill' (single)
 
 ค้นหา skills ที่อยู่ใน github ที่ต้องการ ตัวอย่างเช่น https://github.com/anthropics/skills
 
-ถ้า repo เป็น bundle (มี skill หลายตัวใน subdirectory) thClaws จะตรวจจับและเลื่อน sub-skill แต่ละตัวขึ้นมาเป็น sibling ที่ .thclaws/skills/<sub-name>/
+> ถ้า repo เป็น bundle (มี skill หลายตัวใน subdirectory) thClaws จะตรวจจับและเลื่อน sub-skill แต่ละตัวขึ้นมาเป็น sibling ที่ .thclaws/skills/sub-name/
 
-Subpath syntax (ดึง skill เดียวออกจาก repo ที่มีหลาย skill)
+**หากต้องการเลือกติดตั้งแค่เพียงตัวใดตัวหนึ่งจาก repo**
+
+ต้องใช้ Subpath syntax (ดึง skill เดียวออกจาก repo ที่มีหลาย skill)
 ใช้ extension #<branch>:<subpath> เพื่อติดตั้งเฉพาะ directory หนึ่งใน repo:
 
-```
-❯ /skill install https://github.com/anthropics/skills.git#main:skills/canvas-design
-```
+ตัวอย่างเช่น ต้องการแค่ frontend-design จาก repo ของ anthropics
 
-**เรียกใช้:**
-- **อัตโนมัติ:** พิมพ์คำขอที่ตรงกับ trigger ของ skill → Agent ใช้เอง
-- **บังคับ (ระบุ):** ใช้ข้อความที่ตรงเงื่อนไข หรือระบุชื่อ skill ในคำสั่ง
-
-**ตัวอย่าง:**
 ```
-> ใช้ frontend-design ช่วยออกแบบ html page สินค้า จากข้อมูลในไฟล์ 
-output_cafe_2025_products-price-sheet-th.csv สำหรับแนะนำสินค้าในร้าน
+❯ /skill install https://github.com/anthropics/skills.git#main:skills/frontend-design
 ```
 
 ![รูปที่ 4-3 — รายการ skill ที่มีอยู่ใน workspace"](screenshots/ss-4-3.png)
 
 > 📷 **รูปที่ 4-3 — หน้าจอ Skills panel / ผลลัพธ์ `/skills`** *(screenshot: รายการ skill ที่มีใน workspace)*
 
-![รูปที่ 4-3 — รายการ skill ที่มีอยู่ใน workspace"](screenshots/ss-4-3-1.png)
-`code`
+**การเรียกใช้ หลังจากติดตั้ง skills :**
+- **อัตโนมัติ:** พิมพ์คำขอที่ตรงกับ trigger ของ skill → Agent ใช้เอง
+- **บังคับ (ระบุ):** ใช้ข้อความที่ตรงเงื่อนไข หรือระบุชื่อ skill ในคำสั่ง
+
+**ตัวอย่าง:**
+```
+> ใช้ frontend-design ช่วยออกแบบ html page จากข้อมูลในไฟล์ 
+monthly-sales.csv ในรูปแบบ dashboard
+```
+
 ---
 
-## 4. MCP — "สะพานเชื่อมต่อบริการภายนอก"
+## 4. MCP — "สะพานเชื่อมต่อข้อมูลบริการภายนอก"
 
 ### 4.1 MCP คืออะไร
 
@@ -149,13 +156,23 @@ output_cafe_2025_products-price-sheet-th.csv สำหรับแนะนำ�
 
 > 🔑 เปรียบ: *Tool = เครื่องมือของ Agent / MCP = ปลั๊กไฟมาตรฐานสากลเพื่อดึงข้อมูลและเครื่องมือภายนอกมาให้ใช้*
 
-### 4.2 เชื่อม & เรียกใช้
+### 4.2 การเชื่อมต่อ & การเรียกใช้
 
-1. **ตั้งค่าใน Settings → MCP** — เพิ่ม server (ระบุ URL/command + key)
-2. **เรียกใช้** — พิมพ์คำขอที่ต้องใช้บริการนั้น → Agent ใช้ tool จาก MCP นั้น
+1. **ตั้งค่าด้วย /MCP** — เพิ่ม server (ระบุ URL/command + key)
+2. **ตั้งค่าด้วย การสร้าง JSON ไฟล์ เก็บใน ./thclaws**
+3. **เรียกใช้** — พิมพ์คำขอที่ต้องใช้บริการนั้น → Agent ใช้ tool จาก MCP นั้น
    - ตัวอย่าง: ต่อ MCP กับ Google Drive → "ช่วยดึงไฟล์จาก Drive แล้วสรุป"
 
-> 📷 **รูปที่ 4-4 — หน้าตั้งค่า MCP ใน Settings** *(screenshot: หน้าจอ Settings → MCP — ฟอร์มเพิ่ม server (URL/command + key) — แทรกทีหลัง)*
+**หากต้องการความช่วยเหลือในการต้ังค่าหรือใช้งาน MCP บน thClaws สามารถพิมพ์**
+
+```
+❯ แสดงการใช้คำสั่ง /mcp และการใช้งาน
+```
+
+> เนื่องจากการเชื่อมต่อ MCP จะต้องมีการ setup จากฝั่งผู้ให้บริการ ดังนั้นในจะมีขั้นตอนของแต่ละผู้ให้บริการไม่เหมือนกัน ต้องศึกษาจากหน้าเว็ปของแต่ละค่าย
+
+![ปที่ 4-4 — แสดงคำสั่ง /MCP"](screenshots/ss-4-4.png)
+> 📷 **รูปที่ 4-4 — แสดงคำสั่ง /MCP ** *(screenshot: รูปที่ 4-4 — แสดงคำสั่ง /MCP)*
 
 ---
 
