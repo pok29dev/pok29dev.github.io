@@ -58,7 +58,7 @@ curl -sI https://thclaws.ai | head -1   # เช็กเน็ต — ควร
 ```
 
 - แรม (RAM) ≥ 8GB แนะนำ
-- เช็กว่าติดตั้งซอฟต์แวร์ใหม่บนเครื่องได้ (ถ้าเป็นเครื่องบริษัทมีนโยบายห้าม → ใช้วิธี Docker หรือ Portable ดู §9)
+- เช็กว่าติดตั้งซอฟต์แวร์ใหม่บนเครื่องได้ (ถ้าเป็นเครื่องบริษัทมีนโยบายห้าม → ใช้วิธี Docker หรือ Portable ดู หัวข้อ 9)
 
 ---
 
@@ -82,12 +82,22 @@ open thclaws.dmg
 ### Windows (ไฟล์ `.msi` — per-user, ตั้ง PATH ให้อัตโนมัติ, ไม่ต้อง admin)
 
 ```powershell
-# สำหรับ x86_64 (ปกติ)
-iwr -Uri <ลิงก์ ...-x86_64-pc-windows-msvc.msi> -OutFile thclaws.msi
+# Recommended — .msi installer (per-user, no admin, sets PATH automatically)
+# x86_64 (typical Intel/AMD Windows):
+iwr -Uri https://github.com/thClaws/thClaws/releases/download/v0.114.0/thclaws-v0.114.0-x86_64-pc-windows-msvc.msi -OutFile thclaws.msi
 Start-Process msiexec.exe -ArgumentList '/i', 'thclaws.msi' -Wait
 
-# สำหรับ ARM (Surface Pro X / Snapdragon) → ใช้ไฟล์ ...-aarch64-pc-windows-msvc.msi
+# Windows on ARM (Surface Pro X, Snapdragon X laptops):
+iwr -Uri https://github.com/thClaws/thClaws/releases/download/v0.114.0/thclaws-v0.114.0-aarch64-pc-windows-msvc.msi -OutFile thclaws.msi
+Start-Process msiexec.exe -ArgumentList '/i', 'thclaws.msi' -Wait
+
+# Or ZIP (portable / policy-blocked-MSI scenarios)
+iwr -Uri https://github.com/thClaws/thClaws/releases/download/v0.114.0/thclaws-v0.114.0-x86_64-pc-windows-msvc.zip -OutFile thclaws.zip
+Expand-Archive thclaws.zip -DestinationPath $env:LOCALAPPDATA\Programs\thclaws
 ```
+[![การติดตั้ง thClaws Desktop บน Windows - Youtube](https://youtu.be/Xv7XGbTxJIU)](https://youtu.be/Xv7XGbTxJIU)
+
+[![การติดตั้ง PAHT thClaws Desktop บน Windows - Youtube](https://youtu.be/UHVPqKw4GyM)](https://youtu.be/UHVPqKw4GyM)
 
 ### Linux (ไฟล์ tarball)
 
@@ -277,14 +287,14 @@ thclaws -p "สวัสดี ช่วยแนะนำตัวหน่อ�
 
 ---
 
-## ปัญหาที่พบบ่อย + วิธีแก้ (Troubleshooting)
+## 9. ปัญหาที่พบบ่อย + วิธีแก้ (Troubleshooting)
 
 | อาการ | สาเหตุ | วิธีแก้ |
 |-------|--------|--------|
 | `command not found` | PATH / ยังไม่ได้ติดตั้ง | ใช้ GUI แทน หรือแก้ PATH / เปิด Terminal ใหม่ |
 | Key error `401/403/InvalidApiKey` | คัดลอกไม่ครบ / ยังไม่ activate | เช็ก `sk-…` ครบ, activate โมเดลในหน้า Model, เช็กงบ |
 | ตอบช้า / timeout | เน็ต / provider overloaded | ลอง `qwen-turbo`, เช็กเน็ต |
-| macOS Gatekeeper กัน | app ไม่ได้มาจาก App Store | คลิกขวา → Open → Open อีกครั้ง |
+| macOS Gatekeeper กัน | app ไม่ได้มาจาก App Store | setting → Privacy & Security → Security → Open anyway |
 | MSI ถูก policy กัน | Windows group policy | ใช้ portable / Docker |
 | อยากทำงาน offline | ไม่อยากใช้ Key / ข้อมูลลับมาก | ใช้ Ollama (`ollama pull qwen`) — รันในเครื่องไม่ใช้เน็ต |
 
