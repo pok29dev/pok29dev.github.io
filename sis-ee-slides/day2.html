@@ -1,0 +1,1899 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>thClaws SiS — Day 2</title>
+<style>
+/* ---- sis-theme (inherited from the .marp.md inline theme) ---- */
+/* sis-theme.css — Marp theme for the SiS thClaws end-user training (3 days)
+   Design system: output/sis-web-manual/DESIGN.md  (the SiS product's own colours)
+   One accent (teal #00707f) · one red (#a81019, caution only) · light ground only
+   No second hue, no gradient, no dark mode, no webfont, no CDN.
+   Structurally mirrors output/thclaws-ee-video/slides/ee-theme.css. */
+
+
+:root {
+  --teal: #00707f;
+  --teal-deep: #00565f;
+  --teal-wash: #eaf4f5;
+  --teal-line: #cfe1e3;
+
+  --caution-red: #a81019;
+  --caution-wash: #fdf3f3;
+  --caution-line: #efc9cc;
+
+  --ink: #0f1b22;
+  --ink-2: #3d4b55;
+  --ink-3: #5f6b73;
+
+  --ground: #ffffff;
+  --panel: #f7f8f8;
+  --panel-2: #eff2f2;
+  --hairline: #e2e6e7;
+  --hairline-soft: #eef1f1;
+  --rule-mid: #c3cccd;
+
+  --mark: #fff1a8;
+}
+
+section {
+  width: 1280px;
+  height: 720px;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: 'Noto Sans Thai', 'IBM Plex Sans Thai', 'Sukhumvit Set', Thonburi,
+    'Leelawadee UI', Tahoma, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 22px;
+  line-height: 1.7;
+  padding: 44px 64px;
+}
+
+/* ---- Headings ---- */
+
+h1 {
+  color: var(--ink);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+  padding: 0 0 12px 0;
+  border-bottom: 2px solid var(--hairline);
+}
+
+/* The accent rule that marks the current section — a single hairline, never a fill */
+h1::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 4px;
+  margin-top: -14px;
+  margin-bottom: 10px;
+  background: var(--teal);
+}
+
+h2 {
+  color: var(--teal-deep);
+  font-size: 38px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+h3 {
+  color: var(--ink-2);
+  font-size: 21px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+strong { color: var(--teal-deep); font-weight: 700; }
+em { color: var(--ink-2); font-style: normal; }
+
+/* ---- Lists ---- */
+
+ul, ol { font-size: 22px; line-height: 1.7; margin: 8px 0; padding-left: 28px; }
+li { margin: 6px 0; }
+li::marker { color: var(--teal); }
+ol li::marker { color: var(--teal); font-weight: 700; }
+li > ul, li > ol { font-size: 20px; }
+
+/* ---- Tables ---- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 19px;
+  margin: 10px 0;
+}
+th {
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 700;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--rule-mid);
+}
+td {
+  border-bottom: 1px solid var(--hairline);
+  padding: 9px 14px;
+  color: var(--ink-2);
+}
+tr:last-child td { border-bottom: none; }
+td strong { color: var(--teal-deep); }
+table.hl tr.hl-row td { background: var(--teal-wash); }
+
+/* ---- Code ---- */
+
+code {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  background: var(--panel-2);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.88em;
+  color: var(--ink);
+}
+pre {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--teal);
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-size: 17px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 17px;
+}
+
+/* ---- Blockquote: neutral callout (default) ---- */
+
+blockquote {
+  background: var(--panel);
+  border-left: 4px solid var(--rule-mid);
+  color: var(--ink-2);
+  padding: 12px 18px;
+  border-radius: 0 6px 6px 0;
+  font-size: 20px;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+blockquote p { margin: 0; }
+blockquote strong { color: var(--teal-deep); }
+
+/* A quote lifted verbatim from the product screen — still neutral, marked as a quote */
+blockquote.screen {
+  background: var(--teal-wash);
+  border-left-color: var(--teal);
+  color: var(--ink);
+  font-size: 19px;
+}
+blockquote.screen strong { color: var(--teal-deep); }
+
+/* ---- Caution callout: the ONLY place red appears ---- */
+
+section.caution blockquote,
+blockquote.caution {
+  background: var(--caution-wash);
+  border-left-color: var(--caution-red);
+  color: var(--ink);
+}
+section.caution blockquote strong,
+blockquote.caution strong {
+  color: var(--caution-red);
+}
+
+/* ---- Title slide ---- */
+
+section.lead {
+  background: var(--ground);
+  color: var(--ink);
+  justify-content: center;
+  padding: 0 96px;
+  text-align: left;
+}
+section.lead h1 {
+  color: var(--ink);
+  font-size: 52px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 4px;
+}
+section.lead h1::after {
+  width: 88px;
+  height: 5px;
+  margin: 20px 0 24px 0;
+}
+section.lead h2 {
+  color: var(--teal-deep);
+  font-size: 40px;
+  font-weight: 500;
+}
+section.lead p { color: var(--ink-3); font-size: 21px; }
+section.lead strong { color: var(--teal-deep); }
+
+/* ---- Day badge on leads ---- */
+
+section.lead .day-badge {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  background: var(--teal-wash);
+  border: 1px solid var(--teal-line);
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin-bottom: 20px;
+}
+
+/* ---- Takeaways slide ---- */
+
+section.takeaway {
+  background: var(--panel);
+}
+section.takeaway h1 {
+  font-size: 34px;
+  border-bottom: none;
+}
+section.takeaway h1::after {
+  margin-top: 2px;
+  margin-bottom: 20px;
+}
+section.takeaway ul { font-size: 23px; }
+section.takeaway li { margin: 12px 0; }
+
+/* ---- Source anchor line ---- */
+
+.src {
+  position: absolute;
+  right: 64px;
+  bottom: 20px;
+  font-size: 13px;
+  color: var(--ink-3);
+  letter-spacing: 0.01em;
+}
+
+/* ---- Pagination ----
+   A presentation is not a document: no page number on the slide. */
+
+section::after, footer { display: none !important; }
+
+/* ---- Cards grid ---- */
+
+.cards { display: grid; gap: 14px; margin-top: 6px; }
+.cards.c2 { grid-template-columns: repeat(2, 1fr); }
+.cards.c3 { grid-template-columns: repeat(3, 1fr); }
+.cards.c4 { grid-template-columns: repeat(4, 1fr); }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.card .k {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  margin-bottom: 6px;
+}
+.card .t { font-size: 21px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.card .d { font-size: 17px; color: var(--ink-2); line-height: 1.55; }
+.card.accent { background: var(--teal-wash); border-color: var(--teal-line); }
+/* A card whose content is still pending a real source — dashed, never filled in */
+.card.pending {
+  background: var(--ground);
+  border: 2px dashed var(--rule-mid);
+  color: var(--ink-3);
+}
+.card.pending .d { color: var(--ink-3); }
+
+/* ---- Flow: numbered steps in a row ---- */
+
+.flow { display: flex; align-items: stretch; gap: 10px; margin-top: 14px; }
+.flow .step {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 14px 16px;
+  position: relative;
+}
+.flow .step.accent { background: var(--teal-wash); border-color: var(--teal-line); }
+.flow .step .n {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--teal-deep);
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.flow .step .t { font-size: 19px; font-weight: 700; color: var(--ink); }
+.flow .step .d { font-size: 16px; color: var(--ink-2); line-height: 1.55; margin-top: 2px; }
+.flow .arrow {
+  align-self: center;
+  color: var(--teal);
+  font-size: 24px;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+/* ---- Checklist ---- */
+
+.checklist { list-style: none; padding-left: 0; margin-top: 10px; }
+.checklist li {
+  position: relative;
+  padding-left: 34px;
+  margin: 10px 0;
+  font-size: 21px;
+}
+.checklist li::before {
+  content: '☐';
+  position: absolute;
+  left: 0;
+  color: var(--teal);
+  font-size: 22px;
+}
+.checklist.done li::before { content: '☑'; }
+
+/* ---- Progress bar (a UI element, not a data chart) ---- */
+
+.pbar {
+  margin-top: 18px;
+  background: var(--panel-2);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  height: 26px;
+  overflow: hidden;
+  position: relative;
+}
+.pbar .fill {
+  height: 100%;
+  background: var(--teal);
+  border-radius: 999px 0 0 999px;
+}
+.pbar .lbl {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ---- Stat cards (small numeric facts) ---- */
+
+.stats { display: grid; gap: 14px; margin-top: 8px; }
+.stats.s2 { grid-template-columns: repeat(2, 1fr); }
+.stats.s3 { grid-template-columns: repeat(3, 1fr); }
+.stats.s4 { grid-template-columns: repeat(4, 1fr); }
+.stat {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.stat .v {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--teal-deep);
+  line-height: 1.1;
+}
+.stat .l { font-size: 15px; color: var(--ink-2); margin-top: 4px; }
+
+/* ---- Real screenshot slides ----
+   A captured screen of the product. Presented as one object: hairline border
+   and a soft shadow, on the ground, never cropped. */
+
+section.shot { padding: 34px 52px 40px 52px; }
+
+section.shot h1 {
+  font-size: 30px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 2px;
+}
+section.shot h1::after { margin-top: 2px; margin-bottom: 12px; width: 52px; height: 3px; }
+
+.shot-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 470px;
+}
+.shot-frame img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  box-shadow: 0 6px 22px rgba(15, 27, 34, 0.14);
+}
+/* two images per row. `max-width:49%` each + the 20px gap is >100% of the frame,
+   so the pair used to bleed ~5px out of its column on both sides; wrap keeps
+   extra images on a second row instead of squeezing them into one. */
+.shot-frame.pair { gap: 20px; flex-wrap: wrap; }
+.shot-frame.pair img { max-width: calc(50% - 10px); }
+
+.shot-cap {
+  margin-top: 12px;
+  font-size: 17px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.shot-cap strong { color: var(--teal-deep); }
+
+section.shot .src { bottom: 16px; }
+
+/* ---- Two-column split (text left, figure/shot right) ---- */
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; margin-top: 6px; }
+.split .shot-frame { height: 400px; }
+/* ---- deck chrome: the HTML presentation shell ---- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #10161a; }
+body { font-family: 'Noto Sans Thai','IBM Plex Sans Thai','Sukhumvit Set',Thonburi,'Leelawadee UI',Tahoma,system-ui,sans-serif; }
+#stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+section.slide {
+  position: absolute; display: none; transform-origin: center center;
+  background: #ffffff; overflow: hidden;
+}
+section.slide.active { display: flex; flex-direction: column; }
+/* The theme's `section { padding: … }` (44px 64px · 0 96px for .lead ·
+   34px 52px 40px 52px for .shot) was written when the <section> WAS the slide box.
+   The shell now wraps the body in `.slide-inner`, which carries that same padding —
+   so the section must NOT pad again, or the inner box is pushed right/down by
+   64/96px and the overflow is clipped by `overflow: hidden` (asymmetric margins).
+   Reset here (later in source order than the theme, so it wins) and move each
+   variant's padding onto `.slide-inner`. */
+section.slide { padding: 0; }
+section.lead .slide-inner { padding: 0 96px; }
+section.shot .slide-inner { padding: 34px 52px 40px 52px; }
+.slide-inner { padding: 44px 64px; width: 1280px; height: 720px; overflow: hidden;
+  display: flex; flex-direction: column; }
+section.lead .slide-inner, section.takeaway .slide-inner { justify-content: center; }
+.slide-inner > h1:first-child, .slide-inner > h2:first-child { margin-top: 0; }
+nav { position: fixed; bottom: 14px; left: 0; right: 0; display: flex; gap: 14px;
+  align-items: center; justify-content: center; color: #c3cccd; font-size: 13px;
+  font-family: system-ui, sans-serif; }
+nav button { font: inherit; background: #1d262c; color: #e8edee; border: 1px solid #333f46;
+  border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+nav button:hover { background: #263238; }
+#hint { position: fixed; top: 12px; right: 16px; color: #7b8a92; font-size: 12px;
+  font-family: system-ui, sans-serif; }
+/* keep the accent rule on h1 as in the theme */
+section.slide h1 { font-size: 38px; }
+section.shot h1, section.lead h1 { font-size: 52px; }
+section.lead h1 { font-size: 52px; }
+/* bottom-right corner: slide number (`n / total`) inherits .src's position */
+.src.page-num { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+@media print {
+  #stage, nav, #hint { position: static; }
+  nav, #hint { display: none; }
+  section.slide { display: flex !important; position: relative; transform: none !important;
+    page-break-after: always; }
+  .slide-inner { transform: none !important; }
+}
+</style>
+</head>
+<body>
+<div id="hint">← → เลื่อน · Home/End · F เต็มจอ</div>
+<div id="stage">
+<section class="slide lead" data-n="1">
+<div class="slide-inner">
+<span class="day-badge">วัน 2 / 3</span>
+<h1>ใช้งาน Workspace ทั้งหมด</h1>
+<p>วันที่ 2 · 21 ต.ค. 2026 · ~142 นาที</p>
+<p>thClaws · hosted workspace · การตั้งค่า · Skills · MCP · Multi-agent</p>
+<span class="src page-num">1 / 79</span>
+</div>
+</section>
+<section class="slide" data-n="2">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F15, F40 · sis manual §6">2 / 79</span>
+<h1>ทบทวนวัน 1 — จุดเขียวของคุณยังอยู่ไหม</h1>
+<div class="split">
+<div>
+
+<ul><li>เปิด workspace แล้วดูแถบซ้ายหัวข้อ <strong>PROVIDER</strong></li><li>แถว <code>sis</code> มี<strong>จุดสีเขียว</strong> ไหม?</li><li>จุดแดง = provider ยังไม่พร้อม ⇒ ยังเริ่มช่วงถัดไปไม่ได้</li></ul>
+
+<blockquote><p>บันทึก API key แล้วจุดจะเปลี่ยนเป็นเขียว<strong>ภายใน ~1 วินาที</strong></p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/26-provider-ready.png" alt="PROVIDER พร้อมใช้งาน จุดสีเขียว">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="3">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: outline §4 (03-day2-outline.md)">3 / 79</span>
+<h1>วันนี้เราจะไปไหน</h1>
+<div class="cards c2">
+  <div class="card accent"><div class="k">ช่วงเช้า</div><div class="t">รู้จัก workspace</div><div class="d">สร้าง · เปิด · หน้าตาทั้งหมด · ใช้ Chat และ Files จริง</div></div>
+  <div class="card"><div class="k">ช่วงบ่าย</div><div class="t">ตั้งค่าและต่อขยาย</div><div class="d">Setting · Skills · MCP · Multi-agent</div></div>
+</div>
+<ul class="checklist">
+  <li><strong>3 จุดทดสอบ</strong> — คำสั่งแรก · อัปโหลดไฟล์ · แก้ไฟล์ในแท็บ Files</li>
+  <li>ที่เหลือเป็น <strong>สาธิต</strong> — วันสุดท้าย (26 ต.ค.) เราลงมือเต็มรูปแบบ</li>
+  <li>กติกาเดียวของวันนี้: <strong>กดทุกปุ่มที่ผู้สอนชี้</strong></li>
+</ul>
+<blockquote><p>ไม่ต้องกลัวพัง — workspace เป็นของคุณคนเดียว ลบแล้วสร้างใหม่ได้</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="4">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F6, F19 · sis manual §6.4">4 / 79</span>
+<h1>สร้าง workspace สำหรับเริ่มทำงาน</h1>
+<div class="split">
+<div>
+
+<ol><li>กด <strong><code>+ New workspace</code></strong></li><li>กรอก <strong>Name</strong> — ชื่อที่คุณเข้าใจ (แก้ทีหลังได้)</li><li>กรอก <strong>Slug</strong> — ตัวพิมพ์เล็ก <code>a–z</code> <code>0–9</code> และ <code>-</code></li><li>กดสร้าง แล้วรอสถานะเป็น <strong>READY</strong></li></ol>
+
+<blockquote><p>ที่อยู่ของ workspace จะเป็น<br><code>sis.thclaws.ai/u/&lt;บัญชี&gt;/&lt;slug&gt;/</code></p></blockquote>
+
+<p><strong>ตั้งชื่อตามงานที่ทำจริง</strong> — วันนี้จะได้ใช้ต่อทั้งวัน</p>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/20-dialog-new-workspace.png" alt="กล่องสร้าง workspace ใหม่">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="5">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F6 · sis manual §6.1–6.3">5 / 79</span>
+<h1>สถานะและปุ่มของ workspace</h1>
+<table><thead><tr><th>สถานะ</th><th>หมายความว่า</th><th>ต้องทำอะไร</th></tr></thead><tbody><tr><td><strong>READY</strong></td><td>พร้อมใช้</td><td>กด <code>Open ↗</code> เข้าไปได้เลย</td></tr><tr><td><strong>PAUSED</strong></td><td>พักไว้ (ประหยัดทรัพยากร)</td><td>กด <code>Wake</code> — ใช้เวลาประมาณ 10 วินาที</td></tr><tr><td><strong>provisioning</strong></td><td>กำลังตั้งเครื่องให้</td><td>รอสักครู่</td></tr></tbody></table>
+<div class="cards c3">
+  <div class="card"><div class="t">Open ↗</div><div class="d">เข้าไปใช้งาน</div></div>
+  <div class="card"><div class="t">Pause / Wake</div><div class="d">พัก / ปลุก</div></div>
+  <div class="card"><div class="t">Delete</div><div class="d">ลบ workspace และข้อมูลทั้งหมด — <strong>กู้คืนไม่ได้</strong></div></div>
+</div>
+<blockquote><p><strong>PAUSED ไม่ใช่ค้าง</strong> — ระบบพัก workspace ที่ไม่ได้ใช้ 30 นาทีเพื่อประหยัด</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="6">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F6">6 / 79</span>
+<h1>ลองเอง: สร้าง workspace ของคุณ</h1>
+<ul class="checklist">
+  <li>กด <code>+ New workspace</code></li>
+  <li>ตั้งชื่อตามงานที่คุณทำจริง (เช่น <code>sales-report</code>)</li>
+  <li>รอจนสถานะขึ้น <strong>READY</strong></li>
+  <li>ยังไม่ต้องกด <code>Open</code> — รอผู้สอนพร้อมกัน</li>
+</ul>
+<div class="pbar"><div class="fill" style="width:100%"></div><div class="lbl">ทุกคนมี workspace ของตัวเองก่อนไปสไลด์ถัดไป</div></div>
+<blockquote><p>ไม่ผ่านข้อไหน ยกมือ — อย่าปล่อยผ่าน แล้วค่อยตามคนอื่น</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="7">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F50, F85 · ตรวจหน้าจริง 16 ต.ค. 2026">7 / 79</span>
+<h1>เข้าไปข้างใน — เราเห็นอะไร</h1>
+<div class="split">
+<div>
+
+<p>เมื่อกด <code>Open ↗</code> เราจะเจอ workspace ของตัวเองที่รันอยู่บนคลาวด์</p>
+
+<ul><li><strong>แถบแท็บ</strong> ด้านบน — <code>Chat · Terminal · Files · UI</code></li><li><strong>แถบ agent</strong> ซ้ายสุด — ตัวที่ทำงานอยู่ (<code>main</code>)</li><li><strong>แถบซ้าย</strong> — PROVIDER · SESSIONS · KNOWLEDGE · MCP SERVERS</li><li><strong>แถบสถานะ</strong> ล่างซ้าย = พาธ · ล่างขวา = ปุ่มเฟือง Setting และเวอร์ชัน</li></ul>
+
+<blockquote><p>ทำงานบนเว็บ <strong>ไม่ต้องติดตั้งอะไรเลย</strong> — เปิดจากเบราว์เซอร์ได้ทุกเครื่อง</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/61-web-overview.png" alt="หน้าตา hosted workspace บนเว็บ">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="8">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F50, F81 · outline §0.1">8 / 79</span>
+<h1>ทำงานที่เว็บ หรือที่แอปเดสก์ท็อป?</h1>
+<table><thead><tr><th></th><th>Hosted workspace (เว็บ)</th><th>แอปเดสก์ท็อป</th></tr></thead><tbody><tr><td>ติดตั้ง</td><td>ไม่ต้อง — เปิดเบราว์เซอร์</td><td>ต้องติดตั้ง (ทำแล้วในวัน 1)</td></tr><tr><td>ไฟล์ของคุณ</td><td>ต้องอัปโหลดเข้า workspace</td><td>agent อ่านไฟล์ในเครื่องได้ตรง ๆ</td></tr><tr><td>หน้าตา</td><td>แท็บ + แถบ agent + เมนู Setting <strong>ชุดเดียวกัน</strong></td><td>ชุดเดียวกัน</td></tr><tr><td>เหมาะกับ</td><td>ทำงานได้ทุกที่ · แชร์ให้ทีมดู · เครื่องบริษัทที่ล็อก</td><td>งานที่ต้องแตะไฟล์จำนวนมากในเครื่อง</td></tr></tbody></table>
+<blockquote><p><strong>วันนี้เราสอนบนเว็บเป็นหลัก</strong> — เพราะทุกอย่างที่ต้องใช้อยู่บนนั้นครบแล้ว<br>ที่ทำบนเว็บได้ เดสก์ท็อปก็ทำได้เหมือนกัน (กลับกันไม่จริง: เดสก์ท็อปอ่านไฟล์ในเครื่องได้ลึกกว่า)</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="9">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F85, F86 · ตรวจหน้าจริง 16 ต.ค. 2026">9 / 79</span>
+<h1>แผนที่ workspace — 5 ส่วนที่ต้องรู้</h1>
+<div class="cards c2">
+  <div class="card accent"><div class="k">1</div><div class="t">แถบ agent (ซ้ายสุด)</div><div class="d">ใครกำลังทำงาน — วันนี้มี <code>main</code> ตัวเดียว</div></div>
+  <div class="card"><div class="k">2</div><div class="t">แถบแท็บ (บน)</div><div class="d">Chat · Terminal · Files · UI</div></div>
+  <div class="card"><div class="k">3</div><div class="t">แถบซ้าย</div><div class="d">PROVIDER · SESSIONS · KNOWLEDGE · MCP SERVERS</div></div>
+  <div class="card"><div class="k">4</div><div class="t">เนื้อหาแท็บ</div><div class="d">ที่ทำงานจริง — เปลี่ยนตามแท็บที่เลือก</div></div>
+  <div class="card accent"><div class="k">5</div><div class="t">แถบสถานะ (ล่าง)</div><div class="d">พาธ <code>/workspace</code> · ปุ่มเฟือง Setting · เวอร์ชัน engine</div></div>
+  <div class="card pending"><div class="d">ต่อไป: เปิดทีละส่วนจากหน้าจอจริง</div></div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="10">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F50 · ตรวจหน้าจริง">10 / 79</span>
+<h1>แถบแท็บ — บ้าน 4 หลัง</h1>
+<div class="cards c2">
+  <div class="card accent"><div class="k">ใช้บ่อยสุด</div><div class="t">Chat</div><div class="d">คุยกับ agent — พิมพ์คำสั่งเป็นภาษาไทย</div></div>
+  <div class="card"><div class="t">Terminal</div><div class="d">พิมพ์คำสั่งตรง ๆ · ดูรายการคำสั่งทั้งหมดด้วย <code>/</code></div></div>
+  <div class="card"><div class="t">Files</div><div class="d">ดูและแก้ไฟล์ใน workspace</div></div>
+  <div class="card"><div class="t">UI</div><div class="d">หน้าบ้านแบบอื่น — เลือกได้ 3 แบบ</div></div>
+</div>
+<blockquote><p>สลับแท็บได้ตลอด <strong>ไม่โหลดหน้าใหม่</strong> และ <strong>ประวัติการคุยใช้ร่วมกัน</strong> ระหว่าง Chat กับ Terminal</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="11">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F46 · sis manual §14.3">11 / 79</span>
+<h1>Chat view — ที่ทำงานหลัก</h1>
+<div class="split">
+<div>
+
+<ul><li>พิมพ์คำสั่งเป็น<strong>ภาษาไทยธรรมดา</strong> แล้วกด Enter</li><li>คำตอบค่อย ๆ พิมพ์ออกมา (streaming) — รอได้</li><li>เห็นบล็อก <code>[tool: …]</code> = agent กำลัง<strong>ลงมือทำ</strong> ไม่ใช่แค่ตอบ</li><li>ท้ายคำตอบมีบรรทัดสรุป token และค่าใช้จ่าย</li></ul>
+
+<blockquote><p>ถ้าคำตอบไม่ตรงที่ต้องการ <strong>ไม่ต้องเริ่มใหม่</strong> — บอกแก้เพิ่มในข้อความถัดไปได้เลย</p></blockquote>
+
+</div>
+<div>
+
+<pre><code>[tool: Read: meeting_notes.txt]
+[tool: Write: work-summary.md]
+[tokens: 937in/464out · cache: 22528r
+ · 8s · $0.0221 session]</code></pre>
+
+<div class="shot-cap">ตัวอย่างท้ายคำตอบในแท็บ Chat</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="12">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F47, F94 · ตรวจหน้าจริง">12 / 79</span>
+<h1>Terminal view — เมื่ออยากพิมพ์เอง</h1>
+<div class="split">
+<div>
+
+<p>หน้าตาเหมือน terminal ที่เราคุ้นเคย — รัน <code>thClaws</code> ตัวเดียวกับ CLI</p>
+
+<ul><li><strong>ประวัติใช้ร่วมกับแท็บ Chat</strong> — งานเดียวกัน ไม่แยกกัน</li><li>พิมพ์ <code>/</code> แล้วรายการคำสั่งทั้งหมดจะขึ้น จัดเป็นหมวด</li><li>ใช้เมื่ออยากดูคำสั่งที่แท็บ Chat ไม่โชว์</li></ul>
+
+<blockquote><p>ผู้เริ่มใช้ไม่จำเป็นต้องเปิดแท็บนี้ — แต่รู้ไว้จะช่วยได้มากในหัวข้อ Setting / Skills / MCP</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/64-web-terminal-slash.png" alt="แท็บ Terminal กับรายการคำสั่งเมื่อพิมพ์ /">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="13">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F48, F53, F67 · ตรวจหน้าจริง">13 / 79</span>
+<h1>Files view — ดูและแก้ไฟล์ใน workspace</h1>
+<div class="split">
+<div>
+
+<p>สิ่งที่ทำได้ในแท็บนี้</p>
+
+<ul><li>คลิกไฟล์เพื่อ <strong>ดูตัวอย่าง</strong> (markdown · HTML · โค้ด · รูป · PDF)</li><li>สลับเป็นโหมด <strong>แก้ไข</strong> แล้วพิมพ์แก้ได้</li><li>จุด ● = ยังไม่บันทึก · <code>Cmd/Ctrl + S</code> = บันทึก</li><li>สร้าง <strong>ไฟล์ใหม่</strong> และ <strong>โฟลเดอร์ใหม่</strong> ที่ราก workspace</li></ul>
+
+<blockquote><p>ไฟล์ที่ agent สร้างจะโผล่ที่นี่ให้ตรวจได้ทันที — <strong>นี่คือที่ตรวจงาน</strong></p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/67-web-files.png" alt="แท็บ Files แสดงไฟล์ใน /workspace">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="14">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F52 · ตรวจหน้าจริง">14 / 79</span>
+<h1>UI view — เลือกหน้าบ้านของ workspace</h1>
+<div class="split">
+<div>
+
+<p>ในแท็บนี้เลือกได้ว่าจะให้ workspace หน้าตาเป็นแบบไหน</p>
+
+<div class="cards c2">
+  <div class="card accent"><div class="t">Chat</div><div class="d">หน้าคุยแบบ white-label</div></div>
+  <div class="card"><div class="t">Session Explorer</div><div class="d">ย้อนดู session เก่าและค่าใช้จ่ายต่อเทิร์น</div></div>
+  <div class="card"><div class="t">Media Studio</div><div class="d">สร้างภาพ วิดีโอ เสียง</div></div>
+</div>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/53-workspace-ui.png" alt="แท็บ UI แสดงตัวเลือก GUI Shell">
+</div>
+
+</div>
+</div>
+<blockquote><p>กด <code>Set as default</code> เพื่อให้เปิดมาเจอแบบที่เลือก</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="15">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F86, F87, F93 · ตรวจหน้าจริง 16 ต.ค. 2026">15 / 79</span>
+<h1>แถบ agent — หลายตัวในบ้านเดียว</h1>
+<div class="split">
+<div>
+
+<p>แถบซ้ายสุดบอกว่า <strong>ใครกำลังทำงาน</strong></p>
+
+<ul><li>ช่องแรกคือ agent ตัวที่ใช้อยู่ — ชื่อย่อและสถานะ (เช่น <code>main — ready</code>)</li><li>ท้ายแถบมี 2 ปุ่ม: ตั้งค่า workspace และเพิ่ม agent</li><li>หนึ่ง workspace รับ agent ได้สูงสุด <strong>8 ตัว</strong></li></ul>
+
+<blockquote><p>วันนี้เรามี <code>main</code> ตัวเดียว — เดี๋ยวช่วงบ่ายเราจะเพิ่มตัวที่สอง (module Multi-agent)</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/61-web-overview.png" alt="แถบ agent มุมซ้ายสุดของ workspace">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="16">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F39, F40, F41 · ตรวจหน้าจริง">16 / 79</span>
+<h1>PROVIDER — เลือกมันสมอง</h1>
+<div class="split">
+<div>
+
+<p>แถวบนสุดของแถบซ้ายบอกว่ากำลังใช้ผู้ให้บริการและโมเดลอะไร</p>
+
+<ul><li>คลิกที่แถว แล้วกด <code>▾</code> เพื่อเปิด <strong>รายการโมเดล</strong> (พิมพ์ค้นหาได้)</li><li><strong>จุดเขียว</strong> = พร้อมใช้ · <strong>จุดแดง</strong> = ยังไม่มี credential</li><li>แถว <code>think</code> = ระดับความลึกในการคิด</li></ul>
+
+<blockquote><p>ในระบบ SiS ผู้ใช้ทั่วไปมักไม่ต้องใส่ key เอง — องค์กรผูกช่องทางให้แล้ว</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/61-web-overview.png" alt="แถบ PROVIDER แสดงโมเดลและระดับการคิด">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="17">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F42, F43, F44, F92 · ตรวจหน้าจริง">17 / 79</span>
+<h1>SESSIONS · KNOWLEDGE · MCP SERVERS</h1>
+<div class="cards c3">
+  <div class="card accent"><div class="k">SESSIONS</div><div class="t">ประวัติการคุย</div><div class="d">ทุกบทสนทนาถูกเก็บไว้ · คลิกเพื่อย้อนกลับไปดูได้ · เปลี่ยนชื่อได้</div></div>
+  <div class="card"><div class="k">KNOWLEDGE</div><div class="t">คลังความรู้ของทีม</div><div class="d">ติ๊กถูกเพื่อ<strong>แนบ</strong>คลังเข้า session — agent จึงตอบจากเอกสารของเรา</div></div>
+  <div class="card"><div class="k">MCP SERVERS</div><div class="t">เครื่องมือภายนอก</div><div class="d">แสดง server ที่ต่ออยู่และจำนวน tool — ตั้งค่าในเทอร์มินัลด้วย <code>/mcp</code></div></div>
+</div>
+<blockquote><p>สถานะของ workspace ที่เพิ่งสร้าง: KNOWLEDGE ขึ้น <code>None yet</code> · MCP SERVERS ขึ้น <code>None configured</code> — <strong>เป็นเรื่องปกติ</strong> ยังไม่มีใครใส่ของ</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="18">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F88 · ตรวจหน้าจริง 16 ต.ค. 2026">18 / 79</span>
+<h1>ปุ่ม Setting — อยู่มุมขวาล่าง</h1>
+<div class="split">
+<div>
+
+<p>มองหาปุ่ม <strong>เฟือง</strong> ที่มุมขวาล่าง (ข้างพาธ <code>/workspace</code>)</p>
+
+<p>กดแล้วได้เมนู 7 รายการ</p>
+
+<ul><li>Instructions</li><li>Settings &amp; API keys</li><li>Connect a channel…</li><li>Appearance</li><li>GUI scale</li><li>Reload settings · Optional features</li></ul>
+
+<blockquote><p>รายการที่มีเครื่องหมาย <code>›</code> จะกางเมนูย่อย <strong>เมื่อเอาเมาส์ชี้ค้าง</strong> — ถ้าคลิก เมนูจะปิดแทน</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/60-web-settings-menu.png" alt="เมนู Setting ทั้ง 7 รายการ">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="19">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F85 · ตรวจหน้าจริง">19 / 79</span>
+<h1>ทัวร์จบ — ลองเอง 1 นาที</h1>
+<ul class="checklist">
+  <li>สลับแท็บให้ครบทั้ง 4: Chat → Terminal → Files → UI แล้วกลับมา Chat</li>
+  <li>คลิกแถว PROVIDER แล้วกด <code>▾</code> ดูรายการโมเดล (แล้วปิด)</li>
+  <li>กดปุ่มเฟือง Setting เปิดค้างไว้ แล้วเอาเมาส์ชี้ที่แถว <strong>Instructions</strong></li>
+  <li>ปิดเมนู แล้วกลับมาแท็บ Chat</li>
+</ul>
+<div class="pbar"><div class="fill" style="width:100%"></div><div class="lbl">ทำครบ 4 ข้อ = พร้อมเข้า module ถัดไป</div></div>
+<blockquote><p>ยังไม่เห็นปุ่มไหน? เทียบกับภาพสไลด์ก่อนหน้า แล้วยกมือถาม</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="20">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F30, F19 · demo-files">20 / 79</span>
+<h1>ทดสอบคำสั่งแรก</h1>
+<p>พิมพืในแท็บ <strong>Chat</strong> ว่า</p>
+<pre><code>อ่าน meeting_notes.txt แล้วสรุปเป็น bullet 3 ข้อ ลงไฟล์ work-summary.md</code></pre>
+<div class="cards c2">
+  <div class="card"><div class="t">สิ่งที่ agent จะทำ</div><div class="d">เปิดไฟล์ <code>meeting_notes.txt</code> อ่าน แล้วเขียนผลลัพธ์ลง <code>work-summary.md</code></div></div>
+  <div class="card accent"><div class="t">สิ่งที่เราจะได้</div><div class="d">ไฟล์ใหม่ 1 ไฟล์ที่เปิดอ่านได้ — ตรวจในแท็บ <code>Files</code></div></div>
+</div>
+<blockquote><p>คำสั่งดี = บอก <strong>อ่านอะไร</strong> + <strong>ให้ทำอะไร</strong> + <strong>ได้ผลเป็นไฟล์อะไร</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="21">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F46, F19">21 / 79</span>
+<h1>อ่านผลลัพธ์ให้เป็น</h1>
+<pre><code>[tool: Read: meeting_notes.txt]      ← อ่านไฟล์
+[tool: Write: work-summary.md]       ← เขียนผลลัพธ์</code></pre>
+<pre><code>[tokens: 937in/464out · cache: 22528r · 8s · $0.0221 session]</code></pre>
+<ul><li><code>[tool: …]</code> = agent กำลัง<strong>ลงมือ</strong> ไม่ใช่แค่ตอบ</li><li>บรรทัดท้าย = สรุปการใช้งาน: ป้อนเข้า/ส่งออก · แคช · เวลา · ค่าใช้จ่ายสะสมของ session</li></ul>
+<blockquote><p>ตัวเลขนี้ไว้ดูว่า <strong>งานแบบไหนกินงบ</strong> — ไม่ใช่คะแนนความฉลาดของ agent</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="22">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: blueprint §7">22 / 79</span>
+<h1>ทดสอบ 1 — คำสั่งแรกของฉัน</h1>
+<ul class="checklist">
+  <li>ส่งคำสั่งแรกในแท็บ Chat</li>
+  <li>รอจนจบ — เห็น <code>[tool: …]</code> อย่างน้อย 2 บล็อก</li>
+  <li>สลับไปแท็บ <strong>Files</strong> เปิดดูไฟล์ผลลัพธ์ — อ่านออกไหม</li>
+</ul>
+<div class="pbar"><div class="fill" style="width:70%"></div><div class="lbl">เป้า: ผู้เรียน ≥ 70% ผ่านทั้ง 3 ข้อ</div></div>
+<blockquote><p>ยังไม่ออก? <strong>ระบุชื่อไฟล์ปลายทางให้ชัด</strong> ในคำสั่ง แล้วลองอีกครั้ง<br>ตัวอย่าง: "…ลงไฟล์ <code>work-summary.md</code> ที่ราก workspace"</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="23">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F19 · sis manual §14.3">23 / 79</span>
+<h1>ส่งไฟล์ขึ้น workspace</h1>
+<div class="split">
+<div>
+
+<p><strong>เพดานที่ต้องจำ</strong> — ปุ่ม <code>Upload files</code> รับสูงสุด</p>
+
+<div class="cards c2">
+  <div class="card accent"><div class="v">5 ไฟล์</div><div class="d">ต่อครั้ง</div></div>
+  <div class="card accent"><div class="v">25 MB</div><div class="d">ต่อไฟล์</div></div>
+</div>
+
+<p>ไฟล์ที่อัปโหลดจะไปอยู่ที่โฟลเดอร์ <code>_uploads/</code></p>
+
+<blockquote><p>ทำงานบนเว็บ ไฟล์ในเครื่องเราจะไม่ถูกมองเห็น จนกว่าจะอัปโหลด</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/52-workspace-files.png" alt="แท็บ Files ดูว่าไฟล์ที่อัปโหลดไปอยู่ที่ไหน">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="24">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F19, F53">24 / 79</span>
+<h1>ทดสอบ 2 — อัปโหลด 1 ไฟล์</h1>
+<ul class="checklist">
+  <li>เตรียมไฟล์งานจริงของตัวเองมา 1 ไฟล์ (Word / Excel / PDF)</li>
+  <li>กดปุ่มอัปโหลดในแท็บ Chat แล้วเลือกไฟล์</li>
+  <li>สลับไปแท็บ <strong>Files</strong> — เห็นไฟล์อยู่ใน <code>_uploads/</code> ไหม</li>
+</ul>
+<div class="pbar"><div class="fill" style="width:100%"></div><div class="lbl">เป้า: ทุกคนเห็นไฟล์ของตัวเองในแท็บ Files</div></div>
+<blockquote><p>ไฟล์ใหญ่เกิน 25 MB? ย่อขนาดก่อน แล้วบอกผู้สอนจะได้ช่วยดู</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="25">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F19">25 / 79</span>
+<h1>3 วิธีพาไฟล์เข้าบทสนทนา</h1>
+<div class="cards c3">
+  <div class="card accent"><div class="k">วิธีที่ 1</div><div class="t">อัปโหลด</div><div class="d">ใช้ปุ่มอัปโหลด — ไฟล์ไปที่ <code>_uploads/</code> แล้วเรียกชื่อไฟล์ในคำสั่ง</div></div>
+  <div class="card"><div class="k">วิธีที่ 2</div><div class="t">ลากมาวาง</div><div class="d">ลากไฟล์จากหน้าจอมาวางในช่องพิมพ์ แล้วพิมพ์คำสั่งต่อได้เลย</div></div>
+  <div class="card"><div class="k">วิธีที่ 3</div><div class="t">วางพาธ</div><div class="d">บอกเส้นทางไฟล์ในข้อความ เช่น <code>output/report.xlsx</code></div></div>
+</div>
+<blockquote><p>บนเว็บ ไฟล์ต้องอยู่ใน workspace ก่อน (วิธีที่ 1 หรือ 2) — ส่วนแอปเดสก์ท็อปวางพาธไฟล์ในเครื่องได้ตรง ๆ</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="26">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F30 · thClaws manual ch11">26 / 79</span>
+<h1>Built-in tools ~30 ตัว แบ่ง 4 กลุ่ม</h1>
+<div class="cards c2">
+  <div class="card"><div class="k">File</div><div class="t">อ่าน/เขียนไฟล์</div><div class="d"><code>Ls · Read · Glob · Grep · Write · Edit</code></div></div>
+  <div class="card"><div class="k">Shell</div><div class="t">รันคำสั่ง</div><div class="d"><code>Bash</code></div></div>
+  <div class="card"><div class="k">Web</div><div class="t">ค้นและดึงเว็บ</div><div class="d"><code>WebFetch · WebSearch</code></div></div>
+  <div class="card accent"><div class="k">เอกสาร</div><div class="t">สร้าง/อ่านไฟล์งาน</div><div class="d"><code>PdfCreate · DocxCreate · XlsxCreate · PptxCreate</code> (และตัวอ่านคู่กัน)</div></div>
+</div>
+<blockquote><p>จำ <strong>4 กลุ่ม</strong> พอ — กลุ่ม "เอกสาร" คือของใหม่ที่ทำให้ agent ทำงานออฟฟิศได้จริง</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="27">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F30, F32 · thClaws manual ch11">27 / 79</span>
+<h1>tool ทำงานกับไฟล์อย่างไร</h1>
+<div class="split">
+<div>
+
+<p>ตามรอยของ 1 คำสั่ง</p>
+
+<ol><li><code>Read</code> — อ่านไฟล์ต้นทาง</li><li><strong>คิด</strong> — เลือกข้อมูลที่จะใช้</li><li><code>Write</code> — เขียนไฟล์ปลายทาง</li><li>เราเปิดดูในแท็บ <code>Files</code></li></ol>
+
+<p>ขีดจำกัดที่ควรรู้</p>
+
+<div class="cards c2">
+  <div class="card"><div class="t">Bash</div><div class="d">timeout 2 นาที (ขยายถึง 10)</div></div>
+  <div class="card"><div class="t">Output ใหญ่</div><div class="d">เกิน 50 KB ถูกตัด — ผลเต็มเก็บเป็นไฟล์</div></div>
+</div>
+
+</div>
+<div>
+
+<pre><code>[tool: Read: meeting_notes.txt]
+[tool: Write: work-summary.md]</code></pre>
+
+<div class="shot-cap">เห็นแบบนี้ = agent ยังทำงานอยู่</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="28">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F31 · thClaws manual ch11">28 / 79</span>
+<h1>ภาษาไทยไม่เพี้ยน</h1>
+<div class="cards c2">
+  <div class="card"><div class="t"><code>DocxCreate</code> / <code>PptxCreate</code></div><div class="d">ตั้งฟอนต์ Noto Sans Thai ให้ทุกช่วงข้อความ</div></div>
+  <div class="card accent"><div class="t"><code>PdfCreate</code></div><div class="d">ฝังฟอนต์ไทยลงในไฟล์ — เปิดที่ไหนก็ครบ</div></div>
+</div>
+<p><strong>Thai-first ฝังมาในตัว</strong> — ไม่ต้องติดตั้งฟอนต์เพิ่ม</p>
+<p>ตัวอย่างข้อความที่ต้องอ่านออกครบทุกตัว — <strong>เครื่องมือ ฝ่าย เป็น ทำงาน กำลัง น้ำ</strong></p>
+<blockquote><p>เปิดไฟล์ตรวจทุกครั้งก่อนส่งต่อให้คนอื่น</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="29">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F30, F31 · demo-files">29 / 79</span>
+<h1>เดโม: PDF ไทย → Word</h1>
+<pre><code>อ่าน company-policy.pdf สรุป 5 หัวข้อ แล้วสร้างเป็นไฟล์ Word policy-summary.docx</code></pre>
+<pre><code>[tool: PdfRead: …]  →  [tool: DocxCreate: …]</code></pre>
+<div class="card pending"><div class="d">ภาพผลลัพธ์ <code>policy-summary.docx</code> แสดงสดจากหน้าจอผู้สอน</div></div>
+<blockquote><p>เอกสารมี 14 หมวด — <strong>การเลือก 5 หัวข้อเองคือทักษะการจัดลำดับความสำคัญ</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="30">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F48, F53">30 / 79</span>
+<h1>จัดการไฟล์ใน Files view</h1>
+<div class="cards c2">
+  <div class="card accent"><div class="k">ดู</div><div class="t">Preview</div><div class="d">คลิกไฟล์เพื่อดู — รองรับ markdown · HTML · โค้ด · รูป · PDF</div></div>
+  <div class="card"><div class="k">แก้</div><div class="t">Edit</div><div class="d">สลับเป็นโหมดแก้ไข · จุด ● = ยังไม่บันทึก · <code>Cmd/Ctrl + S</code> = บันทึก</div></div>
+  <div class="card"><div class="k">สร้าง</div><div class="t">New file / New folder</div><div class="d">สร้างที่ราก workspace ได้เลย ไม่ต้องออกไปใช้โปรแกรมอื่น</div></div>
+  <div class="card"><div class="k">เดินดู</div><div class="t">Go up · Show dotfiles</div><div class="d">ย้อนขึ้นโฟลเดอร์บน · ซ่อน/แสดงไฟล์ที่ขึ้นต้นด้วยจุด</div></div>
+</div>
+<blockquote><p>ไฟล์ที่แก้ในนี้คือไฟล์จริงที่ agent อ่าน — <strong>แก้วันนี้ ใช้ได้เทิร์นถัดไป</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="31">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: blueprint §7">31 / 79</span>
+<h1>ทดสอบ 3 — แก้ไฟล์ใน Files</h1>
+<ul class="checklist">
+  <li>สลับไปแท็บ <strong>Files</strong> เปิดไฟล์ผลลัพธ์จากทดสอบ 1</li>
+  <li>สลับเป็นโหมด Edit แก้ข้อความ 1 จุด แล้วกด <code>Cmd/Ctrl + S</code></li>
+  <li>กลับไปแท็บ <strong>Chat</strong> ถามว่า "สรุปในไฟล์ตอนนี้มีกี่ข้อ"</li>
+</ul>
+<div class="pbar"><div class="fill" style="width:100%"></div><div class="lbl">เป้า: agent อ่านค่าที่เราแก้ล่าสุดได้</div></div>
+<blockquote><p>ข้อนี้พิสูจน์ว่า <strong>ไฟล์บนจอคือไฟล์เดียวกันกับที่ agent เห็น</strong></p></blockquote>
+</div>
+</section>
+<section class="slide lead" data-n="32">
+<div class="slide-inner">
+<div class="day-badge">module H · บทที่ 35</div>
+<h1>agent หลายตัวใน workspace เดียว</h1>
+<h2>หนึ่งโปรเจกต์ · หลายตัวตน · ไฟล์ชุดเดียวกัน</h2>
+<p>เนื้อหายกจากชุดวิดีโอ ch35 · ปรับภาพเป็นระบบ SiS v0.141.0</p>
+<span class="src page-num">32 / 79</span>
+</div>
+</section>
+<section class="slide" data-n="33">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · บทนำ">33 / 79</span>
+<h1>หลาย agent หนึ่ง workspace</h1>
+<p>workspace หนึ่งอันเก็บ agent ได้หลายตัว</p>
+<div class="cards c3">
+<div class="card accent">
+<div class="k">ตัวที่ 1</div>
+<div class="t">ทำวิจัย</div>
+<div class="d">ค้นข้อมูล ตรวจสอบข้อเท็จจริง</div>
+</div>
+<div class="card accent">
+<div class="k">ตัวที่ 2</div>
+<div class="t">เขียน</div>
+<div class="d">ร่างเนื้อหา จัดสำนวน</div>
+</div>
+<div class="card accent">
+<div class="k">ตัวที่ 3</div>
+<div class="t">วิเคราะห์</div>
+<div class="d">ตรวจข้อมูล สรุปผล</div>
+</div>
+</div>
+<p>แต่ละตัวมี <strong>บทสนทนา ความจำ และการตั้งค่าของตัวเอง</strong> — แต่ทำงานบน <strong>ไฟล์โปรเจกต์ชุดเดียวกัน</strong></p>
+</div>
+</section>
+<section class="slide" data-n="34">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · บทนำ">34 / 79</span>
+<h1>ch35 ไม่ใช่ ch17</h1>
+<p>สองบทนี้พูดถึง "agent หลายตัว" เหมือนกัน แต่คนละเรื่องกัน</p>
+<div class="split">
+<div>
+
+<h2>บทที่ 35 — agent ใน workspace</h2>
+
+<ul><li>agent ที่ <strong>คุณ</strong> เอาเข้ามาไว้ใน workspace</li><li><strong>คุณ</strong> เป็นคนสลับใช้เอง</li><li>แต่ละตัวมีตัวตนถาวร อยู่ข้ามเซสชัน</li><li>เป้าหมาย: แยกงานเป็นบทบาท</li></ul>
+
+</div>
+<div>
+
+<h2>บทที่ 17 — Agent Teams</h2>
+
+<ul><li>เพื่อนร่วมทีมที่ <strong>agent เรียกขึ้นมาเอง</strong> ผ่าน <code>TeamCreate</code></li><li>ประสานงานกันผ่านกล่องจดหมาย</li><li>มีอายุแค่ช่วงที่ทำงานนั้น</li><li>เป้าหมาย: กระจายงานชิ้นเดียว</li></ul>
+
+</div>
+</div>
+<p><strong>ใช้พร้อมกันได้</strong> — agent ตัวหนึ่งของคุณ จะไปตั้งทีมของมันเองก็ได้</p>
+</div>
+</section>
+<section class="slide" data-n="35">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · โมเดล">35 / 79</span>
+<h1>ทุก agent เห็นไฟล์ชุดเดียวกัน</h1>
+<p>เปิดโฟลเดอร์โปรเจกต์ของคุณขึ้นมา — <strong>นั่นคือไฟล์ที่ทุก agent ใช้ร่วมกัน</strong></p>
+<div class="cards c3">
+<div class="card accent">
+<div class="k">ทุกตัวเห็น</div>
+<div class="t">ไฟล์งานของคุณ</div>
+<div class="d">เอกสาร โค้ด รูป — อยู่ในโฟลเดอร์โปรเจกต์ตามปกติ ไม่ต้องย้ายที่</div>
+</div>
+<div class="card accent">
+<div class="k">ทุกตัวเห็น</div>
+<div class="t">ความรู้ของโปรเจกต์</div>
+<div class="d">knowledge base และ memory ที่ผูกกับโปรเจกต์นี้</div>
+</div>
+<div class="card accent">
+<div class="k">ทุกตัวเห็น</div>
+<div class="t">ประวัติ git</div>
+<div class="d">ถ้าโปรเจกต์ใช้ git ทุก agent เห็นประวัติชุดเดียวกัน</div>
+</div>
+</div>
+<blockquote><p><strong>ไฟล์ของคุณไม่ถูกย้ายไปไหน</strong> — อยู่ในโฟลเดอร์โปรเจกต์เหมือนเดิม หาเจอด้วย Finder ตามปกติ</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="36">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · โมเดล">36 / 79</span>
+<h1>อะไรใช้ด้วยกัน อะไรแยกกัน</h1>
+<div class="split">
+<div>
+
+<h2>ใช้ด้วยกันทั้ง workspace</h2>
+
+<ul><li><strong>ไฟล์งานทั้งหมด</strong> ในโฟลเดอร์โปรเจกต์</li><li><strong>knowledge base</strong> ของโปรเจกต์</li><li><strong>memory</strong> ของโปรเจกต์</li><li><strong>ประวัติ git</strong> (ถ้ามี)</li></ul>
+
+<p>⇒ agent ทุกตัวเห็นสิ่งเดียวกัน</p>
+
+</div>
+<div>
+
+<h2>แยกเป็นของ agent แต่ละตัว</h2>
+
+<ul><li><strong>คำสั่งประจำตัว</strong> ของ agent</li><li><strong>การตั้งค่า</strong> — โมเดล โหมดสิทธิ์ ฟีเจอร์ที่เปิด</li><li><strong>บทสนทนาย้อนหลัง</strong></li><li><strong>skill ที่ติดตั้งไว้</strong></li><li><strong>การล็อกอินเว็บที่ค้างไว้</strong></li></ul>
+
+<p>⇒ แต่ละตัวจำของตัวเอง ไม่ปนกัน</p>
+
+</div>
+</div>
+<blockquote><p>เปลี่ยน agent แล้ว <strong>ไม่ต้องเริ่มบทสนทนาใหม่ทั้งโปรเจกต์</strong> — แต่ประวัติแชทของ agent ตัวก่อนจะไม่ตามมา</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="37">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · โมเดล">37 / 79</span>
+<h1>เพิ่ม agent แล้วไฟล์ฉันจะย้ายไหม</h1>
+<p><strong>ไม่ย้าย</strong> — ไฟล์โปรเจกต์อยู่ที่เดิมเสมอ</p>
+<div class="cards c2">
+<div class="card">
+<div class="k">เรื่องจริงที่เคยเป็น</div>
+<div class="t">เคยย้าย แล้วเลิกทำ</div>
+<div class="d">เวอร์ชันเก่าเคยย้ายไฟล์งานเข้าไปซ่อนในโฟลเดอร์ของ agent ทำให้หาไม่เจอด้วย Finder และ agent ตัวอื่นก็มองไม่เห็น — จึงยกเลิกวิธีนั้น</div>
+</div>
+<div class="card accent">
+<div class="k">ตอนนี้</div>
+<div class="t">ถ้าเจอ workspace เก่า ระบบย้ายกลับให้</div>
+<div class="d">เปิด workspace ที่สร้างด้วยเวอร์ชันเก่า ระบบจะย้ายไฟล์กลับมาไว้ที่รากของโปรเจกต์ให้เองอัตโนมัติ</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide shot" data-n="38">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · แถบ agent">38 / 79</span>
+<h1>แถบ agent</h1>
+<div class="shot-frame">
+<img src="img/61-web-overview.png" alt="หน้าจอ workspace — แถบ agent ที่ขอบซ้ายสุดเป็นแถวช่อง agent หนึ่งช่องต่อหนึ่งตัว ถัดมาเป็นแถบข้าง และด้านขวาเป็นหน้าจอแชท">
+</div>
+<div class="shot-cap">แถบแคบ ๆ ที่ขอบซ้ายสุดคือรายชื่อ agent — หนึ่งช่องต่อหนึ่งตัว · ด้านขวาคือแถบข้างและหน้าจอแชทของ agent ที่เลือกอยู่</div>
+</div>
+</section>
+<section class="slide" data-n="39">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · แถบ agent">39 / 79</span>
+<h1>สลับ agent แล้วอะไรตามไป</h1>
+<p>ใช้ได้ทั้งในแอปเดสก์ท็อปและใน <code>--serve</code></p>
+<ul><li><strong>หนึ่งช่องต่อหนึ่ง agent</strong> — มี <strong>อักษรย่อ</strong> กำกับ</li><li>ตัวที่ใช้อยู่จะถูก <strong>ไฮไลต์</strong></li><li><strong>เอาเมาส์ชี้ค้างไว้</strong> จะเห็นชื่อกับสถานะ เช่น <code>main — ready</code></li><li><strong>คลิกเพื่อสลับ</strong> แล้วแถบแท็บ แถบข้าง และบทสนทนา <strong>จะตามไปทั้งหมด</strong></li></ul>
+<blockquote><p>แถบนี้คือทางเดียวที่คุณเห็นว่า "ตอนนี้กำลังคุยกับ agent ตัวไหน" — ถ้าผลลัพธ์ดูไม่ตรงกับที่ตั้งค่าไว้ ให้ดูแถบนี้ก่อน</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="40">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · แถบ agent">40 / 79</span>
+<h1>ปุ่มสองปุ่มในแถบ</h1>
+<table><thead><tr><th>ปุ่ม</th><th>ทำอะไร</th></tr></thead><tbody><tr><td><strong>Workspace settings</strong></td><td>เพิ่ม ลบ หรือรีสตาร์ท agent</td></tr><tr><td><strong>Add an agent</strong></td><td>ดึงจาก Agent Template หรือเริ่มตัวเปล่า ๆ</td></tr></tbody></table>
+</div>
+</section>
+<section class="slide" data-n="41">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · การเพิ่ม agent">41 / 79</span>
+<h1>agent มาจากไหน</h1>
+<p>agent มาจาก <strong>Agent Templates</strong> — catalog ที่ thclaws.cloud (บทที่ 27)</p>
+<div class="cards c2">
+<div class="card">
+<div class="k">ดูจากในแอป</div>
+<div class="t">หน้า Templates</div>
+<div class="d">เปิดดู catalog ที่หน้าเว็บ thclaws.cloud</div>
+</div>
+<div class="card">
+<div class="k">ดูจากเทอร์มินัล</div>
+<div class="t"><code>/cloud list</code></div>
+<div class="d">สั่งในแชทเพื่อดูรายการเทมเพลต</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="42">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · การเพิ่ม agent">42 / 79</span>
+<h1>เพิ่ม agent จาก GUI — สองทาง</h1>
+<p>กด <strong>+</strong> ที่ท้ายแถบ agent แล้วเลือกว่าจะ <strong>เริ่มตัวเปล่า</strong> หรือ <strong>ดึงจากเทมเพลต</strong></p>
+<div class="cards c2">
+<div class="card accent">
+<div class="k">ทางที่ 1</div>
+<div class="t">Add a blank agent</div>
+<div class="d">เริ่มจากศูนย์ ตั้งชื่อและคำสั่งเองทั้งหมด — เหมาะเมื่อรู้ชัดว่าจะให้ agent ตัวนี้ทำอะไร</div>
+</div>
+<div class="card accent">
+<div class="k">ทางที่ 2</div>
+<div class="t">Add from Agent Template</div>
+<div class="d">เลือกจาก catalog ที่ thclaws.cloud — ได้ agent ที่ตั้งค่าไว้พร้อมใช้</div>
+</div>
+</div>
+<p>agent ใหม่จะขึ้นเป็นช่องใหม่ในแถบ <strong>หลัง host เริ่มรอบถัดไป</strong></p>
+</div>
+</section>
+<section class="slide shot" data-n="43">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · การเพิ่ม agent">43 / 79</span>
+<h1>dialog — Add a blank agent</h1>
+<div class="shot-frame">
+<img src="img/62-web-add-agent-panel.png" alt="dialog เพิ่ม agent ตัวเปล่า แสดงช่องกรอกชื่อและตัวเลือกสำหรับตั้งค่า agent ใหม่">
+</div>
+<div class="shot-cap">เริ่มจากศูนย์ — ตั้งชื่อและคำสั่งเองทั้งหมด เหมาะเมื่อรู้ชัดว่าจะให้ agent ตัวนี้ทำอะไร</div>
+</div>
+</section>
+<section class="slide shot" data-n="44">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · การเพิ่ม agent">44 / 79</span>
+<h1>dialog — Add from Agent Template</h1>
+<div class="shot-frame">
+<img src="img/63-web-agent-templates.png" alt="dialog เลือก Agent Template จาก catalog แสดงรายการเทมเพลตให้เลือก">
+</div>
+<div class="shot-cap">เลือกจาก catalog ที่ thclaws.cloud — ได้ agent ที่ตั้งค่าไว้พร้อมใช้</div>
+</div>
+</section>
+<section class="slide" data-n="45">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · การเพิ่ม agent">45 / 79</span>
+<h1>เพิ่ม agent จากเทอร์มินัล · ผู้ใช้ขั้นสูง</h1>
+<p>ถ้าถนัดเทอร์มินัล ทำได้เหมือนกัน — <strong>ผลลัพธ์เหมือนกดจากแอปทุกอย่าง</strong></p>
+<pre><code>thclaws bots add &lt;template&gt;              # เวอร์ชันล่าสุด
+thclaws bots add &lt;template&gt; --version 3  # ปักหมุดเวอร์ชัน</code></pre>
+<blockquote><p><strong>ไม่ต้องใช้ก็ได้</strong> — ถ้าถนัดใช้ปุ่มในแอป ใช้ทางนั้นได้เลย<br>ทางนี้เหมาะเมื่อต้องเพิ่มหลายตัวพร้อมกัน หรือทำเป็นสคริปต์ติดตั้งให้ทีม</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="46">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · การเพิ่ม agent">46 / 79</span>
+<h1>เพิ่ม agent แล้วไม่เห็นขึ้นในแถบ?</h1>
+<p><strong>เป็นเรื่องปกติ</strong> — agent ใหม่จะขึ้นในแถบ <strong>ไม่ทันที</strong> แต่หลังระบบเริ่มรอบถัดไป</p>
+<div class="cards c2">
+<div class="card">
+<div class="k">ถ้ารอแล้วยังไม่ขึ้น</div>
+<div class="t">ลองรีสตาร์ท workspace</div>
+<div class="d">ปิดแล้วเปิดโปรเจกต์ใหม่ ระบบจะอ่านรายการ agent อีกครั้ง</div>
+</div>
+<div class="card">
+<div class="k">ถ้ายังไม่ขึ้นอีก</div>
+<div class="t">ตรวจว่าเพิ่มสำเร็จจริง</div>
+<div class="d">เปิด Workspace settings ดูรายการ agent ว่ามีตัวใหม่อยู่ในนั้นไหม</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="47">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · การลบออก">47 / 79</span>
+<h1>อยากลบ agent ออก</h1>
+<div class="cards c2">
+<div class="card accent">
+<div class="k">จากในแอป</div>
+<div class="t">Workspace settings</div>
+<div class="d">เปิด Workspace settings ที่ท้ายแถบ agent แล้วเลือก agent ที่ต้องการลบ</div>
+</div>
+<div class="card">
+<div class="k">จากเทอร์มินัล · ผู้ใช้ขั้นสูง</div>
+<div class="t"><code>thclaws bots remove &lt;slug&gt;</code></div>
+<div class="d">ถอด agent ออกจากรายการ — <strong>ข้อมูลของมันยังอยู่บนเครื่อง</strong></div>
+</div>
+</div>
+<blockquote class="caution"><p><strong>ไม่ต้องกลัวว่าจะเสียของ</strong> — การลบแบบปกติไม่ลบข้อมูล agent<br>ประวัติบทสนทนาและการล็อกอินเว็บที่ค้างไว้ยังอยู่ครบ ถ้าเพิ่มตัวเดิมกลับมา <strong>จะได้ของเดิมคืน</strong><br><br>⚠ workspace ต้องมี agent <strong>อย่างน้อย 1 ตัว</strong> — ปุ่มลบของตัวสุดท้ายจะถูกล็อกไว้</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="48">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · ตรวจสอบและอัปเกรด workspace">48 / 79</span>
+<h1>ดูว่าโปรเจกต์นี้มี agent อะไรบ้าง · ผู้ใช้ขั้นสูง</h1>
+<p>ถ้าอยากรู้ว่าตอนนี้มี agent กี่ตัว ชื่ออะไร และโปรเจกต์อยู่รูปแบบไหน</p>
+<pre><code>thclaws bots status</code></pre>
+<pre><code>workspace  /Volumes/Data01/projects/my-project
+layout     multiple agents (v3 or later)
+agent      main (Main)</code></pre>
+<blockquote><p><strong>ปกติไม่ต้องใช้</strong> — ดูรายการ agent ได้จากแถบ agent ในแอปอยู่แล้ว<br>ทางนี้มีประโยชน์เมื่อทำงานหลายโปรเจกต์ แล้วอยากเช็กให้แน่ใจว่ากำลังอยู่โฟลเดอร์ไหน</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="49">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · ตรวจสอบและอัปเกรด workspace">49 / 79</span>
+<h1>โปรเจกต์เก่าใช้ agent หลายตัวได้ไหม</h1>
+<p><strong>ได้</strong> — โปรเจกต์ที่สร้างไว้ก่อนมีระบบหลาย agent จะมี agent ตัวเดียว</p>
+<div class="cards c2">
+<div class="card accent">
+<div class="k">วิธีที่แนะนำ</div>
+<div class="t">แค่เปิดโปรเจกต์</div>
+<div class="d">เปิดในแอปเดสก์ท็อปตามปกติ ระบบจะจัดโครงสร้างให้เอง ไม่ต้องทำอะไร</div>
+</div>
+<div class="card">
+<div class="k">ถ้าอยากคุมเอง · ผู้ใช้ขั้นสูง</div>
+<div class="t">สั่งเองจากเทอร์มินัล</div>
+<div class="d"><code>thclaws bots migrate --dry-run</code> ดูก่อนว่าจะย้ายอะไร → <code>thclaws bots migrate</code> ลงมือ</div>
+</div>
+</div>
+<blockquote><p><strong>ไม่ต้องกังวลเรื่องข้อมูล</strong> — ถ้าถูกขัดจังหวะกลางทาง สั่งใหม่ได้เลย<br>และ <strong>ไฟล์งานของคุณไม่ถูกแก้</strong> — มีแต่โครงสร้างภายในที่จัดใหม่</p></blockquote>
+</div>
+</section>
+<section class="slide caution" data-n="50">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · ข้อจำกัดและจุดที่ต้องระวัง">50 / 79</span>
+<h1>สอง agent แก้ไฟล์เดียวกัน — ระวังอะไร</h1>
+<p>agent ทุกตัวเห็นไฟล์ชุดเดียวกัน <strong>จึงแก้ทับกันได้</strong></p>
+<p>ถ้าสั่ง agent สองตัวแก้ <strong>ไฟล์เดียวกัน</strong> พร้อมกัน ผลที่ได้จะเหมือนให้ <strong>คนสองคน</strong> เขียนไฟล์เดียวกัน — ขึ้นกับว่าใครเซฟทีหลัง</p>
+<div class="cards c2">
+<div class="card">
+<div class="k">ทำแบบนี้</div>
+<div class="t">แบ่งงานตามไฟล์</div>
+<div class="d">ให้แต่ละ agent รับผิดชอบคนละไฟล์ — ไม่มีทางชนกัน</div>
+</div>
+<div class="card">
+<div class="k">หรือ</div>
+<div class="t">ให้ตัวเดียวทำทั้งสองงาน</div>
+<div class="d">ถ้าสองงานต้องแตะไฟล์เดียวกันจริง ๆ ให้ agent ตัวเดียวทำต่อเนื่องกัน</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide caution" data-n="51">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · ข้อจำกัดและจุดที่ต้องระวัง">51 / 79</span>
+<h1>เปิดฟีเจอร์ไม่ติดกับ agent ตัวเดียว</h1>
+<p><strong>อาการ:</strong> ฟีเจอร์หนึ่งใช้ได้กับ agent ตัวอื่น แต่กับ agent ตัวนี้เปิดไม่ติด</p>
+<p><strong>สาเหตุที่พบบ่อย:</strong> ไฟล์ตั้งค่าของ agent ตัวนั้นเสียรูปแบบ — ระบบจะ <strong>ปิดทุกอย่างให้เองโดยไม่แจ้งเตือน</strong></p>
+<div class="cards c2">
+<div class="card">
+<div class="k">ขั้นที่ 1</div>
+<div class="t">เช็กว่าเป็นตัวนี้จริงไหม</div>
+<div class="d">ลองเปิดฟีเจอร์เดียวกันกับ agent อีกตัว ถ้าตัวอื่นใช้ได้ = ยืนยันว่าเป็นที่ตัวนี้</div>
+</div>
+<div class="card">
+<div class="k">ขั้นที่ 2</div>
+<div class="t">แก้ไฟล์ตั้งค่าของ agent ตัวนั้น</div>
+<div class="d">เปิดไฟล์ settings ในโฟลเดอร์ของ agent ตัวนั้น ตรวจว่าเป็นรูปแบบที่ถูกต้อง</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="52">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · ข้อจำกัดและจุดที่ต้องระวัง">52 / 79</span>
+<h1>ให้ agent แตะไฟล์ของคุณ — พูดพาธยังไง</h1>
+<p><strong>พูดพาธจากโฟลเดอร์โปรเจกต์เสมอ</strong> — agent ทุกตัวเข้าใจพาธแบบนี้เหมือนกัน</p>
+<div class="cards c2">
+<div class="card accent">
+<div class="k">พูดแบบนี้</div>
+<div class="t">"แก้ไฟล์ใน src/components/"</div>
+<div class="d">นับจากโฟลเดอร์โปรเจกต์ของคุณ — agent หาเจอแน่นอน</div>
+</div>
+<div class="card">
+<div class="k">ระวัง</div>
+<div class="t">พาธที่ชี้ไปในโฟลเดอร์ของ agent</div>
+<div class="d">โฟลเดอร์ตั้งค่าภายในของแต่ละ agent <strong>แยกกันคนละที่</strong> — agent ตัวหนึ่งจะไม่เห็นของอีกตัว</div>
+</div>
+</div>
+<blockquote><p>ถ้าสงสัยว่าตอนนี้ agent กำลังทำงานจากโฟลเดอร์ไหน <strong>ถามตรง ๆ ในแชทได้</strong><br>— ง่ายและชัวร์กว่าการเดาพาธเอง</p></blockquote>
+</div>
+</section>
+<section class="slide takeaway" data-n="53">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: คู่มือ ch35 · ทั้งบท">53 / 79</span>
+<h1>สรุป</h1>
+<ul><li><strong>หนึ่งโปรเจกต์ หลาย agent</strong> — ไฟล์งานใช้ร่วมกัน แต่ละตัวจำบทสนทนาของตัวเอง</li><li><strong>เพิ่ม agent</strong> ได้จากปุ่ม <code>+</code> ท้ายแถบ — เริ่มเปล่า หรือเลือกจากเทมเพลต</li><li><strong>สลับ agent</strong> ที่แถบซ้ายสุด แล้วแถบข้างและบทสนทนาเปลี่ยนตาม</li><li><strong>ลบ agent แล้วของไม่หาย</strong> — ประวัติและการล็อกอินยังอยู่ เพิ่มกลับมาได้ของเดิม</li><li><strong>โปรเจกต์เก่าใช้ได้เลย</strong> — เปิดขึ้นมาแล้วระบบจัดให้เอง</li><li><strong>ระวังตอนสั่งงาน</strong> — สอง agent แก้ไฟล์เดียวกันพร้อมกัน จะทับกัน ให้แบ่งงานตามไฟล์</li><li><strong>เปิดฟีเจอร์ไม่ติดกับตัวเดียว</strong> — มักเป็นไฟล์ตั้งค่าของตัวนั้นเสีย ไม่ใช่ทั้งระบบ</li></ul>
+</div>
+</section>
+<section class="slide" data-n="54">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F24, F42 · thClaws manual ch07">54 / 79</span>
+<h1>Session คืออะไร ผูกกับอะไร</h1>
+<div class="split">
+<div>
+
+<p>ทุกบทสนทนาถูกบันทึกเป็น <strong>session</strong> เก็บไว้ที่</p>
+
+<pre><code>./.thclaws/state/sessions/&lt;id&gt;.jsonl</code></pre>
+
+<p>session ผูกกับ <strong>workspace หรือโฟลเดอร์</strong> ที่เปิดอยู่</p>
+
+<ul><li>สลับ session → ประวัติที่เห็นเปลี่ยนตาม</li><li>เปลี่ยนโฟลเดอร์ → เห็นคนละชุด session</li></ul>
+
+</div>
+<div>
+
+<div class="cards c2">
+  <div class="card"><div class="t">โฟลเดอร์ A</div><div class="d">มี session ของตัวเอง</div></div>
+  <div class="card"><div class="t">โฟลเดอร์ B</div><div class="d">มีของตัวเอง — ไม่ปนกัน</div></div>
+</div>
+
+<blockquote><p>"session เก่าหาย" เกือบทุกครั้งคือ <strong>เปิดผิดโฟลเดอร์</strong></p></blockquote>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="55">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F42, F95 · ตรวจหน้าจริง">55 / 79</span>
+<h1>จัดการ session ในแถบ SESSIONS</h1>
+<div class="cards c4">
+  <div class="card accent"><div class="k">สร้าง</div><div class="t">+</div><div class="d">เริ่มบทสนทนาใหม่ — ของเดิมยังอยู่</div></div>
+  <div class="card"><div class="k">สลับ</div><div class="t">คลิกชื่อ</div><div class="d">ย้อนกลับไปคุยต่อจากเดิมได้</div></div>
+  <div class="card"><div class="k">ตั้งชื่อ</div><div class="t">ไอคอนดินสอ</div><div class="d">เปลี่ยนชื่อให้จำง่าย เช่น <code>สรุปประชุม-ต.ค.</code></div></div>
+  <div class="card"><div class="k">ค้นหา</div><div class="t">ช่องค้นหา</div><div class="d">พิมพ์เพื่อกรองเมื่อ session เยอะ</div></div>
+</div>
+<blockquote><p><strong>ตั้งชื่อ session ทุกครั้งที่ทำงานสำคัญ</strong> — กลับมาหาง่ายกว่าที่คิด</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="56">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F39, F51, F95 · ตรวจหน้าจริง">56 / 79</span>
+<h1>เลือกโมเดล — PROVIDER</h1>
+<div class="split">
+<div>
+
+<ol><li>คลิกที่แถว <strong>PROVIDER</strong> ในแถบซ้าย</li><li>กด <code>▾</code> เพื่อเปิดรายการโมเดล</li><li>พิมพ์ค้นหา แล้วเลือก</li></ol>
+
+<p>ในระบบ SiS มีอย่างน้อย <code>sis/qwen3.8-flash</code></p>
+
+<blockquote class="caution"><p>⚠ สลับข้ามค่ายผู้ให้บริการ = <strong>ต้องเริ่ม session ใหม่</strong> ถ้าโมเดลที่โฟลเดอร์กำหนดไม่ตรงเดิม</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/61-web-overview.png" alt="แถว PROVIDER และปุ่มเปิดรายการโมเดล">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="57">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F41, F51 · ตรวจหน้าจริง">57 / 79</span>
+<h1>ระดับการคิด (think)</h1>
+<div class="cards c4">
+  <div class="card"><div class="v">auto</div><div class="d">ให้ระบบตัดสินเอง — ค่าเริ่มต้น</div></div>
+  <div class="card"><div class="v">0</div><div class="d">ปิดการคิดลึก — ตอบเร็วสุด</div></div>
+  <div class="card"><div class="v">1–2</div><div class="d">คิดปานกลาง — งานทั่วไป</div></div>
+  <div class="card accent"><div class="v">3</div><div class="d">คิดลึกสุด — งานซับซ้อน ใช้เวลานานขึ้น</div></div>
+</div>
+<p><strong>ลองเทียบด้วยตาตัวเอง</strong> — ส่งคำถามเดียวกันที่ <code>0</code> แล้วที่ <code>3</code> ดูความต่างของความเร็วและความลึก</p>
+<blockquote><p>ค่านี้บันทึกไว้กับ <strong>workspace</strong> ไม่ใช่ราย session — เปลี่ยนแล้วใช้ต่อทุกบทสนทนา</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="58">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F40, F14">58 / 79</span>
+<h1>จุดแดง–จุดเขียว บอกอะไร</h1>
+<div class="cards c2">
+  <div class="card accent"><div class="t">จุดเขียว</div><div class="d">provider พร้อมใช้งาน — ส่งคำสั่งได้ทันที</div></div>
+  <div class="card"><div class="t">จุดแดง + ขีดฆ่า</div><div class="d">ยังไม่มี credential — ข้อความจะบอกว่าให้ไปตั้งค่าที่ไหน</div></div>
+</div>
+<p>บน workspace เว็บของ SiS ผู้ใช้ทั่วไป <strong>มักไม่ต้องใส่ key เอง</strong> เพราะองค์กรผูกช่องทางให้แล้ว</p>
+<blockquote><p>ในแบบฝึกของเรา ถ้าจุดไม่เขียว ให้แจ้งผู้สอน — ไม่ต้องพยายามใส่ key เอง</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="59">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F88 · ตรวจหน้าจริง 16 ต.ค. 2026">59 / 79</span>
+<h1>เมนู Setting — แผนที่ 7 รายการ</h1>
+<table><thead><tr><th>รายการ</th><th>ใช้ทำอะไร</th></tr></thead><tbody><tr><td><strong>Instructions</strong></td><td>แก้คำสั่งประจำตัวของ agent (Global / Folder)</td></tr><tr><td><strong>Settings &amp; API keys</strong></td><td>กุญแจผู้ให้บริการ · gateway · บัญชี cloud</td></tr><tr><td><strong>Connect a channel…</strong></td><td>ต่อ LINE / Telegram / Messenger</td></tr><tr><td><strong>Appearance</strong></td><td>ธีมสว่าง–มืด–ตามระบบ</td></tr><tr><td><strong>GUI scale</strong></td><td>ย่อ/ขยายหน้าจอ 75–200%</td></tr><tr><td><strong>Reload settings</strong></td><td>อ่านไฟล์ตั้งค่าใหม่ด้วยมือ</td></tr><tr><td><strong>Optional features</strong></td><td>เปิด/ปิดความสามารถเสริม 6 ตัว</td></tr></tbody></table>
+<blockquote><p>รายการที่มี <code>›</code> — <strong>เอาเมาส์ชี้ค้าง</strong> เพื่อกางเมนูย่อย (คลิกจะปิดเมนูแทน)</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="60">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F89, F55 · ตรวจหน้าจริง 16 ต.ค. 2026">60 / 79</span>
+<h1>Instructions = ไฟล์ AGENTS.md</h1>
+<div class="split">
+<div>
+
+<p>คำสั่งประจำตัว agent เก็บในไฟล์ <code>AGENTS.md</code> แก้ได้ <strong>2 ที่</strong></p>
+
+<div class="cards c2">
+  <div class="card"><div class="k">Global</div><div class="t">ทุกโปรเจกต์</div><div class="d"><code>~/.config/thclaws/AGENTS.md</code></div></div>
+  <div class="card accent"><div class="k">Folder</div><div class="t">เฉพาะโปรเจกต์นี้</div><div class="d"><code>/workspace/AGENTS.md</code></div></div>
+</div>
+
+<p>เปิดจาก Settings → <strong>Instructions</strong> → เลือก Global หรือ Folder</p>
+
+<blockquote><p>เขียนแล้วกด <code>Save</code> — <strong>agent เห็นทันทีในข้อความถัดไป</strong></p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/69-web-folder-instructions.png" alt="หน้าต่างแก้ Folder instructions">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="61">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F89 · ตรวจหน้าจริง 16 ต.ค. 2026">61 / 79</span>
+<h1>ลองเอง 30 วินาที — instruction ข้อแรก</h1>
+<ul class="checklist">
+  <li>เปิด Settings → Instructions → <strong>Folder</strong></li>
+  <li>เขียน 1 ข้อที่อยากให้ agent จำไว้ เช่น "ตอบสั้น กระชับ ภาษาไทย"</li>
+  <li>กด <code>Save</code> แล้วปิดหน้าต่าง</li>
+</ul>
+<blockquote><p>ต่อจากนี้ agent จะทำตามข้อนั้น <strong>ทุกครั้ง</strong>จนกว่าเราจะแก้หรือลบ</p></blockquote>
+<blockquote><p>คิดไม่ออก? ลอง: "ทุกครั้งที่สร้างไฟล์ ให้สรุป 3 บรรทัดท้ายคำตอบเสมอ"</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="62">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F90, F61, F62 · ตรวจหน้าจริง 16 ต.ค. 2026">62 / 79</span>
+<h1>Optional features — สวิตช์ 6 ตัว</h1>
+<div class="split">
+<div>
+
+<p>เปิด/ปิดความสามารถเสริม — ค่าถูกบันทึกลง <code>.thclaws/settings.json</code> ทันที</p>
+
+<ul><li><strong>Agent Teams</strong> — ทำงานเป็นทีม</li><li><strong>Media tools</strong> — สร้างภาพ วิดีโอ เสียง</li><li><strong>HAL tools</strong> — ดึงวิดีโอ YouTube / อ่านหน้าเว็บ</li><li><strong>Shell tab</strong> — แท็บเทอร์มินัลเต็มรูปแบบ</li><li><strong>Browser tools</strong> — ให้ agent เปิดเบราว์เซอร์</li><li><strong>Sensitive-data masking</strong> — ปิดข้อมูลอ่อนไหวก่อนส่งออก</li></ul>
+
+<blockquote class="caution"><p>⚠ ถ้าไฟล์ <code>settings.json</code> ผิดรูป <strong>ทุกสวิตช์จะอ่านเป็น "ปิด" แบบเงียบ ๆ</strong> ไม่มีคำเตือน</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/70-web-optional-features.png" alt="เมนูย่อย Optional features ทั้ง 6 สวิตช์">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="63">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F58, F59, F88 · thClaws manual ch06">63 / 79</span>
+<h1>API key เก็บที่ไหน — และอะไรที่ห้ามทำ</h1>
+<div class="split">
+<div>
+
+<p>ระบบค้นหากุญแจตามลำดับ (บนสุดชนะ)</p>
+
+<ol><li>ตัวแปรสภาพแวดล้อมของ shell</li><li><strong>OS keychain</strong> ← วิธีที่แนะนำ</li><li><code>~/.config/thclaws/.env</code></li><li><code>./.env</code></li></ol>
+
+<p><strong>กุญแจไม่ถูกเก็บใน <code>settings.json</code> เด็ดขาด</strong> · บนเว็บดู/ตั้งที่ Settings → Settings &amp; API keys</p>
+
+</div>
+<div>
+
+<div class="card caution"><div class="t">⚠ ไฟล์ `.env` เป็นข้อความธรรมดา</div><div class="d">ใครอ่านไฟล์ได้ก็อ่านกุญแจได้ · ติดไปกับ git ง่าย · รั่วผ่าน backup/cloud sync</div></div>
+
+<ul class="checklist">
+  <li>ถ้าใช้ <code>.env</code> ให้ใส่ <code>.env</code> ใน <code>.gitignore</code> ทันที</li>
+  <li>ถ้าเผลอ commit แล้ว — <strong>เปลี่ยนกุญแจใบนั้นทันที</strong></li>
+</ul>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="64">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F65, F91 · ch12 · ตรวจหน้าจริง">64 / 79</span>
+<h1>Skill — ความเชี่ยวชาญที่โหลดได้</h1>
+<div class="split">
+<div>
+
+<p><strong>Skill</strong> = เวิร์กโฟลว์ที่นำกลับมาใช้ใหม่ได้ บรรจุเป็นโฟลเดอร์</p>
+
+<div class="cards c2">
+  <div class="card"><div class="t">Tool</div><div class="d">คือ "มือ" — ทำให้ agent ลงมือทำได้</div></div>
+  <div class="card accent"><div class="t">Skill</div><div class="d">คือ "คู่มือวิธีทำงาน" — ทำให้ทำเป็นแบบผู้เชี่ยวชาญ</div></div>
+</div>
+
+<p>ในระบบ SiS มี skill ติดตั้งไว้ 2 ตัว: <code>extract-and-save</code> · <code>gui-shell</code></p>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/65-web-skills.png" alt="ผลลัพธ์คำสั่ง /skills">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="65">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F65 · thClaws manual ch12">65 / 79</span>
+<h1>ข้างใน skill มีอะไร</h1>
+<div class="split">
+<div>
+
+<div class="cards c2">
+  <div class="card accent"><div class="t">SKILL.md</div><div class="d">จำเป็น — ไฟล์อธิบาย + ส่วนหัวระบุชื่อ คำอธิบาย ใช้เมื่อไหร่ และโมเดลที่แนะนำ</div></div>
+  <div class="card"><div class="t">scripts/</div><div class="d">ไม่บังคับ — สคริปต์ที่ skill เรียกใช้ (run ผ่านคำสั่ง Bash เท่านั้น)</div></div>
+</div>
+
+<blockquote><p>skill ที่ดี = <strong>บอกชัดว่าเมื่อไหร่ควรใช้</strong> ไม่ใช่แค่บอกว่ามันทำอะไร</p></blockquote>
+
+</div>
+<div>
+
+<pre><code>name: extract-and-save
+description: อ่านไฟล์ต้นทาง …
+whenToUse: เมื่อต้องการสกัดข้อมูล…
+model: …</code></pre>
+
+<div class="shot-cap">ส่วนหัวของ SKILL.md — ล้อมด้วยเส้นคั่นสามขีดบนและล่าง</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="66">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F67 · thClaws manual ch12 · ตรวจหน้าจริง">66 / 79</span>
+<h1>ดูว่ามี skill อะไรติดตั้งแล้ว</h1>
+<div class="cards c3">
+  <div class="card accent"><div class="t">/skills</div><div class="d">รายการทั้งหมดที่โหลดไว้ พร้อมคำอธิบาย</div></div>
+  <div class="card"><div class="t">/skill show ชื่อ</div><div class="d">เปิดดูเนื้อหาเต็มของ skill นั้น + ที่อยู่ไฟล์</div></div>
+  <div class="card"><div class="t">โมเดลเห็นเอง</div><div class="d">รายการ skill ถูกส่งให้ agent อัตโนมัติ — ไม่ต้องสั่งโหลด</div></div>
+</div>
+<blockquote><p>พิมพ์ในแท็บ <strong>Terminal</strong> ได้เลย — คำสั่งนี้ไม่กินโควตาโมเดล</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="67">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F69 · thClaws manual marketplace">67 / 79</span>
+<h1>หา skill ใหม่จาก marketplace</h1>
+<div class="split">
+<div>
+
+<p><strong>marketplace</strong> = แคตตาล็อก skill ที่คัดสรรและตรวจสัญญาอนุญาตแล้ว</p>
+
+<div class="cards c2">
+  <div class="card accent"><div class="t">/marketplace</div><div class="d">เปิดหน้าค้นหาในหน้าจอ</div></div>
+  <div class="card"><div class="t">/skill search คำค้น</div><div class="d">ค้นในเทอร์มินัล</div></div>
+  <div class="card"><div class="t">/skill info ชื่อ</div><div class="d">รายละเอียดก่อนตัดสินใจ</div></div>
+  <div class="card"><div class="t">/skill marketplace</div><div class="d">ดูรายการทั้งหมด (ใส่ --refresh เพื่ออัปเดต)</div></div>
+</div>
+
+</div>
+<div>
+
+<div class="card"><div class="t">ทำไมต้องมี marketplace</div><div class="d">ของที่โหลดจากที่อื่นไม่รู้จักไม่ได้ — แคตตาล็อกนี้ผ่านการตรวจที่มาและสิทธิ์การใช้งานแล้ว</div></div>
+
+<blockquote><p>อ่านป้ายก่อนติดตั้งเสมอ:<br><code>open</code> = ใช้ได้ · <code>linked-only</code> = ดูได้แต่ติดตั้งไม่ได้ · <code>[blocked by policy]</code> = องค์กรปิดกั้น</p></blockquote>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="68">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F68, F70, F91">68 / 79</span>
+<h1>ติดตั้ง skill เพิ่ม</h1>
+<pre><code>/skill install</code></pre>
+<div class="cards c2">
+  <div class="card"><div class="t">ใส่ชื่อจาก marketplace</div><div class="d">ง่ายและปลอดภัยสุด — เลือกจากแคตตาล็อก</div></div>
+  <div class="card"><div class="t">ใส่ URL ของ git repo</div><div class="d">ชี้ตรงไปที่โฟลเดอร์ของ skill ใน repo ได้</div></div>
+  <div class="card"><div class="t">ใส่ไฟล์ .zip</div><div class="d">จำกัด 64 MB</div></div>
+  <div class="card accent"><div class="t">ไม่ต้องรีสตาร์ท</div><div class="d">ติดตั้งแล้วใช้ได้ใน session นี้ทันที</div></div>
+</div>
+<blockquote><p>ใส่ <code>--user</code> เพื่อติดตั้งให้ใช้ได้ทุกโปรเจกต์ (ไม่ใส่ = เฉพาะโปรเจกต์นี้)</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="69">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F69, F71 · outline §7.2">69 / 79</span>
+<h1>สาธิต: ดูรายการ + ติดตั้ง 1 ตัว</h1>
+<ul class="checklist">
+  <li>ผู้สอนเปิด <code>/marketplace</code> ให้ดูบนจอ</li>
+  <li>เลือก 1 ตัว → กด Install</li>
+  <li>กลับไป <code>/skills</code> — ตัวใหม่โผล่ในรายการ</li>
+</ul>
+<div class="card pending"><div class="d">ท่านี้เป็น <strong>สาธิต</strong> — ผู้เรียนไม่ต้องติดตั้งเองในวันนี้ · วันที่ 3 (workshop) จะได้ลงมือจริง</div></div>
+<blockquote><p>จำหลักเดียว: <strong>ติดตั้งเฉพาะของที่ตรวจสอบที่มาได้</strong> อย่าโหลดจากลิงก์ที่ไม่มีใครรู้จัก</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="70">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F72 · thClaws manual ch14">70 / 79</span>
+<h1>MCP คืออะไร</h1>
+<div class="cards c2">
+  <div class="card accent"><div class="t">ความหมาย</div><div class="d">มาตรฐานเปิดที่ทำให้ agent ต่อกับ <strong>เครื่องมือภายนอก</strong> ได้ — ฐานข้อมูล · GitHub · บริการองค์กร</div></div>
+  <div class="card"><div class="t">ทำงานอย่างไร</div><div class="d">คุยกันด้วยโปรโตคอลมาตรฐาน ผ่านคำสั่งในเครื่อง หรือผ่าน HTTP</div></div>
+</div>
+<ul><li>tool ที่ได้มาจะถูกตั้งชื่อแบบ <code>&lt;ชื่อ server&gt; &lt;ชื่อ tool&gt;</code></li><li><strong>จากมุมของ agent มันแยกไม่ออกจาก tool ที่มีมาให้อยู่แล้ว</strong></li></ul>
+<blockquote><p>พูดง่าย ๆ: MCP = <strong>ช่องเสียบ</strong> สำหรับต่อความสามารถจากข้างนอกเข้ามา</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="71">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F72">71 / 79</span>
+<h1>Built-in tool กับ MCP ต่างกันตรงไหน</h1>
+<table><thead><tr><th></th><th>Built-in tool</th><th>MCP</th></tr></thead><tbody><tr><td>ใครให้มา</td><td>มากับ thClaws</td><td>เสียบ tool ภายนอกเพิ่ม</td></tr><tr><td>ต้องตั้งค่าไหม</td><td>ไม่ต้อง</td><td>ต้องเพิ่ม server</td></tr><tr><td>ตัวอย่าง</td><td><code>Read</code> · <code>Bash</code> · <code>DocxCreate</code></td><td>GitHub · ฐานข้อมูล · Slack</td></tr><tr><td>ใครดูแล</td><td>ผู้พัฒนา thClaws</td><td>ทีมที่ทำ server นั้น</td></tr></tbody></table>
+<blockquote><p>งานทั่วไปบนเว็บสำเร็จด้วย built-in tool ได้เกือบทั้งหมด — MCP ไว้ต่อ <strong>ระบบของบริษัท</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="72">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F92 · ตรวจหน้าจริง 16 ต.ค. 2026">72 / 79</span>
+<h1>ของจริงในระบบ SiS — ยังไม่มีใครตั้ง</h1>
+<div class="split">
+<div>
+
+<p>เปิดแถบซ้ายหัวข้อ <strong>MCP SERVERS</strong> จะเห็น</p>
+
+<pre><code>None configured</code></pre>
+
+<p>และถ้าพิมพ์ <code>/mcp</code> ในแท็บ Terminal จะได้</p>
+
+<pre><code>no MCP servers configured</code></pre>
+
+<p><strong>นี่เป็นเรื่องปกติ</strong> — workspace ที่เพิ่งสร้างยังไม่มี server</p>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/66-web-mcp.png" alt="ผลลัพธ์คำสั่ง /mcp ว่ายังไม่มี server">
+</div>
+
+</div>
+</div>
+<blockquote><p><strong>สาธิตสด:</strong> เปิดแถบซ้าย <code>MCP SERVERS</code> เทียบกับผลของ <code>/mcp</code> แล้วให้ผู้สอนเพิ่ม server 1 ตัว<br>— สังเกตว่ามันโผล่ในแถบซ้ายทันที และมีคำถามขออนุมัติเมื่อถูกเรียกครั้งแรก</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="73">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F73 · thClaws manual ch14">73 / 79</span>
+<h1>ติดตั้งด้วยคำสั่งเดียว</h1>
+<pre><code>/mcp add gh-mcp npx -y @modelcontextprotocol/server-github</code></pre>
+<p>ผลลัพธ์ที่ได้</p>
+<pre><code>mcp &#x27;gh-mcp&#x27; added (project, stdio, 20 tool(s))
+   → .thclaws/mcp.json</code></pre>
+<div class="cards c2">
+  <div class="card"><div class="t">ขึ้นต้นด้วย http:// หรือ https://</div><div class="d">ถือว่าเป็น server แบบ HTTP</div></div>
+  <div class="card"><div class="t">อย่างอื่น</div><div class="d">ถือว่าเป็นคำสั่งรันในเครื่อง</div></div>
+</div>
+<blockquote><p><strong>ใช้ได้ทันที ไม่ต้องรีสตาร์ท</strong> — แต่แบบที่ติดตั้งผ่าน marketplace ต้องรีสตาร์ท</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="74">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F74, F75">74 / 79</span>
+<h1>ค่าตั้งอยู่ที่ไหน · ดู · ลบ · ต่อใหม่</h1>
+<div class="split">
+<div>
+
+<p>ไฟล์ตั้งค่า</p>
+
+<ul><li>ไม่ระบุอะไร → <strong>project</strong>: <code>.thclaws/mcp.json</code></li><li>ใส่ <code>--user</code> → <code>~/.config/thclaws/mcp.json</code></li></ul>
+
+<p>คำสั่งที่ใช้บ่อย</p>
+
+<ul><li><code>/mcp</code> ดู server และจำนวน tool</li><li><code>/mcp info</code> รายละเอียด</li><li><code>/mcp remove</code> เอาออก</li><li><code>/mcp reauth</code> ต่อสิทธิ์ใหม่เมื่อเจอ error 401</li></ul>
+
+</div>
+<div>
+
+<div class="card"><div class="t">กรณีมีชื่อซ้ำกัน</div><div class="d">ไฟล์ใน <strong>โปรเจกต์ชนะ</strong> ไฟล์ระดับผู้ใช้เสมอ — ตรวจให้ดีก่อนแก้ เพราะแก้ผิดที่จะไม่มีผล</div></div>
+
+<blockquote><p>ถ้า server มีอยู่ในไฟล์หลายที่ ให้แก้ที่ระดับโปรเจกต์ก่อน</p></blockquote>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="75">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F76, F77 · thClaws technical manual mcp">75 / 79</span>
+<h1>⚠ ข้อควรรู้ 1 — ทุก tool ขออนุมัติเสมอ</h1>
+<div class="split">
+<div>
+
+<ul><li>tool ที่มาจาก MCP <strong>ถามอนุมัติทุกครั้ง</strong> ไม่มีข้อยกเว้น</li><li>ไม่มีโหมด "อนุมัติอัตโนมัติ" ยกเว้นสั่งเปิดทั้งระบบ หรือทำ <strong>allowlist รายคำสั่ง</strong></li><li>allowlist เก็บที่ <code>~/.config/thclaws/mcp_allowlist.json</code></li><li>การอนุมัติเทียบแบบ <strong>ตรงตัวอักษร</strong> — เปลี่ยนพาธไฟล์โปรแกรม = ถามใหม่</li></ul>
+
+</div>
+<div>
+
+<div class="card caution"><div class="t">ทำไมต้องเข้ม</div><div class="d">ไฟล์ตั้งค่า MCP ที่ติดมากับโปรเจกต์ที่ clone มา <strong>ชี้คำสั่งไปที่โปรแกรมอะไรก็ได้</strong> — allowlist คือด่านสุดท้ายก่อนมีอะไรรันบนเครื่องเรา</div></div>
+
+<blockquote><p>ถ้าเจอคำถามอนุมัติที่เราไม่ได้เป็นคนสั่ง — <strong>อ่านให้จบก่อนกด</strong></p></blockquote>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="76">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F77, F78 · thClaws technical manual mcp">76 / 79</span>
+<h1>⚠ ข้อควรรู้ 2 — กับดักที่ต้องรู้ก่อนใช้</h1>
+<div class="cards c2">
+  <div class="card"><div class="t">ค่าลับ (env) ใส่ไม่ได้ตอน add</div><div class="d">server ที่ต้องใช้ token จะเพิ่มได้สำเร็จ แต่รันครั้งแรกจะล้มเหลว — ต้องเติมค่าลับในไฟล์เองแล้วรันซ้ำ</div></div>
+  <div class="card"><div class="t">ต้องมี Node ในเครื่อง</div><div class="d">ถ้า server รันผ่าน npx</div></div>
+  <div class="card"><div class="t">หน้าจอของ server เรียกได้แค่ server ตัวเอง</div><div class="d">แตะคำสั่งอื่นหรือ shell ของเครื่องไม่ได้</div></div>
+  <div class="card accent"><div class="t">อ่านป้ายก่อนติดตั้ง</div><div class="d">ของจากที่อื่นไม่รู้จัก = อย่าติดตั้ง</div></div>
+</div>
+<blockquote><p>สรุปสั้น: <strong>ติดตั้งง่าย แต่ต้องรู้ว่ากำลังให้สิทธิ์อะไรกับใคร</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="77">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: blueprint §5 · F76">77 / 79</span>
+<h1>ทบทวนความปลอดภัย — 6 ข้อที่ต้องจำ</h1>
+<div class="cards c2">
+  <div class="card"><div class="k">S1</div><div class="t">Remote + auto</div><div class="d">โหมดเปิดให้เครื่องอื่นเรียก ต้องไม่ตั้งอนุมัติอัตโนมัติ</div></div>
+  <div class="card"><div class="k">S2</div><div class="t">ห้ามวาง access key</div><div class="d">ในช่องแชท — ถ้าจำเป็นให้ใช้วิธีที่ปลอดภัยกว่า</div></div>
+  <div class="card"><div class="k">S4</div><div class="t">โหมด yolo</div><div class="d">ไม่ถามก่อนทำ — ใช้เฉพาะงานที่กล้าเสียของ</div></div>
+  <div class="card"><div class="k">S5</div><div class="t">ห้ามใช้ / เป็น working dir</div><div class="d">ให้จำกัดขอบเขตที่โฟลเดอร์งาน</div></div>
+  <div class="card accent"><div class="k">S11</div><div class="t">ติดตั้งเฉพาะที่ตรวจสอบได้</div><div class="d">skill และ MCP จากแหล่งที่ไม่รู้จัก = เสี่ยงทั้งเครื่อง</div></div>
+  <div class="card accent"><div class="k">S12</div><div class="t">MCP ขออนุมัติทุกครั้ง</div><div class="d">อ่านคำถามอนุมัติให้จบก่อนกดยอมรับ</div></div>
+</div>
+</div>
+</section>
+<section class="slide takeaway" data-n="78">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: blueprint §4">78 / 79</span>
+<h1>สรุปวันที่ 2</h1>
+<ul><li><strong>workspace บนเว็บ</strong> มีครบทุกอย่าง: แท็บ · แถบ agent · แถบซ้าย · เมนู Setting</li><li><strong>Chat + Files</strong> คือที่ทำงานหลัก — สั่งงานและตรวจผลได้ในจอเดียว</li><li><strong>AGENTS.md</strong> คือที่เขียนคำสั่งประจำตัว — แก้ได้ทั้ง Global และเฉพาะโปรเจกต์</li><li><strong>Skill</strong> ให้ความเชี่ยวชาญ · <strong>MCP</strong> ต่อเครื่องมือภายนอก · <strong>หลาย agent</strong> แบ่งงานกันได้</li><li><strong>ทุกอย่างที่ให้สิทธิ์ ต้องรู้ว่ากำลังให้กับใคร</strong></li></ul>
+<blockquote><p>วันสุดท้าย 26 ต.ค. — <strong>ลงมือทำเองแบบไม่มีคนบอก</strong><br>เอาไฟล์งานจริงของคุณมาด้วย</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="79">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: blueprint §7">79 / 79</span>
+<h1>Quiz ท้ายวัน 14 ข้อ</h1>
+<div class="stats s3">
+  <div class="stat"><div class="v">14 ข้อ</div><div class="l">ครอบคลุมทั้งวัน</div></div>
+  <div class="stat"><div class="v">ผ่าน 10/14</div><div class="l">วัดความเข้าใจ ไม่ใช่ท่องจำ</div></div>
+  <div class="stat"><div class="v">5 นาที</div><div class="l">ทำท้ายคาบ</div></div>
+</div>
+<ul><li>เก็บใบคำตอบให้ผู้สอน แล้วเฉลยทันที</li><li>ข้อที่ไม่แน่ใจ = จุดที่ควรกลับไปอ่านใบผู้เรียน</li></ul>
+<div class="card pending"><div class="d">ชุดคำถามอยู่ใน <code>handout/quiz-day2-student.*</code> — แยกฉบับผู้เรียน/ผู้สอน</div></div>
+</div>
+</section>
+</div>
+<nav>
+  <button id="prev" aria-label="ก่อนหน้า">← ก่อนหน้า</button>
+  <button id="next" aria-label="ถัดไป">ถัดไป →</button>
+  <span style="opacity:.6">← → เลื่อน · F เต็มจอ</span>
+</nav>
+<script>
+const slides = Array.from(document.querySelectorAll('section.slide'));
+let cur = 0;
+function fit() {
+  const pad = 90;
+  const s = Math.min((window.innerWidth - 40) / 1280, (window.innerHeight - pad) / 720);
+  slides.forEach(el => { el.style.transform = 'scale(' + s + ')'; });
+}
+function render() {
+  slides.forEach((el, i) => el.classList.toggle('active', i === cur));
+}
+function go(d) { cur = Math.max(0, Math.min(slides.length - 1, cur + d)); render(); }
+document.addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)) { e.preventDefault(); go(1); }
+  else if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key)) { e.preventDefault(); go(-1); }
+  else if (e.key === 'Home') { cur = 0; render(); }
+  else if (e.key === 'End') { cur = slides.length - 1; render(); }
+  else if (e.key === 'f' || e.key === 'F') {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen();
+  }
+});
+document.getElementById('prev').onclick = () => go(-1);
+document.getElementById('next').onclick = () => go(1);
+window.addEventListener('resize', fit);
+fit(); render();
+</script>
+</body>
+</html>

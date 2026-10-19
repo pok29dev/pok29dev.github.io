@@ -1,0 +1,1229 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>การใช้งาน thClaws สำหรับพนักงาน SiS — day1</title>
+<style>
+/* ---- sis-theme (inherited from the .marp.md inline theme) ---- */
+/* sis-theme.css — Marp theme for the SiS thClaws end-user training (3 days)
+   Design system: output/sis-web-manual/DESIGN.md  (the SiS product's own colours)
+   One accent (teal #00707f) · one red (#a81019, caution only) · light ground only
+   No second hue, no gradient, no dark mode, no webfont, no CDN.
+   Structurally mirrors output/thclaws-ee-video/slides/ee-theme.css. */
+
+
+:root {
+  --teal: #00707f;
+  --teal-deep: #00565f;
+  --teal-wash: #eaf4f5;
+  --teal-line: #cfe1e3;
+
+  --caution-red: #a81019;
+  --caution-wash: #fdf3f3;
+  --caution-line: #efc9cc;
+
+  --ink: #0f1b22;
+  --ink-2: #3d4b55;
+  --ink-3: #5f6b73;
+
+  --ground: #ffffff;
+  --panel: #f7f8f8;
+  --panel-2: #eff2f2;
+  --hairline: #e2e6e7;
+  --hairline-soft: #eef1f1;
+  --rule-mid: #c3cccd;
+
+  --mark: #fff1a8;
+}
+
+section {
+  width: 1280px;
+  height: 720px;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: 'Noto Sans Thai', 'IBM Plex Sans Thai', 'Sukhumvit Set', Thonburi,
+    'Leelawadee UI', Tahoma, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 22px;
+  line-height: 1.7;
+  padding: 44px 64px;
+}
+
+/* ---- Headings ---- */
+
+h1 {
+  color: var(--ink);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+  padding: 0 0 12px 0;
+  border-bottom: 2px solid var(--hairline);
+}
+
+/* The accent rule that marks the current section — a single hairline, never a fill */
+h1::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 4px;
+  margin-top: -14px;
+  margin-bottom: 10px;
+  background: var(--teal);
+}
+
+h2 {
+  color: var(--teal-deep);
+  font-size: 38px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+h3 {
+  color: var(--ink-2);
+  font-size: 21px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+strong { color: var(--teal-deep); font-weight: 700; }
+em { color: var(--ink-2); font-style: normal; }
+
+/* ---- Lists ---- */
+
+ul, ol { font-size: 22px; line-height: 1.7; margin: 8px 0; padding-left: 28px; }
+li { margin: 6px 0; }
+li::marker { color: var(--teal); }
+ol li::marker { color: var(--teal); font-weight: 700; }
+li > ul, li > ol { font-size: 20px; }
+
+/* ---- Tables ---- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 19px;
+  margin: 10px 0;
+}
+th {
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 700;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--rule-mid);
+}
+td {
+  border-bottom: 1px solid var(--hairline);
+  padding: 9px 14px;
+  color: var(--ink-2);
+}
+tr:last-child td { border-bottom: none; }
+td strong { color: var(--teal-deep); }
+table.hl tr.hl-row td { background: var(--teal-wash); }
+
+/* ---- Code ---- */
+
+code {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  background: var(--panel-2);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.88em;
+  color: var(--ink);
+}
+pre {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--teal);
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-size: 17px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 17px;
+}
+
+/* ---- Blockquote: neutral callout (default) ---- */
+
+blockquote {
+  background: var(--panel);
+  border-left: 4px solid var(--rule-mid);
+  color: var(--ink-2);
+  padding: 12px 18px;
+  border-radius: 0 6px 6px 0;
+  font-size: 20px;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+blockquote p { margin: 0; }
+blockquote strong { color: var(--teal-deep); }
+
+/* A quote lifted verbatim from the product screen — still neutral, marked as a quote */
+blockquote.screen {
+  background: var(--teal-wash);
+  border-left-color: var(--teal);
+  color: var(--ink);
+  font-size: 19px;
+}
+blockquote.screen strong { color: var(--teal-deep); }
+
+/* ---- Caution callout: the ONLY place red appears ---- */
+
+section.caution blockquote,
+blockquote.caution {
+  background: var(--caution-wash);
+  border-left-color: var(--caution-red);
+  color: var(--ink);
+}
+section.caution blockquote strong,
+blockquote.caution strong {
+  color: var(--caution-red);
+}
+
+/* ---- Title slide ---- */
+
+section.lead {
+  background: var(--ground);
+  color: var(--ink);
+  justify-content: center;
+  padding: 0 96px;
+  text-align: left;
+}
+section.lead h1 {
+  color: var(--ink);
+  font-size: 52px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 4px;
+}
+section.lead h1::after {
+  width: 88px;
+  height: 5px;
+  margin: 20px 0 24px 0;
+}
+section.lead h2 {
+  color: var(--teal-deep);
+  font-size: 40px;
+  font-weight: 500;
+}
+section.lead p { color: var(--ink-3); font-size: 21px; }
+section.lead strong { color: var(--teal-deep); }
+
+/* ---- Day badge on leads ---- */
+
+section.lead .day-badge {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  background: var(--teal-wash);
+  border: 1px solid var(--teal-line);
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin-bottom: 20px;
+}
+
+/* ---- Takeaways slide ---- */
+
+section.takeaway {
+  background: var(--panel);
+}
+section.takeaway h1 {
+  font-size: 34px;
+  border-bottom: none;
+}
+section.takeaway h1::after {
+  margin-top: 2px;
+  margin-bottom: 20px;
+}
+section.takeaway ul { font-size: 23px; }
+section.takeaway li { margin: 12px 0; }
+
+/* ---- Source anchor line ---- */
+
+.src {
+  position: absolute;
+  right: 64px;
+  bottom: 20px;
+  font-size: 13px;
+  color: var(--ink-3);
+  letter-spacing: 0.01em;
+}
+
+/* ---- Pagination ----
+   A presentation is not a document: no page number on the slide. */
+
+section::after, footer { display: none !important; }
+
+/* ---- Cards grid ---- */
+
+.cards { display: grid; gap: 14px; margin-top: 6px; }
+.cards.c2 { grid-template-columns: repeat(2, 1fr); }
+.cards.c3 { grid-template-columns: repeat(3, 1fr); }
+.cards.c4 { grid-template-columns: repeat(4, 1fr); }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.card .k {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  margin-bottom: 6px;
+}
+.card .t { font-size: 21px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.card .d { font-size: 17px; color: var(--ink-2); line-height: 1.55; }
+.card.accent { background: var(--teal-wash); border-color: var(--teal-line); }
+/* A card whose content is still pending a real source — dashed, never filled in */
+.card.pending {
+  background: var(--ground);
+  border: 2px dashed var(--rule-mid);
+  color: var(--ink-3);
+}
+.card.pending .d { color: var(--ink-3); }
+
+/* ---- Flow: numbered steps in a row ---- */
+
+.flow { display: flex; align-items: stretch; gap: 10px; margin-top: 14px; }
+.flow .step {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 14px 16px;
+  position: relative;
+}
+.flow .step.accent { background: var(--teal-wash); border-color: var(--teal-line); }
+.flow .step .n {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--teal-deep);
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.flow .step .t { font-size: 19px; font-weight: 700; color: var(--ink); }
+.flow .step .d { font-size: 16px; color: var(--ink-2); line-height: 1.55; margin-top: 2px; }
+.flow .arrow {
+  align-self: center;
+  color: var(--teal);
+  font-size: 24px;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+/* ---- Checklist ---- */
+
+.checklist { list-style: none; padding-left: 0; margin-top: 10px; }
+.checklist li {
+  position: relative;
+  padding-left: 34px;
+  margin: 10px 0;
+  font-size: 21px;
+}
+.checklist li::before {
+  content: '☐';
+  position: absolute;
+  left: 0;
+  color: var(--teal);
+  font-size: 22px;
+}
+.checklist.done li::before { content: '☑'; }
+
+/* ---- Progress bar (a UI element, not a data chart) ---- */
+
+.pbar {
+  margin-top: 18px;
+  background: var(--panel-2);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  height: 26px;
+  overflow: hidden;
+  position: relative;
+}
+.pbar .fill {
+  height: 100%;
+  background: var(--teal);
+  border-radius: 999px 0 0 999px;
+}
+.pbar .lbl {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ---- Stat cards (small numeric facts) ---- */
+
+.stats { display: grid; gap: 14px; margin-top: 8px; }
+.stats.s2 { grid-template-columns: repeat(2, 1fr); }
+.stats.s3 { grid-template-columns: repeat(3, 1fr); }
+.stats.s4 { grid-template-columns: repeat(4, 1fr); }
+.stat {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.stat .v {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--teal-deep);
+  line-height: 1.1;
+}
+.stat .l { font-size: 15px; color: var(--ink-2); margin-top: 4px; }
+
+/* ---- Real screenshot slides ----
+   A captured screen of the product. Presented as one object: hairline border
+   and a soft shadow, on the ground, never cropped. */
+
+section.shot { padding: 34px 52px 40px 52px; }
+
+section.shot h1 {
+  font-size: 30px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 2px;
+}
+section.shot h1::after { margin-top: 2px; margin-bottom: 12px; width: 52px; height: 3px; }
+
+.shot-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 470px;
+}
+.shot-frame img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  box-shadow: 0 6px 22px rgba(15, 27, 34, 0.14);
+}
+/* two images per row. `max-width:49%` each + the 20px gap is >100% of the frame,
+   so the pair used to bleed ~5px out of its column on both sides; wrap keeps
+   extra images on a second row instead of squeezing them into one. */
+.shot-frame.pair { gap: 20px; flex-wrap: wrap; }
+.shot-frame.pair img { max-width: calc(50% - 10px); }
+
+.shot-cap {
+  margin-top: 12px;
+  font-size: 17px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.shot-cap strong { color: var(--teal-deep); }
+
+section.shot .src { bottom: 16px; }
+
+/* ---- Two-column split (text left, figure/shot right) ---- */
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; margin-top: 6px; }
+.split .shot-frame { height: 400px; }
+/* ---- deck chrome: the HTML presentation shell ---- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #10161a; }
+body { font-family: 'Noto Sans Thai','IBM Plex Sans Thai','Sukhumvit Set',Thonburi,'Leelawadee UI',Tahoma,system-ui,sans-serif; }
+#stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+section.slide {
+  position: absolute; display: none; transform-origin: center center;
+  background: #ffffff; overflow: hidden;
+}
+section.slide.active { display: flex; flex-direction: column; }
+/* The theme's `section { padding: … }` (44px 64px · 0 96px for .lead ·
+   34px 52px 40px 52px for .shot) was written when the <section> WAS the slide box.
+   The shell now wraps the body in `.slide-inner`, which carries that same padding —
+   so the section must NOT pad again, or the inner box is pushed right/down by
+   64/96px and the overflow is clipped by `overflow: hidden` (asymmetric margins).
+   Reset here (later in source order than the theme, so it wins) and move each
+   variant's padding onto `.slide-inner`. */
+section.slide { padding: 0; }
+section.lead .slide-inner { padding: 0 96px; }
+section.shot .slide-inner { padding: 34px 52px 40px 52px; }
+.slide-inner { padding: 44px 64px; width: 1280px; height: 720px; overflow: hidden;
+  display: flex; flex-direction: column; }
+section.lead .slide-inner, section.takeaway .slide-inner { justify-content: center; }
+.slide-inner > h1:first-child, .slide-inner > h2:first-child { margin-top: 0; }
+nav { position: fixed; bottom: 14px; left: 0; right: 0; display: flex; gap: 14px;
+  align-items: center; justify-content: center; color: #c3cccd; font-size: 13px;
+  font-family: system-ui, sans-serif; }
+nav button { font: inherit; background: #1d262c; color: #e8edee; border: 1px solid #333f46;
+  border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+nav button:hover { background: #263238; }
+#hint { position: fixed; top: 12px; right: 16px; color: #7b8a92; font-size: 12px;
+  font-family: system-ui, sans-serif; }
+/* keep the accent rule on h1 as in the theme */
+section.slide h1 { font-size: 38px; }
+section.shot h1, section.lead h1 { font-size: 52px; }
+section.lead h1 { font-size: 52px; }
+/* bottom-right corner: slide number (`n / total`) inherits .src's position */
+.src.page-num { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+@media print {
+  #stage, nav, #hint { position: static; }
+  nav, #hint { display: none; }
+  section.slide { display: flex !important; position: relative; transform: none !important;
+    page-break-after: always; }
+  .slide-inner { transform: none !important; }
+}
+</style>
+</head>
+<body>
+<div id="hint">← → เลื่อน · Home/End · F เต็มจอ</div>
+<div id="stage">
+<section class="slide lead" data-n="1">
+<div class="slide-inner">
+<span class="day-badge">วัน 1 / 3</span>
+<h1>การใช้งาน thClaws สำหรับพนักงาน SiS</h1>
+<p>วันที่ 1 · 19 ต.ค. 2026 · <strong>100 นาที</strong></p>
+<p>SiS Distribution (Thailand) PCL. · <code>sis.thclaws.ai</code></p>
+<span class="src page-num">1 / 40</span>
+</div>
+</section>
+<section class="slide" data-n="2">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: blueprint §4 (วัน 1)">2 / 40</span>
+<h1>หัวข้อ Day 1 — 10 ช่วง</h1>
+<div class="cards c3">
+  <div class="card"><div class="k">1.1</div><div class="t">แนะนำหลักสูตร และเนื้อหา</div><div class="d">5 นาที</div></div>
+  <div class="card"><div class="k">1.2</div><div class="t">ทำความรู้จักกับ thClaws</div><div class="d">18 นาที</div></div>
+  <div class="card"><div class="k">1.3</div><div class="t">เตรียมความพร้อม + Cloud vs Desktop</div><div class="d">9 นาที</div></div>
+  <div class="card"><div class="k">1.4</div><div class="t">เข้าสู่ระบบ + รู้จักหน้าเว็บ SiS thClaws Enterprise Edition</div><div class="d">10 นาที</div></div>
+  <div class="card accent"><div class="k">1.5</div><div class="t">Workspace บน Cloud — จุดเริ่มต้นใช้งาน</div><div class="d">18 นาที · workshop</div></div>
+  <div class="card"><div class="k">1.6</div><div class="t">SIS thClaws Desktop Application</div><div class="d">9 นาที</div></div>
+  <div class="card accent"><div class="k">1.7</div><div class="t">Desktop App เชื่อมต่อ gateway</div><div class="d">9 นาที · workshop</div></div>
+  <div class="card"><div class="k">1.8</div><div class="t">Permission + สิ่งที่ห้ามทำ</div><div class="d">8 นาที</div></div>
+  <div class="card"><div class="k">1.9</div><div class="t">Usage · Access keys · Credits</div><div class="d">9 นาที</div></div>
+  <div class="card"><div class="k">1.10</div><div class="t">สรุปวันที่ 1 + Quiz</div><div class="d">5 นาที</div></div>
+</div>
+<blockquote><p>รวม <strong>100 นาที</strong> · การ์ดที่เน้น <strong>2 ใบ</strong> คือช่วงที่คุณต้องลงมือเอง</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="3">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: blueprint §2 · §8">3 / 40</span>
+<h1>ตรวจสอบความพร้อมก่อนเริ่ม</h1>
+<ul class="checklist">
+  <li>เคยใช้ Chat AI ทั่วไป (ChatGPT / Claude)?</li>
+  <li>ได้รับบัญชีของบริษัทเรียบร้อยแล้ว?</li>
+  <li>เคยต่อ VPN ขององค์กรหรือยัง?</li>
+  <li>เครื่องบริษัทอนุญาตให้ติดตั้งโปรแกรมไหม?</li>
+</ul>
+<blockquote><p><strong>ถ้าเครื่องบล็อกการติดตั้ง</strong> — ยังทำทุกอย่างบนเว็บได้ ช่วง 1.5 ใช้เบราว์เซอร์ล้วน ไม่ต้องติดตั้งอะไร</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="4">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F20 · thClaws manual ch01">4 / 40</span>
+<h1>thClaws คืออะไร</h1>
+<blockquote><p><strong>thClaws คือ AI Agent Platform เป็น Desktop App รันบนเครื่องของคุณเอง และ มี Cloud Version ทำงานผ่าน Web Browser ได้</strong></p></blockquote>
+<div class="cards c3">
+  <div class="card"><div class="k">ทำงานอะไรได้</div><div class="t">จัดระเบียบเอกสาร</div><div class="d">ตรวจและจัดระเบียบไฟล์ ทำงานอัตโนมัติ</div></div>
+  <div class="card"><div class="k">ทำงานอะไรได้</div><div class="t">จัดการ Knowledge Base</div><div class="d">คลังความรู้ที่ agent ค้นและเขียนเองได้</div></div>
+  <div class="card"><div class="k">ทำงานอะไรได้</div><div class="t">สร้างทีม agent</div><div class="d">หลาย agent ทำงานร่วมกันในโปรเจกต์เดียว</div></div>
+</div>
+<blockquote><p>ทั้งหมดรวมอยู่ใน <strong>binary เดียว</strong> — คุยเป็นภาษาธรรมชาติว่าต้องการอะไร แล้ว agent จะอ่านไฟล์ รันคำสั่ง ใช้ tool</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="5">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F20 · thClaws manual ch01 · blueprint §4 (1.2)">5 / 40</span>
+<h1>Chat ตอบ — Agent ทำงาน</h1>
+<div class="cards c2">
+  <div class="card"><div class="k">Chat AI</div><div class="t">ตอบคำถาม</div><div class="d">คุณถาม — มันตอบเป็นข้อความ<br>ไม่แตะไฟล์ในเครื่องคุณ</div></div>
+  <div class="card accent"><div class="k">thClaws Agent</div><div class="t">ทำงานให้เสร็จ</div><div class="d">อ่านไฟล์ รันคำสั่ง สร้างไฟล์จริงในเครื่องคุณ</div></div>
+</div>
+<blockquote><p><strong>AI Agent Platform (Desktop App) รันบนเครื่อง</strong> — ไม่ใช่แค่หน้าต่างแชต<br><strong>AI Agent Platform (Cloud) รันบน server</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="6">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F20, F21, F30 · thClaws manual ch01 · blueprint §3 (O1.9)">6 / 40</span>
+<h1>ตารางเทียบ: Chat AI ทั่วไป กับ thClaws</h1>
+<table><thead><tr><th></th><th>Chat AI ทั่วไป</th><th>thClaws</th></tr></thead><tbody><tr><td>ไฟล์ในเครื่อง</td><td>มองไม่เห็นเอง</td><td><strong>อ่านไฟล์ในเครื่องคุณ</strong></td></tr><tr><td>คำสั่งระบบ</td><td>ทำไม่ได้</td><td><strong>รันคำสั่ง</strong></td></tr><tr><td>ผลลัพธ์</td><td>ข้อความในแชต</td><td><strong>สร้างไฟล์จริงในเครื่องคุณ</strong></td></tr><tr><td>ความปลอดภัย</td><td>—</td><td><strong>ขออนุญาตก่อนแก้ข้อมูล (permission)</strong></td></tr><tr><td>งานหลายขั้น</td><td>ตอบรวดเดียว</td><td><strong>ทำงานเป็นขั้นตอนต่อเนื่องได้</strong></td></tr><tr><td>จำระยะยาว</td><td>จำแค่ในบทสนทนา</td><td><strong>จำได้ด้วย <code>AGENTS.md</code> · memory · KMS</strong></td></tr></tbody></table>
+<div class="hl"></div>
+<blockquote><p>ตารางนี้<strong>ไม่บอกว่าใครเก่งกว่า</strong> — บอกว่า <strong>งานแบบไหนทำได้</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="7">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: thClaws manual ch01 · F7 · manual §14.2">7 / 40</span>
+<h1>thClaws ไม่ใช่คู่แข่งของโมเดล</h1>
+<blockquote><p><strong>รองรับหลาย provider </strong> — สลับไปมาด้วย <code>/model</code> หรือ <code>/provider</code></p></blockquote>
+<div class="cards c3">
+  <div class="card"><div class="k">Providers</div><div class="t">Anthropic · OpenAI</div><div class="d"><code>Claude</code> · <code>GPT</code> · Codex</div></div>
+  <div class="card"><div class="k">Providers</div><div class="t">Google · Alibaba</div><div class="d"><code>Gemini</code> · Gemma · <code>Qwen</code> (DashScope)</div></div>
+  <div class="card"><div class="k">Local Model</div><div class="t">Ollama · LMStudio · vLLM</div><div class="d">รันโมเดลในเครื่องเองได้ ไม่ต้องส่งออก</div></div>
+</div>
+<ul><li>โมเดลไทยก็มี — <strong>NSTDA Thai LLM</strong>: OpenThaiGPT · Typhoon · Pathumma · THaLLE</li><li>ระบบ SiS ให้ใช้ provider ชื่อ <code>sis</code> → โมเดล <code>จาก Dashscope อาทิ Qwen 3.8</code></li></ul>
+<blockquote><p><strong>โมเดลเป็น "เครื่องยนต์" — thClaws เป็น "รถ" ที่เลือกเครื่องยนต์ได้</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="8">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: ch01 (thClaws.cloud) · manual §1 · EE manual §13 · blueprint §3 (O1.9)">8 / 40</span>
+<h1>3 platform ของ thClaws — ใช้ตัวไหนเมื่อไร</h1>
+<div class="flow">
+  <div class="step"><div class="n">platform 1</div><div class="t">thClaws Desktop (Opensource)</div><div class="d">แอปที่รัน agent บนเครื่องคุณเอง เข้าถึงไฟล์จริง</div></div>
+  <div class="arrow">+</div>
+  <div class="step"><div class="n">platform 2</div><div class="t">thClaws.cloud</div><div class="d">catalog แม่แบบ agent + hosted runtime ให้เช่า (รันบนคลาวด์)</div></div>
+  <div class="arrow">+</div>
+  <div class="step accent"><div class="n">platform 3</div><div class="t">thClaws EE + thClaws Desktop (Corp)</div><div class="d">องค์กรติดตั้งไว้ใช้เอง — แบรนด์และนโยบายขององค์กร</div></div>
+</div>
+<p><code>sis.thclaws.ai</code> คือระบบ <strong>thClaws.cloud ที่ SiS Distribution (Thailand) PCL. ติดตั้งไว้ใช้องค์กรโดยเฉพาะ ทำงานบน server และมี desktop app เป็นขององค์กรเองเฉพาะ</strong></p>
+<blockquote><p>คอร์สนี้ใช้ <strong>platform 3</strong> เป็นหลัก — ด้านบนมีไว้ให้เห็นภาพว่า thClaws มีกี่แบบ</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="9">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: thClaws manual ch01 · manual §2">9 / 40</span>
+<h1>9 surface ใน App เดียว · หลาย agent หนึ่ง workspace</h1>
+<blockquote><p><strong>เก้า surface รวมอยู่ใน App เดียว</strong> — ใช้ Agent loop, Session และ tool registry ชุดเดียวกัน</p></blockquote>
+<table><thead><tr><th>surface</th><th>ใช้โดย</th></tr></thead><tbody><tr><td>Desktop GUI · CLI REPL · โหมดไม่โต้ตอบ · Webapp</td><td>คน</td></tr><tr><td>LINE · Telegram · Messenger</td><td>คน (ผ่านมือถือ)</td></tr><tr><td>thClaws Remote</td><td>คน (สั่งเครื่องตัวเองผ่านเว็บ)</td></tr><tr><td><strong>AI Agent (API Server)</strong></td><td><strong>ซอฟต์แวร์อื่น</strong></td></tr></tbody></table>
+<blockquote><p><strong>สูงสุด 8 agents ต่อหนึ่ง workspace</strong> — agent แต่ละตัวเป็น "โฟลเดอร์" ของตัวเอง</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="10">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F30 · demo-files (M3) · blueprint §4 (1.2)">10 / 40</span>
+<h1>เดโมสด: สั่งงานเดียว ได้ไฟล์จริง</h1>
+<pre><code>อ่าน meeting_notes.txt แล้วเขียนสรุปงานเป็น bullet 3 ข้อ ลงไฟล์ work-summary.md</code></pre>
+<p>→ <code>work-summary.md</code></p>
+<blockquote><p><strong>สั่งเป็นภาษาไทยธรรมดา</strong> — ไม่ต้องเขียนโค้ด ไม่ต้องจำไวยากรณ์</p></blockquote>
+<div class="card pending"><div class="d">ภาพผลลัพธ์จริงจะแสดงสดจากหน้าจอผู้สอน</div></div>
+</div>
+</section>
+<section class="slide" data-n="11">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F10 · manual §9 · blueprint §3 (O1.10)">11 / 40</span>
+<h1>เตรียมความพร้อม 1/2 — เครื่องและเบราว์เซอร์</h1>
+<table><thead><tr><th>ต้องมี</th><th>รายละเอียด</th></tr></thead><tbody><tr><td><strong>เครื่อง</strong></td><td>macOS (installer <code>.pkg</code>) · Windows x64 · Linux x86_64 — มีตัวติดตั้งครบทั้งสาม</td></tr><tr><td><strong>เบราว์เซอร์</strong></td><td>ใช้รุ่นใหม่ที่อัปเดตล่าสุด — Google Chrome · Safari · Microsoft Edge</td></tr></tbody></table>
+<blockquote><p><strong>เปิด <code>sis.thclaws.ai</code> ขึ้นหน้าแรกได้ = ผ่านข้อนี้</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="12">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F3, F11 · manual §3, §9.1 · blueprint §8">12 / 40</span>
+<h1>เตรียมความพร้อม 2/2 — บัญชี และ VPN</h1>
+<div class="cards c2">
+  <div class="card"><div class="k">เรียกใช้งานจากในสำนักงาน</div><div class="t">ไม่ต้องต่อ VPN</div><div class="d">เปิด <code>sis.thclaws.ai</code> จาก web browser หรือ แอปเดสก์ท็อป</div></div>
+  <div class="card accent"><div class="k">เรียกใช้งานจากภายนอกสำนักงาน</div><div class="t">ต้องต่อ VPN ขององค์กร</div><div class="d">ไม่งั้นเข้าใช้งานไม่ได้</div></div>
+</div>
+<blockquote><p><strong>ยังไม่มีบัญชี?</strong> หน้า Sign in ไม่มีปุ่มสมัครบัญชีเอง <strong> พนักงาน SIS มี email องค์กรสามารถ sign in จาก Continue with Microsoft </strong>— หากไม่ได้ให้ติดต่อผู้ดูแลระบบ SiS</p></blockquote>
+<blockquote><p><strong>ก่อนวันเรียน:</strong> ทดสอบ VPN ให้ได้ — ถ้าต่อไม่ได้ แจ้งผู้สอนล่วงหน้า</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="13">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F6, F8, F15 · manual §1, §6.1, §15">13 / 40</span>
+<h1>Cloud Version vs Desktop Version — ใช้ตัวไหนเมื่อไร</h1>
+<table><thead><tr><th></th><th>Cloud (hosted workspace)</th><th>Desktop</th></tr></thead><tbody><tr><td><strong>ติดตั้ง</strong></td><td>ไม่ต้องติดตั้ง ใช้ผ่านเบราว์เซอร์</td><td>ติดตั้งบนเครื่อง</td></tr><tr><td><strong>ไฟล์งาน</strong></td><td>อยู่ใน workspace บนคลาวด์</td><td><strong>เข้าถึงไฟล์จริงในเครื่องคุณ</strong></td></tr><tr><td><strong>ต้องต่อ VPN</strong></td><td>ไม่ต้อง</td><td>ต้องต่อ</td></tr><tr><td><strong>เหมาะกับ</strong></td><td>งานที่ไม่แตะไฟล์ในเครื่อง</td><td>งานที่ต้องจัดการไฟล์ของตัวเอง</td></tr></tbody></table>
+<div class="hl"></div>
+<ul><li>Cloud: "Run thClaws in the cloud — <strong>pods scale to zero after 30 min idle</strong>; first click after a pause <strong>warms them in ~10s</strong>."</li><li>เว็บกับแอปเชื่อมกันด้วย <strong>access key ตัวเดียว</strong> ⇒ <strong>ไม่ต้องเลือกอย่างเดียว ใช้คู่กันได้</strong></li></ul>
+</div>
+</section>
+<section class="slide" data-n="14">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F3, F14 · manual §3">14 / 40</span>
+<h1>ลงชื่อเข้าเว็บ — 2 ทาง</h1>
+<div class="split">
+<div>
+
+<div class="flow">
+  <div class="step"><div class="n">ขั้น 1</div><div class="t">เปิด</div><div class="d"><code>sis.thclaws.ai</code></div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">ขั้น 2</div><div class="t">กด <code>Sign in</code></div><div class="d">พาธ <code>/login</code></div></div>
+  <div class="arrow">→</div>
+  <div class="step accent"><div class="n">ขั้น 3</div><div class="t">เลือกผู้ให้บริการ</div><div class="d">Google หรือ Microsoft</div></div>
+</div>
+
+<ul><li><strong><code>Continue with Google</code></strong> — เข้าด้วยบัญชี Google</li><li><strong><code>Continue with Microsoft</code></strong> — เข้าด้วยบัญชี Microsoft</li></ul>
+
+<blockquote><p>"พนักงานของ SIS ใช้ Sign in ด้วย Continue with Microsoft"</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/00-login.png" alt="หน้า Sign in ของ sis.thclaws.ai แสดงปุ่ม Continue with Google และ Continue with Microsoft">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="15">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F1, F2 · manual §2, §13">15 / 40</span>
+<h1>หน้าเว็บ SiS — ส่วนต่าง ๆ</h1>
+<div class="split">
+<div>
+
+<div class="cards">
+  <div class="card"><div class="k">โซนบน — เลือก</div><div class="t">แถบนำทาง</div><div class="d"><code>SiS</code> (กลับหน้าแรก) · <code>Agent Templates</code> · <code>Workspaces</code> · <code>Docs</code></div></div>
+  <div class="card"><div class="k">โซนซ้าย — ไป</div><div class="t">แถบเมนู</div><div class="d">แสดงทุกหน้าหลังล็อกอิน แบ่งเป็น WORK กับ ACCOUNT</div></div>
+  <div class="card accent"><div class="k">โซนกลาง — ทำงาน</div><div class="t">เนื้อหาของแต่ละหน้า</div><div class="d">ปุ่ม <code>Browse Agent Templates</code> · รายการ workspace · ตาราง Usage</div></div>
+</div>
+</div>
+<div>
+
+
+<div class="shot-frame">
+  <img src="img-spare/10-home.png" alt="หน้า Home ของ sis.thclaws.ai">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="16">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F5 · manual §4, §13">16 / 40</span>
+<h1>เมนูหลังล็อกอิน — WORK กับ ACCOUNT</h1>
+<div class="split">
+<div>
+
+<table><thead><tr><th>กลุ่ม</th><th>รายการ</th><th>ไปที่</th></tr></thead><tbody><tr><td><strong>WORK</strong></td><td>Workspaces</td><td><code>/dashboard</code></td></tr><tr><td></td><td>Agent Templates</td><td><code>/templates</code></td></tr><tr><td></td><td>thClaws Remote</td><td><code>/talk</code></td></tr><tr><td></td><td>Download</td><td><code>/download</code></td></tr><tr><td><strong>ACCOUNT</strong></td><td>Usage</td><td><code>/credit/usage</code></td></tr><tr><td></td><td>Access keys</td><td><code>/access-keys</code></td></tr></tbody></table>
+
+<blockquote><p><strong><code>Docs</code></strong> — อยู่บนแถบนำทางด้านบน (<code>/manual</code>)</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/11-workspaces.png" alt="แถบด้านซ้ายแสดงกลุ่ม WORK และ ACCOUNT พร้อมบรรทัดเครดิตใต้กลุ่ม ACCOUNT">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="17">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: manual §5, §4.1 · blueprint §3 (O1.8)">17 / 40</span>
+<h1>เมนูบัญชี + วิธีอ่านตัวเลขเครดิต</h1>
+<div class="split">
+<div>
+
+<p><strong>กดชื่อตัวเอง หรือตัวเลขเครดิตที่มุมขวาบน</strong> จะเปิดเมนูลัด</p>
+
+<ul><li>ชื่อ + อีเมล + บทบาท (<code>USER</code>)</li><li>บรรทัดเครดิต: <code>Credits: 0 / 2,000 this month · 0 / 600 today</code></li><li>ทางลัดไป: <code>Workspaces</code> · <code>Agent Templates</code> · <code>thClaws Remote</code> · <code>Usage</code> · <code>Access keys</code></li><li><code>Sign out</code> — ออกจากระบบ</li></ul>
+
+<blockquote><p><strong>วิธีอ่านเครดิต:</strong> <code>ใช้ไป / วงเงิน</code> — <code>0 / 2,000 this month</code> = เดือนนี้ใช้ไป 0 จากวงเงิน 2,000</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/21-menu-account.png" alt="เมนูบัญชี แสดงชื่อ อีเมล บทบาท บรรทัดเครดิต ทางลัด และ Sign out">
+</div>
+
+<div class="card pending"><div class="d">เมนูนี้เรียกว่า "Profiles / Shortcut menu"</div></div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="18">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F6, F18 · manual §6.1">18 / 40</span>
+<h1>Workspaces — จุดเริ่มต้นของทุกอย่าง</h1>
+<blockquote><p><strong>agent ทำงานใน workspace — หากไม่มีต้องสร้าง workspace ขึ้นมาก่อน</strong></p></blockquote>
+<div class="split">
+<div>
+
+<ul><li><strong>หัวข้อ:</strong> "Hosted workspaces"</li><li><strong>โควตา:</strong> <code>ใช้ไป / ทั้งหมด (quota)</code> เช่น <code>1 / 3 (quota)</code></li><li><strong>ปุ่ม <code>+ New workspace</code></strong></li><li><strong>การ์ด workspace</strong> มี ชื่อ · พาธ (<code>/u/&lt;slug&gt;/</code>) · tier · ป้าย <code>GATEWAY</code> · สถานะ · ใช้ล่าสุด</li></ul>
+
+<blockquote><p>"Run thClaws in the cloud — <strong>pods scale to zero after 30 min idle</strong>; first click after a pause <strong>warms them in ~10s</strong>."</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/11-workspaces.png" alt="หน้า Workspaces แสดงโควตา ปุ่ม New workspace และการ์ดของแต่ละ workspace">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="19">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F6, F19 · manual §6.4">19 / 40</span>
+<h1>สร้าง workspace ใหม่</h1>
+<div class="split">
+<div>
+
+<div class="flow">
+  <div class="step"><div class="n">ขั้น 1</div><div class="t">กด <code>+ New workspace</code></div><div class="d">เปิดหน้าต่างย่อย</div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">ขั้น 2</div><div class="t">กรอก 2 ช่อง</div><div class="d"><code>Name</code> · <code>Slug (optional, a–z 0–9 –)</code></div></div>
+  <div class="arrow">→</div>
+  <div class="step accent"><div class="n">ขั้น 3</div><div class="t">กด <code>Create workspace</code></div><div class="d">หรือ <code>Cancel</code> เพื่อยกเลิก</div></div>
+</div>
+
+<ul><li>URL จะเป็น <code>/u/&lt;your-handle&gt;/&lt;slug&gt;/</code></li><li>ถ้าเว้น Slug ว่าง ระบบตั้งให้จากชื่อ</li></ul>
+
+<blockquote><p><strong>สร้างไม่ได้เพราะโควตาเต็ม?</strong> เมื่อใช้ครบ (เช่น <code>3 / 3 (quota)</code>) ต้องลบ workspace เดิมก่อน</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/20-dialog-new-workspace.png" alt="หน้าต่างสร้าง workspace ใหม่ มีช่อง Name และ Slug พร้อมปุ่ม Cancel และ Create workspace">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="20">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F6, F18 · manual §6.2, §6.3">20 / 40</span>
+<h1>เปิดใช้งาน workspace + สถานะต่าง ๆ</h1>
+<table><thead><tr><th>สถานะ</th><th>ปุ่มที่ใช้ได้</th></tr></thead><tbody><tr><td><code>READY</code> (พร้อมใช้)</td><td><code>Open ↗</code> · <code>Pause</code> · <code>Delete</code></td></tr><tr><td><code>PAUSED</code> (ถูกพักเพราะ idle)</td><td><code>Wake</code> / <code>Resume</code> · <code>Delete</code></td></tr><tr><td>ระหว่างปลุก</td><td><code>provisioning</code> — รอให้ขึ้น <code>READY</code> ก่อนจึงกด <code>Open</code> ได้</td></tr></tbody></table>
+<div class="flow">
+  <div class="step"><div class="n">ขั้น 1</div><div class="t">เข้า Workspaces</div><div class="d">ดูการ์ดของตัวเอง</div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">ขั้น 2</div><div class="t">เจอ PAUSED ให้กด Wake</div><div class="d">รอจนขึ้น READY</div></div>
+  <div class="arrow">→</div>
+  <div class="step accent"><div class="n">ขั้น 3</div><div class="t">กด Open ↗</div><div class="d">เปิดแท็บใหม่ไปที่ UI แชทของ workspace</div></div>
+</div>
+<blockquote><p><code>Delete</code> ลบ workspace <strong>และข้อมูลทั้งหมด</strong> — ยืนยันก่อนกดทุกครั้ง</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="21">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F18 · manual §14.1, F19">21 / 40</span>
+<h1>หน้าตา workspace — 4 แท็บ</h1>
+<div class="split">
+<div>
+
+<table><thead><tr><th>แท็บ</th><th>ใช้ทำอะไร</th></tr></thead><tbody><tr><td><strong>Chat</strong></td><td>คุยกับ agent — ที่ทำงานหลักของวันนี้</td></tr><tr><td><strong>Terminal</strong></td><td>รันคำสั่ง shell ใน workspace ตรง ๆ</td></tr><tr><td><strong>Files</strong></td><td>ดูไฟล์ที่ agent สร้าง · คลิกดูตัวอย่างได้</td></tr><tr><td><strong>UI</strong></td><td>เลือกหน้าบ้าน (GUI Shell) ที่จะใช้</td></tr></tbody></table>
+
+<blockquote><p><strong>4 แท็บคือ workspace เดียวกัน</strong> ไม่ใช่ 4 โปรแกรม · มีปุ่ม <strong>Full-screen UI (⌘⇧U)</strong> · แถบล่างสุดแสดงพาธปัจจุบัน (<code>/workspace</code>)</p></blockquote>
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/50-workspace-chat.png" alt="หน้าจอ workspace แท็บ Chat มีแถบแท็บด้านบน แถบซ้าย PROVIDER SESSIONS KNOWLEDGE MCP SERVERS และช่องพิมพ์ด้านล่าง">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="22">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F7, F19 · manual §14.2">22 / 40</span>
+<h1>แถบด้านซ้ายของ workspace — 4 ส่วน</h1>
+<div class="split">
+<div>
+
+<table><thead><tr><th>ส่วน</th><th>รายละเอียด</th></tr></thead><tbody><tr><td><strong>PROVIDER</strong></td><td>ตัวเลือกโมเดล (<code>sis</code> → <code>sis/qwen3.8-flash</code>) · สวิตช์ <code>think</code> · ระดับการคิด <strong>0–3</strong></td></tr><tr><td><strong>SESSIONS</strong></td><td>สร้าง session ใหม่ · ย้อนดูของเดิม</td></tr><tr><td><strong>KNOWLEDGE</strong></td><td>คลังความรู้ของ workspace — ว่างจะขึ้น <code>None yet</code></td></tr><tr><td><strong>MCP SERVERS</strong></td><td>รายการ MCP server — ว่างจะขึ้น <code>None configured</code></td></tr></tbody></table>
+
+<blockquote><p><strong>โมเดลที่ระบบ SiS ให้ใช้คือ <code>sis/qwen3.8-flash</code></strong> — เลือกได้จากช่อง PROVIDER</p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/52-workspace-files.png" alt="หน้าจอ workspace แสดงแท็บ Files พร้อมแถบด้านซ้ายทั้งสี่ส่วน">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="23">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F19 · manual §14.3">23 / 40</span>
+<h1>คำสั่งแรกของคุณ</h1>
+<pre><code>คุณคือใคร และมีไฟล์อะไรบ้างในระบบ</code></pre>
+<div class="cards c3">
+  <div class="card"><div class="k">คาดหวัง 1</div><div class="t">ได้คำตอบกลับมา</div><div class="d">ไม่ใช่หน้าจอว่าง</div></div>
+  <div class="card"><div class="k">คาดหวัง 2</div><div class="t">agent บอกว่ามีไฟล์อะไร</div><div class="d">"ยังไม่มีไฟล์" ก็เป็นคำตอบที่ถูก</div></div>
+  <div class="card accent"><div class="k">คาดหวัง 3</div><div class="t">มีบรรทัดสรุปค่าใช้จ่ายต่อเทิร์น</div><div class="d">เช่น <code>[tokens: 937in/464out · 8s]</code></div></div>
+</div>
+<blockquote><p>พิมพ์ข้อความ "<strong>คุณคือใคร และมีไฟล์อะไรบ้างในระบบ</strong>" · กด <strong><code>Send</code></strong></p></blockquote>
+<blockquote><p><strong>ถ้าขึ้นปุ่ม <code>Allow</code></strong> ให้กดได้เลย — นั่นคือโหมด permission = <code>ask</code> (ช่วง 1.8 จะอธิบาย)</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="24">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F19 · manual §14.3 · demo-files (M3)">24 / 40</span>
+<h1>ส่งไฟล์ขึ้น workspace</h1>
+<div class="split">
+<div>
+
+<div class="cards c2">
+  <div class="card"><div class="k">วิธี 1</div><div class="t">กด <code>Upload files</code></div><div class="d">สูงสุด <strong>5 ไฟล์</strong> ไฟล์ละไม่เกิน <strong>25 MB</strong> → เก็บที่ <code>_uploads/</code></div></div>
+  <div class="card accent"><div class="k">วิธี 2</div><div class="t">เลือก Files จาก Menu ลากไฟล์มาวางในช่อง</div><div class="d">"drop a file to add its path"</div></div>
+</div>
+
+<blockquote><p><strong>ไฟล์ที่ agent สร้าง</strong> ไปอยู่ <code>workspace/</code> · <strong>ไฟล์ที่คุณอัปโหลด</strong> ไปอยู่ <code>_uploads/</code> — คนละที่กัน<br>ดูได้ทั้งคู่ในแท็บ <strong>Files</strong></p></blockquote>
+
+<ul><li>ไฟล์ที่ใช้ในคอร์สวันนี้: <code>meeting_notes.txt</code></li></ul>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/52-workspace-files.png" alt="ช่องพิมพ์ด้านล่างของแท็บ Chat พร้อมปุ่ม Upload files และปุ่ม Send">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="25">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F18, F19 · blueprint §4 (1.5), §7">25 / 40</span>
+<h1>ลงมือทำพร้อมกัน — Hands-on 1</h1>
+<ul class="checklist">
+  <li>สร้าง workspace ของตัวเอง 1 อัน</li>
+  <li>กด <code>Open ↗</code> แล้วรอจนขึ้น <code>READY</code></li>
+  <li>ส่งคำสั่งแรก และได้คำตอบกลับมา</li>
+  <li>อัปโหลดไฟล์ 1 ไฟล์ แล้วเห็นไฟล์ในแท็บ <code>Files</code></li>
+</ul>
+<div class="stats s2">
+  <div class="stat"><div class="v">80%</div><div class="l">เกณฑ์ผ่านของ Hands-on 1</div></div>
+  <div class="stat"><div class="v">5 นาที</div><div class="l">เวลาที่ให้</div></div>
+</div>
+<blockquote><p><strong>ยังไม่ขึ้น <code>READY</code>?</strong> รอ ~10 วินาทีก่อนกด <code>Open</code> อีกครั้ง · ติดตรงไหนยกมือ ผู้สอนเดินช่วยรายคน</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="26">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F10, F15, F35 · EE manual §13 · blueprint §3 (O1.12)">26 / 40</span>
+<h1>แอปเดสก์ท็อป: ฉบับองค์กร vs ฉบับสาธารณะ</h1>
+<table><thead><tr><th></th><th>ฉบับองค์กร</th><th>ฉบับสาธารณะ</th></tr></thead><tbody><tr><td><strong>โหลดจาก</strong></td><td>หน้า <code>Download</code> ขององค์กร (<code>/download</code>)</td><td>เว็บ thClaws สาธารณะ</td></tr><tr><td><strong>นโยบาย</strong></td><td>carries your organisation's signed policy, which fixes the models, the gateway, and a few features</td><td>นโยบายของตัวเอง</td></tr><tr><td><strong>โมเดลที่ได้</strong></td><td>โมเดลขององค์กรผ่าน gateway</td><td>โมเดลของตัวเอง</td></tr></tbody></table>
+<blockquote><p><strong>ข้อควรระวัง ตัวติดตั้งสองตัวหน้าตาเหมือนกัน แต่ผูกนโยบายต่างกัน</strong> — ผิดตัวคือใช้โมเดลองค์กรไม่ได้</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="27">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F10 · manual §9">27 / 40</span>
+<h1>ดาวน์โหลด: 3 แพลตฟอร์ม</h1>
+<div class="split">
+<div>
+
+<table><thead><tr><th>แพลตฟอร์ม</th><th>ขนาด</th></tr></thead><tbody><tr><td><strong>macOS</strong> — installer <code>.pkg</code></td><td>67 MB</td></tr><tr><td><strong>Windows</strong> x64</td><td>86 MB</td></tr><tr><td><strong>Linux</strong> x86_64</td><td>33 MB</td></tr></tbody></table>
+
+<blockquote><p><strong>ทั้งสามตัวเป็น <code>unsigned</code></strong> — ต้องอนุญาตเองตอนเปิดครั้งแรก</p></blockquote>
+
+<ul><li>ปุ่ม <strong>copy</strong> ข้างไฟล์ใช้คัดลอก <strong>SHA-256</strong> ไว้ตรวจว่าดาวน์โหลดครบ</li></ul>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/19-download.png" alt="หน้า Download แสดงตัวติดตั้งสามแพลตฟอร์มพร้อมขนาดไฟล์และปุ่มคัดลอก SHA-256">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="28">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F10, F11 · manual §9.1 · blueprint §4 (1.6)">28 / 40</span>
+<h1>วิธีติดตั้งแต่ละแพลตฟอร์ม</h1>
+<table><thead><tr><th>แพลตฟอร์ม</th><th>สิ่งที่ต้องทำ</th></tr></thead><tbody><tr><td><strong>macOS</strong></td><td><code>System Settings → Privacy &amp; Security → Open Anyway</code></td></tr><tr><td><strong>Windows</strong></td><td><code>More info → Run anyway</code></td></tr><tr><td><strong>Linux</strong></td><td><code>tar xzf …</code> แล้วรัน <code>./thclaws</code></td></tr></tbody></table>
+<blockquote><p><strong>macOS กับ Windows จะโดนบล็อกครั้งเดียว</strong> — เพราะไฟล์เป็น <code>unsigned</code> ไม่ใช่ไวรัส</p></blockquote>
+<div class="hl"></div>
+<blockquote><p>"Then connect to the company network or VPN, open the app and use <strong>Settings → Sign in with browser</strong>."</p></blockquote>
+<blockquote><p><strong>ติดตั้งเสร็จแล้วยังไม่ต้องลงชื่อ</strong> — ช่วงถัดไปคือขั้นตอนนั้นโดยเฉพาะ</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="29">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F11, F15 · manual §15.1">29 / 40</span>
+<h1>เชื่อมต่อ gateway กับ thClaws EE — 5 ขั้น</h1>
+<div class="split">
+<div>
+
+<ul><li><strong>ขั้น 1 · ต่อ VPN</strong> — เครือข่ายองค์กร</li><li><strong>ขั้น 2 · เปิดแอป</strong> — แอปเดสก์ท็อปฉบับองค์กร</li><li><strong>ขั้น 3 · Sign in with browser</strong> — <code>Settings → Sign in with browser</code></li><li><strong>ขั้น 4 · Allow</strong> — <code>Sign In to SIS thClaws</code> · <code>DESKTOP SIGN-IN</code></li><li><strong>ขั้น 5 · จุดเขียว</strong> — <code>You're signed in</code> · <code>PROVIDER</code> พร้อมใช้</li></ul>
+
+<blockquote><p>เว็บกับแอปเชื่อมกันด้วย <strong>access key ตัวเดียว</strong> — <strong>ไม่มีคีย์แยกสำหรับ gateway</strong></p></blockquote>
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/26-provider-ready.png" alt="แอปเดสก์ท็อปหลังลงชื่อสำเร็จ ช่อง PROVIDER พร้อมใช้งาน">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="30">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F16 · manual §15.1">30 / 40</span>
+<h1>หน้า DESKTOP SIGN-IN — อ่านให้ออกก่อนกด</h1>
+<div class="split">
+<div>
+
+<blockquote><p>"The app will use your organisation's AI models as you. <strong>Your usage is recorded under your account.</strong>"</p></blockquote>
+
+<blockquote><p>"Only allow this if you just started a sign-in from the SiS Distribution (Thailand) PCL. app. <strong>You can revoke it any time under Access keys.</strong>"</p></blockquote>
+
+<div class="cards c2">
+  <div class="card accent"><div class="k">Allow</div><div class="t">อนุญาต</div><div class="d">กดเมื่อคุณเริ่มลงชื่อเองเท่านั้น</div></div>
+  <div class="card"><div class="k">Deny</div><div class="t">ปฏิเสธ</div><div class="d">ถ้าไม่ได้เริ่มลงชื่อเอง หรือไม่แน่ใจ</div></div>
+</div>
+
+<blockquote><p>ข้อความนี้บอก 3 อย่าง: ใช้โมเดลองค์กรแทนคุณ · การใช้ถูกบันทึกในชื่อคุณ · ยกเลิกได้ที่ <code>Access keys</code></p></blockquote>
+
+</div>
+<div>
+
+<div class="shot-frame pair">
+  <img src="img/23-desktop-sign-in.png" alt="หน้า DESKTOP SIGN-IN ขออนุญาตเชื่อมแอปกับบัญชี">
+  <img src="img/24-sign-in-allow.png" alt="ปุ่ม Allow และ Deny บนหน้า DESKTOP SIGN-IN">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="31">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F15, F16, F17 · blueprint §3 (O1.12), §7">31 / 40</span>
+<h1>ลงมือทำพร้อมกัน — Gate วัน 1</h1>
+<div class="split">
+<div>
+
+<ul class="checklist">
+  <li>ต่อ VPN ขององค์กรได้</li>
+  <li>เปิดแอป แล้วไป <code>Settings → Sign in with browser</code></li>
+  <li>กด <code>Allow</code> บนหน้า <code>DESKTOP SIGN-IN</code></li>
+  <li>เห็นจุดสถานะเขียวในแอป</li>
+</ul>
+
+<blockquote><p><strong>Gate วัน 1: ผู้เรียน ≥ 80% เห็นจุดสถานะเขียวในแอป</strong></p></blockquote>
+</div>
+<div>
+
+
+<div class="shot-frame pair" style="height:240px">
+  <img src="img/25-sign-in-success.png" alt="ลงชื่อสำเร็จ — You're signed in">
+  <img src="img/26-provider-ready.png" alt="แอปพร้อมใช้งานหลังลงชื่อสำเร็จ">
+</div>
+
+</div>
+</div>
+<blockquote><p><strong>ยังไม่เขียว?</strong> ผู้สอนเดินช่วยรายคน · ถ้าติดตั้งไม่ได้ ให้ทำข้อ 1–3 บน hosted workspace แทน</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="32">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F25, F26, F29 · thClaws manual ch05 · blueprint §3 (O1.5)">32 / 40</span>
+<h1>Permission: <code>auto</code> · <code>ask</code> · <code>plan</code> ต่างกันอย่างไร</h1>
+<table><thead><tr><th>โหมด</th><th>พฤติกรรม</th></tr></thead><tbody><tr><td><code>auto</code></td><td>ทุก tool รันเอง ไม่ถาม</td></tr><tr><td><code>ask</code></td><td>tool ที่เปลี่ยนข้อมูลขออนุญาตก่อน</td></tr><tr><td><code>plan</code></td><td>read-only ล้วน</td></tr></tbody></table>
+<div class="split">
+<div>
+
+<p><strong>อ่านอัตโนมัติเสมอ</strong><br><code>Ls</code> · <code>Read</code> · <code>Glob</code> · <code>Grep</code></p>
+
+</div>
+<div>
+
+<p><strong>ต้องขออนุญาต</strong><br><code>Write</code> · <code>Edit</code> · <code>Bash</code> · <code>WebFetch</code> · <code>WebSearch</code> · <code>Task</code></p>
+
+</div>
+</div>
+<blockquote><p><strong><code>Sandbox</code> กันไฟล์นอกโฟลเดอร์งานเสมอ — ไม่ว่าโหมดไหน</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="33">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F9, F13, F27, F29 · blueprint §5 (S1–S4)">33 / 40</span>
+<h1>ข้อควรระวัง 1/2 — Remote · Key</h1>
+<div class="split">
+<div>
+
+<div class="cards c2">
+  <div class="card"><div class="k">S1</div><div class="t">อย่าเปิด thClaws Remote ขณะ permission เป็น <code>auto</code></div><div class="d">ควรตั้ง <code>/permissions ask</code> ก่อนเปิด Remote</div></div>
+  <div class="card"><div class="k">S2</div><div class="t">อย่า paste access key ลงแชต/เอกสาร/อีเมล</div><div class="d">token <code>thc_…</code> ตัวเดียว authenticate ทุกอย่าง</div></div>
+  <div class="card"><div class="k">S3</div><div class="t">อย่าแชร์ access key ระหว่างเครื่อง</div><div class="d">แยก key ต่อเครื่อง เพื่อ revoke เจาะจงได้</div></div>
+  <div class="card"><div class="k">S4</div><div class="t">อย่าตั้ง <code>mode</code> / Allow for session กับงานที่ยังไม่เข้าใจ</div><div class="d">ไม่รู้ว่า agent จะแตะอะไรบ้าง</div></div>
+</div>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/17-remote.png" alt="หน้า thClaws Remote บนเว็บ">
+</div>
+
+</div>
+</div>
+<blockquote><p><strong>S1 สำคัญที่สุด: Remote + <code>auto</code> = ใครก็สั่งเครื่องคุณได้</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="34">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F21, F16, F14, F6, F35 · blueprint §5 (S5–S10)">34 / 40</span>
+<h1>ข้อควรระวัง 2/2 — โฟลเดอร์ · URL · เครดิต · ตัวติดตั้ง · ลบ</h1>
+<div class="cards c2">
+  <div class="card"><div class="k">S5</div><div class="t">อย่าใช้ <code>/</code> หรือ home directory เป็น working directory</div><div class="d">ให้ agent ทำงานในโฟลเดอร์งานเท่านั้น</div></div>
+  <div class="card"><div class="k">S6</div><div class="t">อย่าอนุมัติ URL/คำสั่งที่ตัวเองไม่รู้จัก</div><div class="d">อ่านก่อนกด Allow ทุกครั้ง</div></div>
+  <div class="card"><div class="k">S7</div><div class="t">อย่าคิดว่าต้องซื้อเครดิต/ใส่ key เอง</div><div class="d">องค์กรเป็นเจ้าของ gateway และจ่ายให้แล้ว</div></div>
+  <div class="card"><div class="k">S8</div><div class="t">อย่าใช้ตัวติดตั้ง thClaws ฉบับสาธารณะกับระบบองค์กร</div><div class="d">โหลดจากหน้า <code>Download</code> ขององค์กรเท่านั้น</div></div>
+  <div class="card"><div class="k">S9</div><div class="t">อย่าลบ workspace โดยไม่ตรวจก่อน</div><div class="d"><code>Delete</code> ลบ workspace และข้อมูลทั้งหมด</div></div>
+  <div class="card pending"><div class="k">S10</div><div class="t">อย่าแชร์ข้อมูลลับของบริษัทเข้า AI</div><div class="d">ตรวจสอบเอกสารนโยบายองค์กรก่อน</div></div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="35">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F4, F12 · manual §10, §4.1">35 / 40</span>
+<h1>Usage (1/2) — รายงานการใช้งานระบบ</h1>
+<div class="split">
+<div>
+
+<div class="stats s2">
+  <div class="stat"><div class="v">Calls (30d)</div><div class="l">จำนวนครั้งที่เรียก</div></div>
+  <div class="stat"><div class="v">Input · Output</div><div class="l">token เข้า · token ออก</div></div>
+  <div class="stat"><div class="v">Total tokens</div><div class="l">รวมทั้งเดือน</div></div>
+  <div class="stat"><div class="v">Daily tokens</div><div class="l">กราฟรายวัน</div></div>
+</div>
+
+<ul><li>ตาราง <strong><code>By workspace</code></strong> — ใช้ที่ workspace ไหน มากน้อยแค่ไหน</li><li>เครดิต: <code>0 / 2,000 this month · 0 / 600 today</code></li></ul>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/14-usage.png" alt="หน้า Usage แสดงการ์ดตัวเลข กราฟ Daily tokens และตาราง By workspace">
+</div>
+
+</div>
+</div>
+<blockquote><p><strong>เครดิตแสดง 2 ที่:</strong> มุมขวาบนต่อท้ายชื่อ และใต้กลุ่ม <code>ACCOUNT</code> ในแถบซ้าย</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="36">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F12 · manual §10">36 / 40</span>
+<h1>Usage (2/2) — รายละเอียดการใช้งานแต่ละครั้ง</h1>
+<table><thead><tr><th>When</th><th>Provider</th><th>Model</th><th>In</th><th>Out</th><th>ms</th><th>Status</th></tr></thead><tbody><tr><td>เวลาที่เรียก</td><td><code>SIS</code></td><td><code>sis/qwen3.8-flash</code></td><td>token เข้า</td><td>token ออก</td><td>เวลาที่ใช้</td><td><code>200</code></td></tr></tbody></table>
+<div class="hl"></div>
+<ul><li><strong><code>Server caps at 500.</code></strong> — ตารางโชว์ได้สูงสุด 500 แถว</li><li><strong>ไม่แสดงเนื้อหาบทสนทนา</strong> — เห็นแค่ตัวเลขและโมเดล ไม่เห็นว่าคุณคุยอะไร</li></ul>
+<blockquote><p><strong>สรุปคือรายงานจะแสดง:</strong> บอกได้ว่าเดือนนี้ใช้ไปเท่าไร และงานล่าสุดใช้โมเดลอะไร</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="37">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F13, F14 · manual §11, §15">37 / 40</span>
+<h1>Access keys — Key สำหรับเชื่อม Desktop App กับ Cloud</h1>
+<div class="split">
+<div>
+
+<div class="cards c3">
+  <div class="card accent"><div class="k">1</div><div class="t">เรียกโมเดลผ่าน gateway</div><div class="d">โมเดลขององค์กร</div></div>
+    <div class="card"><div class="k">2</div><div class="t">ซิงก์งาน</div><div class="d"><code>/cloud push</code> · <code>/cloud pull</code></div></div>
+  <div class="card"><div class="k">3</div><div class="t">ดึง agent template</div><div class="d"><code>/cloud get &lt;slug&gt;</code></div></div>
+</div>
+
+<blockquote><p>token รูปแบบ <code>thc_…</code> · <strong>revoke ได้ทุกเมื่อ</strong> — แต่ revoke = sign out ทุกที่ที่ใช้ token นั้น</p></blockquote>
+
+<ul><li>การลงชื่อจากในแอป (sign-in with browser) <strong>ระบบสร้าง token ให้เอง</strong> โดยใช้ชื่อเครื่องเป็น Label</li></ul>
+
+</div>
+<div>
+
+<div class="shot-frame">
+  <img src="img/13-access-keys.png" alt="หน้า Access keys แสดงรายการ token และปุ่มสร้าง/ยกเลิก">
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="38">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: F14, F35 · manual §12 · EE manual §13">38 / 40</span>
+<h1>Credits และ Provider keys</h1>
+<div class="cards c2">
+  <div class="card accent"><div class="k">ดูได้</div><div class="t">Credits</div><div class="d">ใช้ไป / วงเงิน — แสดงบนแถบทุกหน้า</div></div>
+  <div class="card"><div class="k">ไม่ต้องกรอกเอง</div><div class="t">Provider keys</div><div class="d">ระบบใช้ gateway ขององค์กร ⇒ ไม่มี key ให้ใส่</div></div>
+</div>
+<blockquote><p><strong>No API keys</strong> — โมเดลวิ่งผ่าน gateway ขององค์กร</p></blockquote>
+<blockquote><p><strong>ไม่ต้องเติมเครดิตเอง ไม่ต้องใส่ provider key เอง</strong> — องค์กรจ่ายให้</p></blockquote>
+</div>
+</section>
+<section class="slide takeaway" data-n="39">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: blueprint §4 (1.10), §3 (O1.9–O1.12)">39 / 40</span>
+<h1>สรุปวันที่ 1 — สิ่งที่ได้เรียนรู้มา</h1>
+<ol><li><strong>thClaws คือ AI Agent Platform</strong> — Chat ตอบ แต่ Agent ทำงาน</li><li><strong>หน้าเว็บ thClaws Enterprise Edition ขององค์กร = <code>sis.thclaws.ai</code></strong> — โหลดตัวติดตั้ง · สร้าง workspace · ดูเครดิต</li><li><strong>workspace บน Cloud:</strong> สร้าง → <code>Open ↗</code> → สั่งงานแรก → อัปโหลดไฟล์</li><li><strong>แอปเดสก์ท็อปขององค์กร:</strong> โหลดจากหน้า <code>Download</code> แล้ว <code>Sign in with browser</code> จนได้จุดเขียว</li></ol>
+<blockquote><p>Next Day - 21 ต.ค. — เริ่มใช้งาน workspace แบบละเอียด<br><strong>คำถาม 3 ข้อก่อนเลิก:</strong> อะไรยังไม่ชัด · อะไรทำไม่สำเร็จ · อยากให้เพิ่มเนื้อหาลงลึกเรื่องไหน</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="40">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: blueprint §7 · manual §13">40 / 40</span>
+<h1>Quiz ท้ายวัน 8 ข้อ</h1>
+<div class="stats s2">
+  <div class="stat"><div class="v">8 ข้อ</div><div class="l">ต่อวัน</div></div>
+  <div class="stat"><div class="v">ผ่าน 6/8</div><div class="l">วัดความเข้าใจ ไม่ใช่ท่องจำ</div></div>
+</div>
+<ul><li>ทำ 2–3 นาทีท้ายคาบ</li><li>เก็บใบคำตอบให้ผู้สอน</li><li>เฉลยทันทีหลังเก็บใบ</li></ul>
+<blockquote><p><strong>3 ทางกลับมาหาความรู้:</strong> หน้า <strong>Docs</strong> ในเว็บ · ใบเช็กลิสต์คำสั่ง (วัน 3) · คู่มือการใช้งานเว็บ SiS thClaws</p></blockquote>
+</div>
+</section>
+</div>
+<nav>
+  <button id="prev" aria-label="ก่อนหน้า">← ก่อนหน้า</button>
+  <button id="next" aria-label="ถัดไป">ถัดไป →</button>
+  <span style="opacity:.6">← → เลื่อน · F เต็มจอ</span>
+</nav>
+<script>
+const slides = Array.from(document.querySelectorAll('section.slide'));
+let cur = 0;
+function fit() {
+  const pad = 90;
+  const s = Math.min((window.innerWidth - 40) / 1280, (window.innerHeight - pad) / 720);
+  slides.forEach(el => { el.style.transform = 'scale(' + s + ')'; });
+}
+function render() {
+  slides.forEach((el, i) => el.classList.toggle('active', i === cur));
+}
+function go(d) { cur = Math.max(0, Math.min(slides.length - 1, cur + d)); render(); }
+document.addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)) { e.preventDefault(); go(1); }
+  else if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key)) { e.preventDefault(); go(-1); }
+  else if (e.key === 'Home') { cur = 0; render(); }
+  else if (e.key === 'End') { cur = slides.length - 1; render(); }
+  else if (e.key === 'f' || e.key === 'F') {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen();
+  }
+});
+document.getElementById('prev').onclick = () => go(-1);
+document.getElementById('next').onclick = () => go(1);
+window.addEventListener('resize', fit);
+fit(); render();
+</script>
+</body>
+</html>
