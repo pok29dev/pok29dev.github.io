@@ -1,0 +1,325 @@
+/* ==========================================================================
+   ใบเสนอราคา — HTML/CSS template
+   A4 portrait · 185 mm content width · Sarabun
+   ปรับสี/ระยะได้ที่ :root ด้านล่าง
+   ========================================================================== */
+
+:root {
+  --ink:        #333333;   /* เนื้อหา */
+  --ink-soft:   #7a7a7a;   /* หมายเหตุ / ตัวเลขลำดับ */
+  --accent:     #d9822b;   /* หัวเรื่อง + ป้ายชื่อ */
+  --accent-fill:#f3994a;   /* สามเหลี่ยมตกแต่ง */
+  --rule:       #d5d5d5;   /* เส้นคั่น */
+  --placeholder:#b4b4b4;   /* กรอบโลโก้ตัวอย่าง */
+  --paper:      #ffffff;
+
+  --font: "Sarabun", "IBM Plex Sans Thai", "Noto Sans Thai", Tahoma,
+          Thonburi, sans-serif;
+
+  --pad-top:    8mm;
+  --pad-x:      12.5mm;
+  --pad-bottom: 10mm;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  font-family: var(--font);
+  font-size: 9.5pt;
+  line-height: 1.42;
+  color: var(--ink);
+  background: #eceef1;
+  -webkit-font-smoothing: antialiased;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+/* ── กระดาษ (หน้าจอ) ─────────────────────────────────────────────────── */
+.sheet {
+  position: relative;
+  width: 210mm;
+  min-height: 297mm;
+  margin: 24px auto;
+  padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+  background: var(--paper);
+  box-shadow: 0 2px 4px rgba(16, 24, 40, .06),
+              0 12px 32px rgba(16, 24, 40, .12);
+}
+
+/* ── ตกแต่งมุมขวาบน ──────────────────────────────────────────────────────
+   ต้องไม่ล้นกรอบ .sheet — ของที่ล้นกรอบทำให้ Chrome ย่อ/ขยับ layout ตอนพิมพ์ */
+.corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 18mm;
+  height: 16mm;
+  background: var(--accent-fill);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+/* ── หัวเอกสาร ───────────────────────────────────────────────────────── */
+.doc-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 14.4mm;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44mm;
+  height: 12mm;
+  border: 1px dashed #e8e8e8;
+  color: var(--placeholder);
+  font-size: 8pt;
+}
+
+.doc-title {
+  margin: 8.6mm 33.6mm 0 0;
+  font-size: 15pt;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--accent);
+}
+
+/* ── บล็อกซ้าย/ขวา ใต้หัวเอกสาร ──────────────────────────────────────── */
+.parties,
+.buyer-area {
+  display: grid;
+  grid-template-columns: 98mm 1fr;
+  align-items: start;
+}
+
+/* grid items default to min-width:auto and overflow their track in print */
+.parties > *,
+.buyer-area > *,
+.totals > * { min-width: 0; }
+
+.seller p,
+.buyer p {
+  margin: 0;
+  line-height: 4.4mm;
+}
+
+.org {
+  font-size: 10pt;
+  font-weight: 700;
+  line-height: 4.8mm;
+}
+
+.buyer-area { margin-top: 4.3mm; }
+
+/* ── รายการ label : ค่า (ข้อมูลเอกสาร / โปรเจกต์) ────────────────────── */
+.meta {
+  display: grid;
+  grid-template-columns: 30.7mm 1fr;
+  margin: 1.6mm 7mm 0 0;
+  padding: 1.4mm 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.meta dt {
+  color: var(--accent);
+  font-size: 9pt;
+  line-height: 4.8mm;
+}
+
+.meta dd {
+  margin: 0;
+  line-height: 4.8mm;
+}
+
+.meta--plain {
+  margin: -2.6mm 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.label {
+  margin: 0 0 1mm;
+  font-size: 9pt;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.buyer .label { margin-bottom: 0; }
+
+/* ── ตารางรายการ ─────────────────────────────────────────────────────── */
+.items {
+  width: 100%;
+  margin-top: 4.2mm;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.items col.c-no     { width: 12mm; }
+.items col.c-desc   { width: 94mm; }
+.items col.c-qty    { width: 14mm; }
+.items col.c-price  { width: 37.5mm; }
+.items col.c-amount { width: 27.5mm; }
+
+.items thead th {
+  height: 6.5mm;
+  padding: 0;
+  vertical-align: middle;
+  font-size: 9pt;
+  font-weight: 500;
+  color: #434343;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.items thead th.desc { text-align: center; }
+
+.items tbody tr { height: 8mm; }
+
+.items tbody td {
+  padding: 2mm 0;
+  vertical-align: top;
+  line-height: 4.3mm;
+}
+
+.items tbody tr:last-child td { border-bottom: 1px solid var(--rule); }
+
+.items td.desc { padding-left: 1.5mm; }
+
+.items .no {
+  padding-right: 2mm;
+  text-align: right;
+  font-size: 8.5pt;
+  color: var(--ink-soft);
+}
+
+.items .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── สรุปยอด ─────────────────────────────────────────────────────────── */
+.totals {
+  display: grid;
+  grid-template-columns: 1fr 87mm;
+  margin-top: 4mm;
+}
+
+.words {
+  margin: 10mm 0 0;
+  font-size: 8pt;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.summary {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.summary th {
+  width: 51mm;
+  padding: 0;
+  text-align: right;
+  font-size: 9pt;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.summary td {
+  padding: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary tr { height: 5.6mm; }
+
+.summary tr.strong th,
+.summary tr.strong td { font-weight: 700; }
+
+.summary tr.rule th {
+  height: 9mm;
+  border-top: 1px solid var(--rule);
+}
+
+/* ── หมายเหตุ ────────────────────────────────────────────────────────── */
+.notes { margin-top: 4.5mm; }
+
+.notes ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notes li { line-height: 4.7mm; }
+
+.notes li::before {
+  content: "– ";
+  color: var(--ink);
+}
+
+/* ── ลายเซ็น ─────────────────────────────────────────────────────────── */
+.signatures {
+  display: grid;
+  grid-template-columns: 80mm 75mm;
+  justify-content: space-between;
+  margin-top: 50.5mm;
+}
+
+.sig-name {
+  margin: 0;
+  font-size: 9pt;
+  line-height: 4.6mm;
+}
+
+.sig-lines {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4mm;
+  margin-top: 18mm;
+}
+
+.sig-lines .line { border-top: 1px solid var(--rule); }
+
+.sig-caps {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4mm;
+  margin-top: 1.4mm;
+  font-size: 8.5pt;
+  text-align: center;
+}
+
+/* ── การพิมพ์ ────────────────────────────────────────────────────────── */
+@page {
+  size: A4;
+  margin: var(--pad-top) var(--pad-x) var(--pad-bottom);
+}
+
+@media print {
+  body { background: #fff; }
+
+  .sheet {
+    width: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .corner {
+    position: absolute;   /* อยู่ในกรอบ .sheet — ไม่ล้น ไม่ดัน layout */
+    top: 0;
+    right: 0;
+  }
+
+  .items tr,
+  .summary tr,
+  .sig,
+  .notes,
+  .meta { break-inside: avoid; }
+}

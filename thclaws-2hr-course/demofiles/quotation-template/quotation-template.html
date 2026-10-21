@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>ใบเสนอราคา — เทมเพลต</title>
+<link rel="stylesheet" href="quotation-template.css">
+</head>
+<body>
+<main class="sheet" role="document">
+
+  <!-- ── ตกแต่งมุมขวาบน (ลบได้ถ้าไม่ต้องการ) ─────────────────────────── -->
+  <span class="corner" aria-hidden="true"></span>
+
+  <!-- ── หัวเอกสาร: โลโก้ + ชื่อเอกสาร ──────────────────────────────── -->
+  <header class="doc-head">
+    <div class="logo">วางโลโก้บริษัท</div>
+    <h1 class="doc-title">ใบเสนอราคา</h1>
+  </header>
+
+  <!-- ── ผู้ขาย (ซ้าย) + ข้อมูลเอกสาร (ขวา) ─────────────────────────── -->
+  <section class="parties">
+    <div class="seller">
+      <p class="org">บริษัท ตัวอย่าง จำกัด (สำนักงานใหญ่)</p>
+      <p>141 ชั้น 11 ยูนิต 12B อาคารชุดสกุลไทย สุรวงศ์ ทาวเวอร์</p>
+      <p>ถนนสุรวงศ์ แขวงสุริยวงศ์ เขตบางรัก กรุงเทพมหานคร 10500</p>
+      <p>เลขประจำตัวผู้เสียภาษี 0105558096348</p>
+      <p>เบอร์มือถือ 099-999-9999</p>
+      <p>อีเมล contact@example.com</p>
+    </div>
+
+    <dl class="meta">
+      <dt>เลขที่</dt><dd>QT2021110006</dd>
+      <dt>วันที่</dt><dd>20/10/2026</dd>
+      <dt>เครดิต</dt><dd>30 วัน</dd>
+      <dt>ผู้ขาย</dt><dd>สมชาย ใจดี</dd>
+    </dl>
+  </section>
+
+  <!-- ── ผู้ซื้อ (ซ้าย) + โปรเจกต์/ผู้ติดต่อ (ขวา) ───────────────────── -->
+  <section class="buyer-area">
+    <div class="buyer">
+      <p class="label">ลูกค้า</p>
+      <p class="org">บริษัท ลูกค้าตัวอย่าง จำกัด (สำนักงานใหญ่)</p>
+      <p>141/12 ชั้น 11 ยูนิต 12B อาคารชุดสกุลไทย สุรวงศ์ ทาวเวอร์</p>
+      <p>ถนนสุรวงศ์ แขวงสุริยวงศ์ เขตบางรัก กรุงเทพมหานคร 10500</p>
+      <p>เลขประจำตัวผู้เสียภาษี 0105558096348</p>
+    </div>
+
+    <dl class="meta meta--plain">
+      <dt>ชื่องาน</dt><dd>Page Facebook - Japan Coffee</dd>
+      <dt>ผู้ติดต่อ</dt><dd>คุณสมคิด เป็นงาน</dd>
+      <dt>เบอร์โทร</dt><dd>099-999-9999</dd>
+      <dt>อีเมล</dt><dd>somkit@example.com</dd>
+    </dl>
+  </section>
+
+  <!-- ── ตารางรายการ: เพิ่ม/ลบ <tr> ตามจำนวนรายการ ──────────────────── -->
+  <table class="items">
+    <colgroup>
+      <col class="c-no"><col class="c-desc"><col class="c-qty">
+      <col class="c-price"><col class="c-amount">
+    </colgroup>
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col" class="desc">รายละเอียด</th>
+        <th scope="col" class="num">จำนวน</th>
+        <th scope="col" class="num">ราคาต่อหน่วย</th>
+        <th scope="col" class="num">ยอดรวม</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="no">1</td>
+        <td class="desc">Facebook post and photo album<br>Post promote Japan Coffee</td>
+        <td class="num">10</td>
+        <td class="num">2,000.00</td>
+        <td class="num">20,000.00</td>
+      </tr>
+      <tr>
+        <td class="no">2</td>
+        <td class="desc"></td>
+        <td class="num"></td>
+        <td class="num"></td>
+        <td class="num"></td>
+      </tr>
+      <tr>
+        <td class="no">3</td>
+        <td class="desc"></td>
+        <td class="num"></td>
+        <td class="num"></td>
+        <td class="num"></td>
+      </tr>
+      <tr>
+        <td class="no">4</td>
+        <td class="desc"></td>
+        <td class="num"></td>
+        <td class="num"></td>
+        <td class="num"></td>
+      </tr>
+      <tr>
+        <td class="no">5</td>
+        <td class="desc"></td>
+        <td class="num"></td>
+        <td class="num"></td>
+        <td class="num"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ── สรุปยอด ────────────────────────────────────────────────────── -->
+  <section class="totals">
+    <p class="words">(สองหมื่นหนึ่งพันสี่ร้อยบาทถ้วน)</p>
+
+    <table class="summary">
+      <tbody>
+        <tr><th scope="row">รวมเป็นเงิน</th><td>20,000.00 บาท</td></tr>
+        <tr><th scope="row">ภาษีมูลค่าเพิ่ม 7%</th><td>1,400.00 บาท</td></tr>
+        <tr class="strong"><th scope="row">จำนวนเงินรวมทั้งสิ้น</th><td>21,400.00 บาท</td></tr>
+        <tr class="rule"><th colspan="2"></th></tr>
+        <tr><th scope="row">หักภาษี ณ ที่จ่าย 3%</th><td>600.00 บาท</td></tr>
+        <tr class="strong"><th scope="row">ยอดชำระ</th><td>20,800.00 บาท</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── หมายเหตุ ───────────────────────────────────────────────────── -->
+  <section class="notes">
+    <h2 class="label">หมายเหตุ</h2>
+    <ul>
+      <li>สามารถแก้ไขงานได้ 2 ครั้ง</li>
+      <li>ส่งงานให้ล่วงหน้าก่อนโพสต์ 1 สัปดาห์</li>
+    </ul>
+  </section>
+
+  <!-- ── ลายเซ็น ────────────────────────────────────────────────────── -->
+  <footer class="signatures">
+    <div class="sig">
+      <p class="sig-name">ในนาม บริษัท ลูกค้าตัวอย่าง จำกัด (สำนักงานใหญ่)</p>
+      <div class="sig-lines"><span class="line"></span><span class="line"></span></div>
+      <div class="sig-caps"><span>ผู้สั่งซื้อสินค้า</span><span>วันที่</span></div>
+    </div>
+
+    <div class="sig">
+      <p class="sig-name">ในนาม บริษัท ตัวอย่าง จำกัด (สำนักงานใหญ่)</p>
+      <div class="sig-lines"><span class="line"></span><span class="line"></span></div>
+      <div class="sig-caps"><span>ผู้อนุมัติ</span><span>วันที่</span></div>
+    </div>
+  </footer>
+
+</main>
+</body>
+</html>
