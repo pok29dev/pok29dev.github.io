@@ -1,0 +1,994 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chat AI Agent — เดโม 8 สถานการณ์</title>
+<style>
+/* ---- deck theme (the .marp.md inline <style>, verbatim) ---- */
+:root {
+  --accent: #00707f;
+  --accent-deep: #00565f;
+  --accent-wash: #eaf4f5;
+  --accent-line: #cfe1e3;
+
+  --caution-red: #a81019;
+  --caution-wash: #fdf3f3;
+  --caution-line: #efc9cc;
+
+  --ink: #0f1b22;
+  --ink-2: #3d4b55;
+  --ink-3: #5f6b73;
+
+  --ground: #ffffff;
+  --panel: #f7f8f8;
+  --panel-2: #eff2f2;
+  --hairline: #e2e6e7;
+  --hairline-soft: #eef1f1;
+  --rule-mid: #c3cccd;
+
+  --mark: #fff1a8;
+}
+
+section {
+  width: 1280px;
+  height: 720px;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: 'Noto Sans Thai', 'IBM Plex Sans Thai', 'Sukhumvit Set', Thonburi,
+    'Leelawadee UI', Tahoma, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 22px;
+  line-height: 1.7;
+  padding: 44px 64px;
+}
+
+/* ---- Headings ---- */
+
+h1 {
+  color: var(--ink);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+  padding: 0 0 12px 0;
+  border-bottom: 2px solid var(--hairline);
+}
+
+/* The accent rule that marks the current section — a single hairline, never a fill */
+h1::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 4px;
+  margin-top: -14px;
+  margin-bottom: 10px;
+  background: var(--accent);
+}
+
+h2 {
+  color: var(--accent-deep);
+  font-size: 38px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+h3 {
+  color: var(--ink-2);
+  font-size: 21px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+strong { color: var(--accent-deep); font-weight: 700; }
+em { color: var(--ink-2); font-style: normal; }
+
+/* ---- Lists ---- */
+
+ul, ol { font-size: 22px; line-height: 1.7; margin: 8px 0; padding-left: 28px; }
+li { margin: 6px 0; }
+li::marker { color: var(--accent); }
+ol li::marker { color: var(--accent); font-weight: 700; }
+li > ul, li > ol { font-size: 20px; }
+
+/* ---- Tables ---- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 19px;
+  margin: 10px 0;
+}
+th {
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 700;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--rule-mid);
+}
+td {
+  border-bottom: 1px solid var(--hairline);
+  padding: 9px 14px;
+  color: var(--ink-2);
+}
+tr:last-child td { border-bottom: none; }
+td strong { color: var(--accent-deep); }
+table.hl tr.hl-row td { background: var(--accent-wash); }
+
+/* ---- Code ---- */
+
+code {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  background: var(--panel-2);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.88em;
+  color: var(--ink);
+}
+pre {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-size: 17px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 17px;
+}
+
+/* ---- Blockquote: neutral callout (default) ---- */
+
+blockquote {
+  background: var(--panel);
+  border-left: 4px solid var(--rule-mid);
+  color: var(--ink-2);
+  padding: 12px 18px;
+  border-radius: 0 6px 6px 0;
+  font-size: 20px;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+blockquote p { margin: 0; }
+blockquote strong { color: var(--accent-deep); }
+
+/* A quote lifted verbatim from the product screen — still neutral, marked as a quote */
+blockquote.screen {
+  background: var(--accent-wash);
+  border-left-color: var(--accent);
+  color: var(--ink);
+  font-size: 19px;
+}
+blockquote.screen strong { color: var(--accent-deep); }
+
+/* ---- Caution callout: the ONLY place red appears ---- */
+
+section.caution blockquote,
+blockquote.caution {
+  background: var(--caution-wash);
+  border-left-color: var(--caution-red);
+  color: var(--ink);
+}
+section.caution blockquote strong,
+blockquote.caution strong {
+  color: var(--caution-red);
+}
+
+/* ---- Title slide ---- */
+
+section.lead {
+  background: var(--ground);
+  color: var(--ink);
+  justify-content: center;
+  padding: 0 96px;
+  text-align: left;
+}
+section.lead h1 {
+  color: var(--ink);
+  font-size: 52px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 4px;
+}
+section.lead h1::after {
+  width: 88px;
+  height: 5px;
+  margin: 20px 0 24px 0;
+}
+section.lead h2 {
+  color: var(--accent-deep);
+  font-size: 40px;
+  font-weight: 500;
+}
+section.lead p { color: var(--ink-3); font-size: 21px; }
+section.lead strong { color: var(--accent-deep); }
+
+/* ---- Day badge on leads ---- */
+
+section.lead .day-badge {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  background: var(--accent-wash);
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin-bottom: 20px;
+}
+
+/* ---- Takeaways slide ---- */
+
+section.takeaway {
+  background: var(--panel);
+}
+section.takeaway h1 {
+  font-size: 34px;
+  border-bottom: none;
+}
+section.takeaway h1::after {
+  margin-top: 2px;
+  margin-bottom: 20px;
+}
+section.takeaway ul { font-size: 23px; }
+section.takeaway li { margin: 12px 0; }
+
+/* ---- Source anchor line ---- */
+
+.src {
+  position: absolute;
+  right: 64px;
+  bottom: 20px;
+  font-size: 13px;
+  color: var(--ink-3);
+  letter-spacing: 0.01em;
+}
+
+/* ---- Pagination ----
+   A presentation is not a document: no page number on the slide. */
+
+section::after, footer { display: none !important; }
+
+/* ---- Cards grid ---- */
+
+.cards { display: grid; gap: 14px; margin-top: 6px; }
+.cards.c2 { grid-template-columns: repeat(2, 1fr); }
+.cards.c3 { grid-template-columns: repeat(3, 1fr); }
+.cards.c4 { grid-template-columns: repeat(4, 1fr); }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.card .k {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  margin-bottom: 6px;
+}
+.card .t { font-size: 21px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.card .d { font-size: 17px; color: var(--ink-2); line-height: 1.55; }
+.card.accent { background: var(--accent-wash); border-color: var(--accent-line); }
+/* A card whose content is still pending a real source — dashed, never filled in */
+.card.pending {
+  background: var(--ground);
+  border: 2px dashed var(--rule-mid);
+  color: var(--ink-3);
+}
+.card.pending .d { color: var(--ink-3); }
+
+/* ---- Flow: numbered steps in a row ---- */
+
+.flow { display: flex; align-items: stretch; gap: 10px; margin-top: 14px; }
+.flow .step {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 14px 16px;
+  position: relative;
+}
+.flow .step.accent { background: var(--accent-wash); border-color: var(--accent-line); }
+.flow .step .n {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-deep);
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.flow .step .t { font-size: 19px; font-weight: 700; color: var(--ink); }
+.flow .step .d { font-size: 16px; color: var(--ink-2); line-height: 1.55; margin-top: 2px; }
+.flow .arrow {
+  align-self: center;
+  color: var(--accent);
+  font-size: 24px;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+/* ---- Checklist ---- */
+
+.checklist { list-style: none; padding-left: 0; margin-top: 10px; }
+.checklist li {
+  position: relative;
+  padding-left: 34px;
+  margin: 10px 0;
+  font-size: 21px;
+}
+.checklist li::before {
+  content: '☐';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 22px;
+}
+.checklist.done li::before { content: '☑'; }
+
+/* ---- Progress bar (a UI element, not a data chart) ---- */
+
+.pbar {
+  margin-top: 18px;
+  background: var(--panel-2);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  height: 26px;
+  overflow: hidden;
+  position: relative;
+}
+.pbar .fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px 0 0 999px;
+}
+.pbar .lbl {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ---- Stat cards (small numeric facts) ---- */
+
+.stats { display: grid; gap: 14px; margin-top: 8px; }
+.stats.s2 { grid-template-columns: repeat(2, 1fr); }
+.stats.s3 { grid-template-columns: repeat(3, 1fr); }
+.stats.s4 { grid-template-columns: repeat(4, 1fr); }
+.stat {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.stat .v {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--accent-deep);
+  line-height: 1.1;
+}
+.stat .l { font-size: 15px; color: var(--ink-2); margin-top: 4px; }
+
+/* ---- Real screenshot slides ----
+   A captured screen of the product. Presented as one object: hairline border
+   and a soft shadow, on the ground, never cropped. */
+
+section.shot { padding: 34px 52px 40px 52px; }
+
+section.shot h1 {
+  font-size: 30px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 2px;
+}
+section.shot h1::after { margin-top: 2px; margin-bottom: 12px; width: 52px; height: 3px; }
+
+.shot-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 470px;
+}
+.shot-frame img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  box-shadow: 0 6px 22px rgba(15, 27, 34, 0.14);
+}
+/* two images per row — and four, without overflowing. `flex-wrap` alone moved the
+   second row *out* of the frame: every image was still allowed the frame's full
+   470px height, so four images pushed 172px past the content box (the layout
+   fixture caught it). A 2-column grid whose rows share the frame's height splits it
+   between the rows it actually has — one row of 470px for two images (unchanged),
+   two rows of 235px for four. */
+.shot-frame.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* minmax(0, 1fr): a bare `1fr` keeps its content-based minimum, so two rows still
+     measured 352px each inside a 470px frame and the pair overflowed anyway. */
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  justify-items: center;
+}
+/* no `width: 100%` here: clamping only the height squashes the aspect ratio.
+   max-width + max-height with auto width/height (the base rule) keeps it. */
+.shot-frame.pair img { max-width: 100%; }
+
+.shot-cap {
+  margin-top: 12px;
+  font-size: 17px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.shot-cap strong { color: var(--accent-deep); }
+
+section.shot .src { bottom: 16px; }
+
+/* ---- Two-column split (text left, figure/shot right) ---- */
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; margin-top: 6px; }
+.split .shot-frame { height: 400px; }
+
+/* ---- Full-bleed poster slide (the eight demo infographics) ----
+   Each infographic is authored at 16:9 and carries its own headline, so it is
+   shown whole: 1280x720 on the canvas, no crop, no caption competing with it.
+   The shell carries the padding on `.slide-inner` (see shell comment); this
+   selector is (0,2,0) against the shell's `.slide-inner` (0,1,0), so it wins even
+   though the theme comes first in source order. */
+section.poster .slide-inner { padding: 0; }
+section.poster img {
+  display: block;
+  flex: none;
+  width: 1280px;
+  height: 720px;
+  object-fit: contain;
+  background: var(--ground);
+}
+/* the page number sits over the picture here: give it its own ground */
+section.poster .src {
+  right: 14px;
+  bottom: 12px;
+  padding: 1px 9px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* structural heading for a slide whose words are inside an image */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+/* ---- deck chrome: the HTML presentation shell ---- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #10161a; }
+body { font-family: 'Noto Sans Thai','IBM Plex Sans Thai','Sukhumvit Set',Thonburi,'Leelawadee UI',Tahoma,system-ui,sans-serif; }
+#stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+section.slide {
+  position: absolute; display: none; transform-origin: center center;
+  /* the slide surface is the THEME's, not the shell's: hardcoding #ffffff here
+     wins over the theme's `section { background: var(--ground) }` (this
+     selector is more specific and comes later in source order), which turns a
+     dark theme into cream text on a white slide — 1.1:1, unreadable. */
+  background: var(--ground, #ffffff); overflow: hidden;
+}
+section.slide.active { display: flex; flex-direction: column; }
+/* The theme's `section { padding: … }` (44px 64px · 0 96px for .lead ·
+   34px 52px 40px 52px for .shot) was written when the <section> WAS the slide box.
+   The shell now wraps the body in `.slide-inner`, which carries that same padding —
+   so the section must NOT pad again, or the inner box is pushed right/down by
+   64/96px and the overflow is clipped by `overflow: hidden` (asymmetric margins).
+   Reset here (later in source order than the theme, so it wins) and move each
+   variant's padding onto `.slide-inner`. */
+section.slide { padding: 0; }
+section.lead .slide-inner { padding: 0 96px; }
+section.shot .slide-inner { padding: 34px 52px 40px 52px; }
+.slide-inner { padding: 44px 64px; width: 1280px; height: 720px; overflow: hidden;
+  display: flex; flex-direction: column; }
+section.lead .slide-inner, section.takeaway .slide-inner { justify-content: center; }
+.slide-inner > h1:first-child, .slide-inner > h2:first-child { margin-top: 0; }
+nav { position: fixed; bottom: 14px; left: 0; right: 0; display: flex; gap: 14px;
+  align-items: center; justify-content: center; color: #c3cccd; font-size: 13px;
+  font-family: system-ui, sans-serif; }
+nav button { font: inherit; background: #1d262c; color: #e8edee; border: 1px solid #333f46;
+  border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+nav button:hover { background: #263238; }
+#hint { position: fixed; top: 12px; right: 16px; color: #7b8a92; font-size: 12px;
+  font-family: system-ui, sans-serif; }
+/* keep the accent rule on h1 as in the theme */
+section.slide h1 { font-size: 38px; }
+section.shot h1, section.lead h1 { font-size: 52px; }
+section.lead h1 { font-size: 52px; }
+/* bottom-right corner: slide number (`n / total`) inherits .src's position */
+.src.page-num { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+@media print {
+  #stage, nav, #hint { position: static; }
+  nav, #hint { display: none; }
+  section.slide { display: flex !important; position: relative; transform: none !important;
+    page-break-after: always; }
+  .slide-inner { transform: none !important; }
+}
+</style>
+</head>
+<body>
+<div id="hint">← → เลื่อน · Home/End · F เต็มจอ</div>
+<div id="stage">
+<section class="slide lead" data-n="1">
+<div class="slide-inner">
+<span class="day-badge">เดโมต่อจากวันที่ 2 · 8 Case Study</span>
+<h1>Chat AI Agent ทำงานจริง</h1>
+<p>จากไฟล์เดียว ถึงงานทั้งกระบวนการ · ประมาณ 45 นาที</p>
+<p>thClaws · workspace · Files + Chat</p>
+<span class="src page-num">1 / 32</span>
+</div>
+</section>
+<section class="slide" data-n="2">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">2 / 32</span>
+<h1>เดโมชุดนี้ต่างจากถาม–ตอบปกติตรงไหน</h1>
+<div class="cards c3">
+  <div class="card accent"><div class="t">ได้ไฟล์ ไม่ใช่แค่คำตอบ</div><div class="d">ทุกเดโมจบด้วยไฟล์ที่เปิดใช้ต่อได้ — md, PDF, ใบเสนอราคา, dashboard</div></div>
+  <div class="card"><div class="t">ทำงานข้ามโฟลเดอร์</div><div class="d">เดโม 6 อ่านอีเมล → ค้นราคา → ใส่ template โดยไม่ต้องคัดลอกเอง</div></div>
+  <div class="card"><div class="t">เห็นทุกขั้นตอน</div><div class="d">การอ่านไฟล์ การค้นหา และการเขียนไฟล์ โผล่ในแชทให้ตรวจระหว่างทาง</div></div>
+</div>
+<blockquote><p>เป้าหมายของการเดโมวันนี้ — ไม่ใช่ดูว่า agent เก่งแค่ไหน แต่ดูว่า <strong>Agent ทำอะไรได้บ้าง และเราต้องตรวจตรงไหน</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="3">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">3 / 32</span>
+<h1>8 Case Study — เห็นภาพรวมการใช้งาน AI Agent ในรูปแบบต่าง ๆ</h1>
+<div class="split">
+<div>
+
+<table><thead><tr><th>#</th><th>โจทย์</th><th>ผลลัพธ์</th></tr></thead><tbody><tr><td>1</td><td>แปลไฟล์ทั้งไฟล์ Translate</td><td>ไฟล์แปล</td></tr><tr><td>2</td><td>สรุปเอกสารยาว Summarize</td><td>ไฟล์สรุปเนื่อหาตามระบุ</td></tr><tr><td>3</td><td>ข้อความจีนในภาพบนเว็บ</td><td>ไฟล์เนื้อหาในภาษาอังกฤษ</td></tr><tr><td>4</td><td>วิดีโอ YouTube</td><td>บทความ + timestamp</td></tr></tbody></table>
+
+</div>
+<div>
+
+<table><thead><tr><th>#</th><th>โจทย์</th><th>ผลลัพธ์</th></tr></thead><tbody><tr><td>5</td><td>ดึงข้อมูลหน้าเว็บ</td><td>ไฟล์ข้อมูล พร้อมแหล่งอ้างอิง</td></tr><tr><td>6</td><td>อีเมลลูกค้า</td><td>ใบเสนอราคา PDF</td></tr><tr><td>7</td><td>Excel รายเดือน</td><td>รายงานผู้บริหาร PDF</td></tr><tr><td>8</td><td>ข้อมูลในไฟล์ data</td><td>dashboard HTML</td></tr></tbody></table>
+
+</div>
+</div>
+<blockquote><p>รวมประมาณ 30-45 นาที · เดโม 1–2 ใช้เมนูคลิกขวา ที่เหลือสั่งด้วย prompt</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="4">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">4 / 32</span>
+<h1>การเดโมจะดำเนินตาม — 4 ขั้นตอน</h1>
+<div class="flow">
+  <div class="step"><div class="n">01</div><div class="t">โจทย์</div><div class="d">ตรวจสอบไฟล์หรือลิงก์จริงที่ใช้</div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">02</div><div class="t">สั่ง</div><div class="d">คลิกขวา หรือ prompt บนสไลด์</div></div>
+  <div class="arrow">→</div>
+  <div class="step accent"><div class="n">03</div><div class="t">ทำงาน</div><div class="d">อ่าน → ค้น → เขียนไฟล์</div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">04</div><div class="t">ตรวจ</div><div class="d">เปิดไฟล์ ตรวจสอบหรือเปรียบเทียบตัวเลข</div></div>
+</div>
+<ul class="checklist">
+  <li>ทุกเดโมมี <strong>สามสไลด์</strong> — ภาพรวมก่อนเริ่ม · สิ่งที่สั่ง · สิ่งที่ต้องตรวจ</li>
+  <li>prompt บนสไลด์คัดลอกไปใช้ได้ทันที ไม่ต้องจดตาม</li>
+</ul>
+<blockquote><p>ขั้นตอน 3 คือช่วงที่ควรดูผลลัพธ์ขณะทำงาน</p></blockquote>
+</div>
+</section>
+<section class="slide poster" data-n="5">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: ภาพรวมก่อนเริ่ม · gpt-image-2 · 2026-10-20">5 / 32</span>
+<h1 class="sr-only">เดโม 1 — แปลไฟล์ทั้งไฟล์จากเมนูคลิกขวา</h1>
+
+<img src="img/demo-01.png" alt="ภาพรวมเดโม 1 — ไฟล์ต้นฉบับ ผ่านเมนู Translate กลายเป็นไฟล์แปลใหม่ และจุดที่ต้องตรวจ">
+</div>
+</section>
+<section class="slide" data-n="6">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">6 / 32</span>
+<h1>เดโม 1 — แปลไฟล์ทั้งไฟล์จากเมนูคลิกขวา</h1>
+<div class="split">
+<div>
+
+<ul class="checklist">
+  <li>เปิดแท็บ <strong>Files</strong> ของ workspace</li>
+  <li>คลิกขวาที่ชื่อไฟล์ → <strong>Translate</strong></li>
+  <li>เลือกภาษาปลายทาง แล้วรอไฟล์ใหม่</li>
+  <li>เปิดไฟล์ผลลัพธ์ เทียบกับต้นฉบับ</li>
+</ul>
+
+</div>
+<div>
+
+<div class="card accent"><div class="t">เดโมนี้ไม่ต้องพิมพ์ prompt</div><div class="d">เมนู Translate เรียก agent ให้ทำงานแทนคุณ — ใช้เมื่ออยากแปลทั้งไฟล์ ไม่ใช่ทีละย่อหน้า</div></div>
+
+<div class="card"><div class="t">ถ้าไม่เห็นเมนู</div><div class="d">ชื่อเมนูขึ้นกับเวอร์ชันที่ติดตั้ง — ใช้ prompt แทนได้ ผู้สอนมีตัวอย่างในสคริปต์</div></div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="7">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">7 / 32</span>
+<h1>เดโม 1 — ผลลัพธ์ที่ต้องเห็น</h1>
+<ul class="checklist">
+  <li>ไฟล์ใหม่ถูกสร้างขึ้น ไม่ทับต้นฉบับ</li>
+  <li>หัวข้อ ตาราง และลำดับย่อหน้า</li>
+  <li>ชื่อสินค้า คำเฉพาะ และ code ไม่ถูกแปล</li>
+  <li>เทียบ 2–3 ย่อหน้าแรกด้วยตาก่อนเชื่อ</li>
+</ul>
+<blockquote><p>จุดที่คนดูมักพลาด — ไฟล์แปลหน้าตาดี แต่ตัวเลขในตารางเพี้ยน ต้องเปิดเทียบทุกครั้ง</p></blockquote>
+</div>
+</section>
+<section class="slide poster" data-n="8">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: ภาพรวมก่อนเริ่ม · gpt-image-2 · 2026-10-20">8 / 32</span>
+<h1 class="sr-only">เดโม 2 — สรุปเอกสารยาวให้เหลือหนึ่งหน้า</h1>
+
+<img src="img/demo-02.png" alt="ภาพรวมเดโม 2 — เอกสาร 20 หน้าสรุปเหลือ 1 หน้า และเกณฑ์ที่ทำให้ตรวจย้อนกลับได้">
+</div>
+</section>
+<section class="slide" data-n="9">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">9 / 32</span>
+<h1>เดโม 2 — สรุปเอกสารยาวให้เหลือหนึ่งหน้า</h1>
+<div class="split">
+<div>
+
+<ul class="checklist">
+  <li>คลิกขวาที่ชื่อไฟล์ → <strong>Summarize</strong></li>
+  <li>อ่านสรุป แล้วเปิดต้นฉบับตามที่อ้างอิง</li>
+  <li>ถ้าต้องการรูปแบบเฉพาะ ใช้ prompt ทางขวา</li>
+</ul>
+
+</div>
+<div>
+
+<div class="card accent"><div class="t">prompt ทางเลือก</div><div class="d">สรุปเอกสารนี้เป็น 1 หน้า: ประเด็นหลัก 5 ข้อ ตัวเลขที่ต้องจำ และสิ่งที่ต้องตัดสินใจ — กำกับทุกข้อด้วยหัวข้อหรือเลขหน้าในต้นฉบับ</div></div>
+
+</div>
+</div>
+<blockquote><p>Summarize ให้สรุปตามที่โมเดลเห็น — ถ้าต้องการหัวข้อตายตัว ใช้ prompt แทนเมนู</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="10">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">10 / 32</span>
+<h1>เดโม 2 — ผลลัพธ์ที่ต้องเห็น</h1>
+<ul class="checklist">
+  <li>ทุกข้อมีหัวข้อหรือเลขหน้าอ้างอิง กลับไปอ่านต้นฉบับได้</li>
+  <li>แยก “สิ่งที่เอกสารบอก” กับ “ข้อเสนอของ agent” ชัดเจน</li>
+  <li>ไม่มีตัวเลขหรือชื่อที่ไม่มีในเอกสาร</li>
+  <li>บอกว่าสรุปข้ามส่วนใดไป ถ้ามี</li>
+</ul>
+<blockquote><p>สรุปที่ดีไม่ใช่สั้นที่สุด แต่คืออันที่พากลับไปต้นฉบับได้</p></blockquote>
+</div>
+</section>
+<section class="slide poster" data-n="11">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: ภาพรวมก่อนเริ่ม · gpt-image-2 · 2026-10-20">11 / 32</span>
+<h1 class="sr-only">เดโม 3 — อ่านข้อความจีนในภาพบนหน้าเว็บ</h1>
+
+<img src="img/demo-03.png" alt="ภาพรวมเดโม 3 — เปิดหน้าเว็บ อ่านข้อความจีนในภาพ แปลเป็นภาษาอังกฤษ แล้วบันทึกเป็น md">
+</div>
+</section>
+<section class="slide" data-n="12">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">12 / 32</span>
+<h1>เดโม 3 — อ่านข้อความจีนในภาพบนหน้าเว็บ</h1>
+<div class="split">
+<div>
+
+<div class="card"><div class="k">URL</div><div class="d">eu.36kr.com/en/p/4032427409609096</div></div>
+
+<div class="card accent"><div class="k">prompt</div><div class="d">เปิด URL นี้ อ่านเนื้อหาทั้งหน้า รวมข้อความที่อยู่ในภาพซึ่งเป็นภาษาจีน แปลงเป็นภาษาอังกฤษ บันทึกเป็น output/36kr-article.md ระบุว่าข้อความส่วนใดมาจากภาพ ถ้าอ่านไม่ชัดให้ใส่ [?] แทน ห้ามเดา</div></div>
+
+</div>
+<div>
+
+<div class="card"><div class="t">ทำไมเดโมนี้ยาก</div><div class="d">ข้อความอยู่ในภาพ ไม่ใช่ HTML · ต้องอ่านสองภาษา · ต้องแยกให้ออกระหว่าง “อ่านได้” กับ “เดา”</div></div>
+
+<div class="card"><div class="t">สิ่งที่ควรดู</div><div class="d">agent เปิดหน้าเว็บจริง แล้วชี้ว่าภาพไหนคือแหล่งของข้อความ</div></div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="13">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">13 / 32</span>
+<h1>เดโม 3 — ผลลัพธ์ที่ต้องเห็น</h1>
+<ul class="checklist">
+  <li>ตัวเลขและชื่อจากภาพครบ — เปิดภาพเทียบ 2 จุด</li>
+  <li>มีบรรทัดระบุว่าเนื้อหาส่วนใดมาจากภาพ</li>
+  <li>ไม่มีข้อความที่ agent เติมเองขึ้นมา</li>
+  <li>ไฟล์เป็น md ที่เปิดอ่านได้ ไม่มี markup หลุด</li>
+</ul>
+<blockquote><p>ภาพคือหลักฐาน — ถ้าอ่านไม่ได้ ต้องบอก ไม่ใช่แต่งให้ครบ</p></blockquote>
+</div>
+</section>
+<section class="slide poster" data-n="14">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: ภาพรวมก่อนเริ่ม · gpt-image-2 · 2026-10-20">14 / 32</span>
+<h1 class="sr-only">เดโม 4 — วิดีโอ → บทความ โดยไม่ตัดเนื้อหา</h1>
+
+<img src="img/demo-04.png" alt="ภาพรวมเดโม 4 — ไทม์ไลน์วิดีโอหนึ่งชั่วโมงที่ถูกเรียบเรียงเป็นบทความครบทุกช่วง">
+</div>
+</section>
+<section class="slide" data-n="15">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">15 / 32</span>
+<h1>เดโม 4 — วิดีโอ → บทความ โดยไม่ตัดเนื้อหา</h1>
+<div class="card"><div class="k">URL</div><div class="d">youtube.com/watch?v=Zqno_vux6d8</div></div>
+<div class="card accent"><div class="k">prompt</div><div class="d">ดึง transcript ของวิดีโอนี้ แล้วเรียบเรียงเป็นบทความภาษาไทยแบบครบทุกช่วง ห้ามสรุปข้ามหรือตัดทิ้ง แบ่งหัวข้อตามช่วงเวลา ใส่ timestamp หน้าทุกหัวข้อ บันทึกเป็น md</div></div>
+<div class="cards c2">
+  <div class="card"><div class="t">ทำไมต้องพูดว่า “ห้ามข้าม”</div><div class="d">โมเดลมีแนวโน้มย่อให้สั้นลง ถ้าไม่กำหนด จะได้บทสรุปแทนบทความ</div></div>
+  <div class="card"><div class="t">ต้องมีอะไรถึงตรวจได้</div><div class="d">timestamp ทุกหัวข้อ และจำนวนช่วงที่สอดคล้องกับความยาววิดีโอ</div></div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="16">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">16 / 32</span>
+<h1>เดโม 4 — ผลลัพธ์ที่ต้องเห็น</h1>
+<ul class="checklist">
+  <li>ทุกหัวข้อมี timestamp และเรียงตามวิดีโอ</li>
+  <li>จำนวนหัวข้อสอดคล้องกับความยาว — เปิดดูช่วงท้าย 2–3 จุด</li>
+  <li>ประโยคเปิดและปิดของแต่ละช่วงยังอยู่</li>
+  <li>ถ้าไม่มี transcript ต้องแจ้ง ไม่เดาเนื้อหา</li>
+</ul>
+<blockquote><p>บทความที่ “ไม่ตัด” ต้องยาวพอ ๆ กับวิดีโอ — สั้นกว่านั้นคือตัด</p></blockquote>
+</div>
+</section>
+<section class="slide poster" data-n="17">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: ภาพรวมก่อนเริ่ม · gpt-image-2 · 2026-10-20">17 / 32</span>
+<h1 class="sr-only">เดโม 5 — เก็บหน้าเว็บเป็น md ที่ยังอ่านรู้เรื่อง</h1>
+
+<img src="img/demo-05.png" alt="ภาพรวมเดโม 5 — หน้าเว็บที่เก็บเป็น md ครบ 10 รายการ พร้อม URL และวันที่เข้าถึง">
+</div>
+</section>
+<section class="slide" data-n="18">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">18 / 32</span>
+<h1>เดโม 5 — เก็บหน้าเว็บเป็น md ที่ยังอ่านรู้เรื่อง</h1>
+<div class="card"><div class="k">URL</div><div class="d">weforum.org/stories/emerging-technologies/the-top-10-emerging-technologies-of-2026</div></div>
+<div class="card accent"><div class="k">prompt</div><div class="d">เปิด URL นี้ เก็บเนื้อหาเป็น md: หัวข้อ รายการทั้ง 10 เทคโนโลยี คำอธิบาย และตัวอย่างการใช้งาน ตัดเมนูและโฆษณาออก ใส่ URL ต้นทางและวันที่เข้าถึง บันทึกเป็น output/wef-top-10-2026.md</div></div>
+<div class="cards c2">
+  <div class="card"><div class="t">กับดักของหน้าเว็บ</div><div class="d">เนื้อหาบางส่วนถูกโหลดด้วย JavaScript — ต้องรอให้ครบก่อนเก็บ</div></div>
+  <div class="card"><div class="t">สิ่งที่ทำให้ไฟล์นี้มีค่า</div><div class="d">URL ต้นทางและวันที่เข้าถึง — เพราะหน้าเว็บเปลี่ยนได้ทุกวัน</div></div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="19">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">19 / 32</span>
+<h1>เดโม 5 — ผลลัพธ์ที่ต้องเห็น</h1>
+<ul class="checklist">
+  <li>ครบ 10 รายการ — ตรวจเลขลำดับ</li>
+  <li>ชื่อเทคโนโลยีสะกดตรงกับต้นฉบับ</li>
+  <li>มี URL ต้นทางและวันที่เข้าถึงในไฟล์</li>
+  <li>เปิดเทียบ 2 หัวข้อกับหน้าเว็บจริง</li>
+</ul>
+<blockquote><p>ไฟล์ที่ไม่มีวันที่ คือไฟล์ที่อีกสามเดือนเราจะไม่รู้ว่ายังจริงไหม</p></blockquote>
+</div>
+</section>
+<section class="slide poster" data-n="20">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: ภาพรวมก่อนเริ่ม · gpt-image-2 · 2026-10-20">20 / 32</span>
+<h1 class="sr-only">เดโม 6 — อีเมลลูกค้า → ใบเสนอราคา</h1>
+
+<img src="img/demo-06.png" alt="ภาพรวมเดโม 6 — inputs/ pricelists/ และ template/ รวมกันเป็นใบเสนอราคา PDF">
+</div>
+</section>
+<section class="slide" data-n="21">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">21 / 32</span>
+<h1>เดโม 6 — อีเมลลูกค้า → ใบเสนอราคา</h1>
+<div class="cards c3">
+  <div class="card"><div class="k">inputs/</div><div class="t">อีเมล</div><div class="d">คำขอ จำนวน และเงื่อนไข</div></div>
+  <div class="card"><div class="k">pricelists/</div><div class="t">ราคา</div><div class="d">แหล่งเดียวที่ใช้ได้</div></div>
+  <div class="card accent"><div class="k">template/</div><div class="t">แบบฟอร์ม</div><div class="d">หน้าตาใบเสนอราคา</div></div>
+</div>
+<div class="card accent"><div class="k">prompt</div><div class="d">อ่านอีเมลใน inputs/ แล้วออกใบเสนอราคาตาม template/ โดยค้นสินค้าและราคาจาก pricelists/ เท่านั้น ห้ามเดาราคา ถ้าสินค้าใดไม่พบ ให้ระบุว่าขาดและถามก่อนสรุป ใส่เลขที่ใบเสนอราคา วันที่ และเงื่อนไขตามที่อีเมลขอ บันทึกเป็น PDF</div></div>
+</div>
+</section>
+<section class="slide" data-n="22">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">22 / 32</span>
+<h1>เดโม 6 — ผลลัพธ์ที่ต้องเห็น</h1>
+<ul class="checklist">
+  <li>ทุกราคาตรงกับ pricelist — สุ่มตรวจ 3 บรรทัด</li>
+  <li>ส่วนลดและ VAT แยกบรรทัด ไม่ถูกกลืนในราคาต่อหน่วย</li>
+  <li>ข้อมูลลูกค้า เลขผู้เสียภาษี และที่อยู่ครบ</li>
+  <li>มีรายการ “สิ่งที่ต้องให้คนตรวจก่อนส่ง”</li>
+</ul>
+<blockquote><p>เอกสารที่ออกถึงลูกค้า ต้องมีคนเซ็นชื่อกำกับเสมอ — agent เตรียมให้ ไม่ใช่ส่งเอง</p></blockquote>
+</div>
+</section>
+<section class="slide poster" data-n="23">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: ภาพรวมก่อนเริ่ม · gpt-image-2 · 2026-10-20">23 / 32</span>
+<h1 class="sr-only">เดโม 7 — Excel รายเดือน → รายงานผู้บริหาร</h1>
+
+<img src="img/demo-07.png" alt="ภาพรวมเดโม 7 — ตาราง Excel ถูกวิเคราะห์เป็นรายงานผู้บริหารที่ทุกตัวเลขบอกที่มาได้">
+</div>
+</section>
+<section class="slide" data-n="24">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">24 / 32</span>
+<h1>เดโม 7 — Excel รายเดือน → รายงานผู้บริหาร</h1>
+<div class="split">
+<div>
+
+<div class="card accent"><div class="k">prompt</div><div class="d">วิเคราะห์ไฟล์ Excel รายงานรายเดือน: ยอดรวม เทียบเดือนก่อน สินค้าขายดี 5 อันดับ สินค้าที่ตก และข้อผิดปกติของข้อมูล สรุปเป็นรายงานผู้บริหารไม่เกิน 1 หน้า มีตารางตัวเลขและระบุที่มาของแต่ละค่า บันทึกเป็น PDF</div></div>
+
+</div>
+<div>
+
+<div class="card"><div class="t">สิ่งที่ agent ต้องอ่านจากไฟล์</div><div class="d">ชื่อคอลัมน์ ช่วงเวลา และแถวที่ข้อมูลขาด — ก่อนคำนวณอะไรทั้งสิ้น</div></div>
+
+<div class="card"><div class="t">สิ่งที่คนต้องตรวจ</div><div class="d">ตัวเลขหลัก 2 ค่า เปิดเทียบกับ Excel ตรง ๆ</div></div>
+
+</div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="25">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">25 / 32</span>
+<h1>เดโม 7 — ผลลัพธ์ที่ต้องเห็น</h1>
+<ul class="checklist">
+  <li>ตัวเลขหลักตรงกับ Excel — เปิดเทียบอย่างน้อย 2 ค่า</li>
+  <li>บอกฐานการคำนวณ เช่น เทียบเดือนก่อนหรือค่าเฉลี่ย</li>
+  <li>แยก “สิ่งที่ข้อมูลบอก” กับ “ข้อสังเกตของ agent”</li>
+  <li>ระบุแถวหรือคอลัมน์ที่ข้อมูลขาด</li>
+</ul>
+<blockquote><p>ตัวเลขที่ผิดแต่หน้าตาดี อันตรายกว่าตารางว่าง</p></blockquote>
+</div>
+</section>
+<section class="slide poster" data-n="26">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: ภาพรวมก่อนเริ่ม · gpt-image-2 · 2026-10-20">26 / 32</span>
+<h1 class="sr-only">เดโม 8 — samples/ → dashboard หน้าเดียว หลายมุมมอง</h1>
+
+<img src="img/demo-08.png" alt="ภาพรวมเดโม 8 — dashboard หน้าเดียวสี่มุมมองที่เปิดจากไฟล์เดียวได้">
+</div>
+</section>
+<section class="slide" data-n="27">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">27 / 32</span>
+<h1>เดโม 8 — samples/ → dashboard หน้าเดียว หลายมุมมอง</h1>
+<div class="card accent"><div class="k">prompt</div><div class="d">สร้าง single-page HTML dashboard จากข้อมูลทั้งหมดใน samples/ ให้มี 4 มุมมอง: ภาพรวม, แนวโน้มตามเวลา, อันดับสินค้า, จุดผิดปกติ โทน light พื้นขาว accent ส้ม เปิดได้จากไฟล์เดียวโดยไม่โหลด CDN และต้องแสดงข้อมูลจริงทันทีโดยไม่ต้องตั้งค่า</div></div>
+<div class="cards c2">
+  <div class="card"><div class="t">สิ่งที่ต้องกำหนดให้ชัด</div><div class="d">โทนสี · จำนวนมุมมอง · แหล่งข้อมูล · ข้อห้ามเรื่อง CDN</div></div>
+  <div class="card"><div class="t">ถ้าไม่กำหนด</div><div class="d">จะได้กราฟสวยที่ใช้ข้อมูลสมมติ และเปิดจากไฟล์เดียวไม่ได้</div></div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="28">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">28 / 32</span>
+<h1>เดโม 8 — ผลลัพธ์ที่ต้องเห็น</h1>
+<ul class="checklist">
+  <li>ทุกมุมมองดึงจากไฟล์ใน samples/ จริง ไม่ใช่ข้อมูลที่ agent แต่ง</li>
+  <li>ตัวเลขใน dashboard ตรงกับต้นทาง — สุ่มตรวจ 2 ค่า</li>
+  <li>เปิดจากไฟล์เดียวได้ ไม่ต้องรันเซิร์ฟเวอร์</li>
+  <li>อ่านบนมือถือได้ และสีส้มไม่ได้ใช้แทนความหมายสถานะอย่างเดียว</li>
+</ul>
+<blockquote><p>จากข้อมูลดิบถึงเครื่องมือที่ใช้ได้ — ในคำสั่งเดียว</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="29">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">29 / 32</span>
+<h1>ทั้ง 8 เดโม คือทักษะเดียวกัน 4 ข้อ</h1>
+<div class="cards c4">
+  <div class="card"><div class="k">1</div><div class="t">อ่าน</div><div class="d">ไฟล์ ภาพ เว็บ วิดีโอ</div></div>
+  <div class="card"><div class="k">2</div><div class="t">แปลง</div><div class="d">ภาษา รูปแบบ เอกสาร</div></div>
+  <div class="card"><div class="k">3</div><div class="t">ข้ามไฟล์</div><div class="d">อีเมล → ราคา → template</div></div>
+  <div class="card accent"><div class="k">4</div><div class="t">ส่งงาน</div><div class="d">md, PDF, xlsx, HTML</div></div>
+</div>
+<blockquote><p>เลือกงานของคุณที่ตรงกับช่องใดช่องหนึ่ง — นั่นคือเดโมแรกที่ควรลอง</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="30">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">30 / 32</span>
+<h1>5 กติกาที่ทำให้ผลลัพธ์ใช้ได้จริง</h1>
+<ul class="checklist">
+  <li>ระบุโฟลเดอร์ต้นทาง และชื่อไฟล์ปลายทาง</li>
+  <li>สั่งชัดว่า “ห้ามเดา — ถ้าไม่พบให้ถาม”</li>
+  <li>กำหนดรูปแบบผลลัพธ์ที่ต้องการ (md / PDF / xlsx / HTML)</li>
+  <li>ให้ agent ตรวจตัวเองก่อนส่ง: นับแถว เทียบตัวเลข เปิดไฟล์</li>
+  <li>คนเปิดผลลัพธ์ทุกครั้งก่อนส่งต่อ</li>
+</ul>
+<blockquote><p>prompt ที่ดีคือ briefing งาน ไม่ใช่คำสั่งสั้น ๆ</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="31">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">31 / 32</span>
+<h1>ข้อควรระวัง 6 ข้อ</h1>
+<div class="cards c2">
+  <div class="card"><div class="t">ข้อมูลลูกค้าและราคา</div><div class="d">ตรวจว่า workspace นี้แชร์ให้ใครก่อนวางไฟล์จริง</div></div>
+  <div class="card"><div class="t">ราคาและกฎระเบียบ</div><div class="d">agent หาได้ แต่คนต้องยืนยันก่อนใช้</div></div>
+  <div class="card"><div class="t">ไฟล์ทับ</div><div class="d">สั่งให้เขียนไฟล์ใหม่เสมอ อย่าให้ทับต้นฉบับ</div></div>
+  <div class="card"><div class="t">หน้าเว็บเปลี่ยน</div><div class="d">เก็บวันที่เข้าถึงทุกครั้งที่ดึงเนื้อหา</div></div>
+  <div class="card accent"><div class="t">รูปแบบสวย</div><div class="d">อย่าตัดสินจากภาพ — เปิดอ่านตัวเลข</div></div>
+  <div class="card accent"><div class="t">สิทธิ์ที่ให้</div><div class="d">อ่านกล่องอนุมัติให้จบก่อนกดทุกครั้ง</div></div>
+</div>
+</div>
+</section>
+<section class="slide takeaway" data-n="32">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: โจทย์ผู้ใช้ · 2026-10-20">32 / 32</span>
+<h1>เริ่มจากงานที่คุณทำซ้ำทุกสัปดาห์</h1>
+<div class="flow">
+  <div class="step"><div class="n">01</div><div class="t">เลือกงาน 1 อย่าง</div><div class="d">งานที่ทำซ้ำและมีตัวอย่างจริง</div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">02</div><div class="t">เตรียมโฟลเดอร์</div><div class="d">ต้นฉบับ + template + ตัวอย่างผลลัพธ์</div></div>
+  <div class="arrow">→</div>
+  <div class="step accent"><div class="n">03</div><div class="t">สั่งงาน 1 ครั้ง</div><div class="d">แล้วจับเวลาที่ประหยัดได้จริง</div></div>
+</div>
+<blockquote><p>ถาม–ตอบ · อยากลองเดโมไหนต่อ ยกมือ</p></blockquote>
+</div>
+</section>
+</div>
+<nav>
+  <button id="prev" aria-label="ก่อนหน้า">← ก่อนหน้า</button>
+  <button id="next" aria-label="ถัดไป">ถัดไป →</button>
+  <span style="opacity:.6">← → เลื่อน · F เต็มจอ</span>
+</nav>
+<script>
+const slides = Array.from(document.querySelectorAll('section.slide'));
+let cur = 0;
+function fit() {
+  const pad = 90;
+  const s = Math.min((window.innerWidth - 40) / 1280, (window.innerHeight - pad) / 720);
+  slides.forEach(el => { el.style.transform = 'scale(' + s + ')'; });
+}
+function render() {
+  slides.forEach((el, i) => el.classList.toggle('active', i === cur));
+}
+function go(d) { cur = Math.max(0, Math.min(slides.length - 1, cur + d)); render(); }
+document.addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)) { e.preventDefault(); go(1); }
+  else if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key)) { e.preventDefault(); go(-1); }
+  else if (e.key === 'Home') { cur = 0; render(); }
+  else if (e.key === 'End') { cur = slides.length - 1; render(); }
+  else if (e.key === 'f' || e.key === 'F') {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen();
+  }
+});
+document.getElementById('prev').onclick = () => go(-1);
+document.getElementById('next').onclick = () => go(1);
+window.addEventListener('resize', fit);
+fit(); render();
+</script>
+</body>
+</html>
