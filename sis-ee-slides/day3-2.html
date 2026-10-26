@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>สร้างภาพ สร้างคลิป สร้างเสียง ด้วย AI ผ่าน thClaws — Day 3 ส่วนที่ 2</title>
+<style>
+/* ---- sis-theme (inherited from the .marp.md inline theme) ---- */
+/* sis-theme.css — Marp theme for the SiS thClaws end-user training (3 days)
+   Design system: output/sis-web-manual/DESIGN.md  (the SiS product's own colours)
+   One accent (teal #00707f) · one red (#a81019, caution only) · light ground only
+   No second hue, no gradient, no dark mode, no webfont, no CDN.
+   Structurally mirrors output/thclaws-ee-video/slides/ee-theme.css. */
+
+
+:root {
+  --teal: #00707f;
+  --teal-deep: #00565f;
+  --teal-wash: #eaf4f5;
+  --teal-line: #cfe1e3;
+
+  --caution-red: #a81019;
+  --caution-wash: #fdf3f3;
+  --caution-line: #efc9cc;
+
+  --ink: #0f1b22;
+  --ink-2: #3d4b55;
+  --ink-3: #5f6b73;
+
+  --ground: #ffffff;
+  --panel: #f7f8f8;
+  --panel-2: #eff2f2;
+  --hairline: #e2e6e7;
+  --hairline-soft: #eef1f1;
+  --rule-mid: #c3cccd;
+
+  --mark: #fff1a8;
+}
+
+section {
+  width: 1280px;
+  height: 720px;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: 'Noto Sans Thai', 'IBM Plex Sans Thai', 'Sukhumvit Set', Thonburi,
+    'Leelawadee UI', Tahoma, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 22px;
+  line-height: 1.7;
+  padding: 44px 64px;
+}
+
+/* ---- Headings ---- */
+
+h1 {
+  color: var(--ink);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+  padding: 0 0 12px 0;
+  border-bottom: 2px solid var(--hairline);
+}
+
+/* The accent rule that marks the current section — a single hairline, never a fill */
+h1::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 4px;
+  margin-top: -14px;
+  margin-bottom: 10px;
+  background: var(--teal);
+}
+
+h2 {
+  color: var(--teal-deep);
+  font-size: 38px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+h3 {
+  color: var(--ink-2);
+  font-size: 21px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+strong { color: var(--teal-deep); font-weight: 700; }
+em { color: var(--ink-2); font-style: normal; }
+
+/* ---- Lists ---- */
+
+ul, ol { font-size: 22px; line-height: 1.7; margin: 8px 0; padding-left: 28px; }
+li { margin: 6px 0; }
+li::marker { color: var(--teal); }
+ol li::marker { color: var(--teal); font-weight: 700; }
+li > ul, li > ol { font-size: 20px; }
+
+/* ---- Tables ---- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 19px;
+  margin: 10px 0;
+}
+th {
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 700;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--rule-mid);
+}
+td {
+  border-bottom: 1px solid var(--hairline);
+  padding: 9px 14px;
+  color: var(--ink-2);
+}
+tr:last-child td { border-bottom: none; }
+td strong { color: var(--teal-deep); }
+table.hl tr.hl-row td { background: var(--teal-wash); }
+
+/* ---- Code ---- */
+
+code {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  background: var(--panel-2);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.88em;
+  color: var(--ink);
+}
+pre {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--teal);
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-size: 17px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 17px;
+}
+
+/* ---- Blockquote: neutral callout (default) ---- */
+
+blockquote {
+  background: var(--panel);
+  border-left: 4px solid var(--rule-mid);
+  color: var(--ink-2);
+  padding: 12px 18px;
+  border-radius: 0 6px 6px 0;
+  font-size: 20px;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+blockquote p { margin: 0; }
+blockquote strong { color: var(--teal-deep); }
+
+/* A quote lifted verbatim from the product screen — still neutral, marked as a quote */
+blockquote.screen {
+  background: var(--teal-wash);
+  border-left-color: var(--teal);
+  color: var(--ink);
+  font-size: 19px;
+}
+blockquote.screen strong { color: var(--teal-deep); }
+
+/* ---- Caution callout: the ONLY place red appears ---- */
+
+section.caution blockquote,
+blockquote.caution {
+  background: var(--caution-wash);
+  border-left-color: var(--caution-red);
+  color: var(--ink);
+}
+section.caution blockquote strong,
+blockquote.caution strong {
+  color: var(--caution-red);
+}
+
+/* ---- Title slide ---- */
+
+section.lead {
+  background: var(--ground);
+  color: var(--ink);
+  justify-content: center;
+  padding: 0 96px;
+  text-align: left;
+}
+section.lead h1 {
+  color: var(--ink);
+  font-size: 52px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 4px;
+}
+section.lead h1::after {
+  width: 88px;
+  height: 5px;
+  margin: 20px 0 24px 0;
+}
+section.lead h2 {
+  color: var(--teal-deep);
+  font-size: 40px;
+  font-weight: 500;
+}
+section.lead p { color: var(--ink-3); font-size: 21px; }
+section.lead strong { color: var(--teal-deep); }
+
+/* ---- Day badge on leads ---- */
+
+section.lead .day-badge {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  background: var(--teal-wash);
+  border: 1px solid var(--teal-line);
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin-bottom: 20px;
+}
+
+/* ---- Takeaways slide ---- */
+
+section.takeaway {
+  background: var(--panel);
+}
+section.takeaway h1 {
+  font-size: 34px;
+  border-bottom: none;
+}
+section.takeaway h1::after {
+  margin-top: 2px;
+  margin-bottom: 20px;
+}
+section.takeaway ul { font-size: 23px; }
+section.takeaway li { margin: 12px 0; }
+
+/* ---- Source anchor line ---- */
+
+.src {
+  position: absolute;
+  right: 64px;
+  bottom: 20px;
+  font-size: 13px;
+  color: var(--ink-3);
+  letter-spacing: 0.01em;
+}
+
+/* ---- Pagination ----
+   A presentation is not a document: no page number on the slide. */
+
+section::after, footer { display: none !important; }
+
+/* ---- Cards grid ---- */
+
+.cards { display: grid; gap: 14px; margin-top: 6px; }
+.cards.c2 { grid-template-columns: repeat(2, 1fr); }
+.cards.c3 { grid-template-columns: repeat(3, 1fr); }
+.cards.c4 { grid-template-columns: repeat(4, 1fr); }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.card .k {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  margin-bottom: 6px;
+}
+.card .t { font-size: 21px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.card .d { font-size: 17px; color: var(--ink-2); line-height: 1.55; }
+.card.accent { background: var(--teal-wash); border-color: var(--teal-line); }
+/* A card whose content is still pending a real source — dashed, never filled in */
+.card.pending {
+  background: var(--ground);
+  border: 2px dashed var(--rule-mid);
+  color: var(--ink-3);
+}
+.card.pending .d { color: var(--ink-3); }
+
+/* ---- Flow: numbered steps in a row ---- */
+
+.flow { display: flex; align-items: stretch; gap: 10px; margin-top: 14px; }
+.flow .step {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 14px 16px;
+  position: relative;
+}
+.flow .step.accent { background: var(--teal-wash); border-color: var(--teal-line); }
+.flow .step .n {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--teal-deep);
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.flow .step .t { font-size: 19px; font-weight: 700; color: var(--ink); }
+.flow .step .d { font-size: 16px; color: var(--ink-2); line-height: 1.55; margin-top: 2px; }
+.flow .arrow {
+  align-self: center;
+  color: var(--teal);
+  font-size: 24px;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+/* ---- Checklist ---- */
+
+.checklist { list-style: none; padding-left: 0; margin-top: 10px; }
+.checklist li {
+  position: relative;
+  padding-left: 34px;
+  margin: 10px 0;
+  font-size: 21px;
+}
+.checklist li::before {
+  content: '☐';
+  position: absolute;
+  left: 0;
+  color: var(--teal);
+  font-size: 22px;
+}
+.checklist.done li::before { content: '☑'; }
+
+/* ---- Progress bar (a UI element, not a data chart) ---- */
+
+.pbar {
+  margin-top: 18px;
+  background: var(--panel-2);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  height: 26px;
+  overflow: hidden;
+  position: relative;
+}
+.pbar .fill {
+  height: 100%;
+  background: var(--teal);
+  border-radius: 999px 0 0 999px;
+}
+.pbar .lbl {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ---- Stat cards (small numeric facts) ---- */
+
+.stats { display: grid; gap: 14px; margin-top: 8px; }
+.stats.s2 { grid-template-columns: repeat(2, 1fr); }
+.stats.s3 { grid-template-columns: repeat(3, 1fr); }
+.stats.s4 { grid-template-columns: repeat(4, 1fr); }
+.stat {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.stat .v {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--teal-deep);
+  line-height: 1.1;
+}
+.stat .l { font-size: 15px; color: var(--ink-2); margin-top: 4px; }
+
+/* ---- Real screenshot slides ----
+   A captured screen of the product. Presented as one object: hairline border
+   and a soft shadow, on the ground, never cropped. */
+
+section.shot { padding: 34px 52px 40px 52px; }
+
+section.shot h1 {
+  font-size: 30px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 2px;
+}
+section.shot h1::after { margin-top: 2px; margin-bottom: 12px; width: 52px; height: 3px; }
+
+.shot-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 470px;
+}
+.shot-frame img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  box-shadow: 0 6px 22px rgba(15, 27, 34, 0.14);
+}
+/* two images per row. `max-width:49%` each + the 20px gap is >100% of the frame,
+   so the pair used to bleed ~5px out of its column on both sides; wrap keeps
+   extra images on a second row instead of squeezing them into one. */
+.shot-frame.pair { gap: 20px; flex-wrap: wrap; }
+.shot-frame.pair img { max-width: calc(50% - 10px); }
+
+.shot-cap {
+  margin-top: 12px;
+  font-size: 17px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.shot-cap strong { color: var(--teal-deep); }
+
+section.shot .src { bottom: 16px; }
+
+/* ---- Two-column split (text left, figure/shot right) ---- */
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; margin-top: 6px; }
+.split .shot-frame { height: 400px; }
+/* ---- deck chrome: the HTML presentation shell ---- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #10161a; }
+body { font-family: 'Noto Sans Thai','IBM Plex Sans Thai','Sukhumvit Set',Thonburi,'Leelawadee UI',Tahoma,system-ui,sans-serif; }
+#stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+section.slide {
+  position: absolute; display: none; transform-origin: center center;
+  background: #ffffff; overflow: hidden;
+}
+section.slide.active { display: flex; flex-direction: column; }
+/* The theme's `section { padding: … }` (44px 64px · 0 96px for .lead ·
+   34px 52px 40px 52px for .shot) was written when the <section> WAS the slide box.
+   The shell now wraps the body in `.slide-inner`, which carries that same padding —
+   so the section must NOT pad again, or the inner box is pushed right/down by
+   64/96px and the overflow is clipped by `overflow: hidden` (asymmetric margins).
+   Reset here (later in source order than the theme, so it wins) and move each
+   variant's padding onto `.slide-inner`. */
+section.slide { padding: 0; }
+section.lead .slide-inner { padding: 0 96px; }
+section.shot .slide-inner { padding: 34px 52px 40px 52px; }
+.slide-inner { padding: 44px 64px; width: 1280px; height: 720px; overflow: hidden;
+  display: flex; flex-direction: column; }
+section.lead .slide-inner, section.takeaway .slide-inner { justify-content: center; }
+.slide-inner > h1:first-child, .slide-inner > h2:first-child { margin-top: 0; }
+nav { position: fixed; bottom: 14px; left: 0; right: 0; display: flex; gap: 14px;
+  align-items: center; justify-content: center; color: #c3cccd; font-size: 13px;
+  font-family: system-ui, sans-serif; }
+nav button { font: inherit; background: #1d262c; color: #e8edee; border: 1px solid #333f46;
+  border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+nav button:hover { background: #263238; }
+#hint { position: fixed; top: 12px; right: 16px; color: #7b8a92; font-size: 12px;
+  font-family: system-ui, sans-serif; }
+/* keep the accent rule on h1 as in the theme */
+section.slide h1 { font-size: 38px; }
+section.shot h1, section.lead h1 { font-size: 52px; }
+section.lead h1 { font-size: 52px; }
+/* bottom-right corner: slide number (`n / total`) inherits .src's position */
+.src.page-num { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+@media print {
+  #stage, nav, #hint { position: static; }
+  nav, #hint { display: none; }
+  section.slide { display: flex !important; position: relative; transform: none !important;
+    page-break-after: always; }
+  .slide-inner { transform: none !important; }
+}
+</style>
+</head>
+<body>
+<div id="hint">← → เลื่อน · Home/End · F เต็มจอ</div>
+<div id="stage">
+<section class="slide lead" data-n="1">
+<div class="slide-inner">
+<span class="day-badge">วัน 3 / 3 · ส่วนที่ 2</span>
+<h1>สร้างภาพ สร้างคลิป สร้างเสียง ด้วย AI ผ่าน thClaws</h1>
+<p>วันที่ 3 · 26 ต.ค. 2026 · 30 นาที</p>
+<p>บรรยาย สาธิตสด และฝึกปฏิบัติไปพร้อมกัน</p>
+<span class="src page-num">1 / 23</span>
+</div>
+</section>
+<section class="slide" data-n="2">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §0">2 / 23</span>
+<h1>Media Tools คืออะไร?</h1>
+<div class="cards c2">
+  <div class="card"><div class="t">นิยาม</div><div class="d">กลุ่มเครื่องมือสร้างและแปลงไฟล์สื่อด้วย AI ที่ติดตั้งมากับ thClaws — สั่งงานด้วยการพิมพ์ภาษาธรรมชาติ แล้วระบบสร้างไฟล์จริง (PNG / MP4 / WAV) ไว้ในโฟลเดอร์ <code>output/</code></div></div>
+  <div class="card accent"><div class="t">สิ่งที่ควรทราบ</div><div class="d">ไม่ต้องมี API key ของตัวเอง · ผลลัพธ์เป็นไฟล์จริงบนเครื่อง · <strong>ค่าใช้จ่ายเกิดขึ้นจริง</strong>ต่อภาพ/ต่อวินาทีของวิดีโอ/ต่อตัวอักษรของเสียง</div></div>
+</div>
+<table><thead><tr><th>Media Tools <strong>คือ</strong></th><th>Media Tools <strong>ไม่ใช่</strong></th></tr></thead><tbody><tr><td>ตัวเรียกที่ส่งงานไปโมเดล AI ขององค์กรผ่าน gateway</td><td>โปรแกรมตัดต่อภาพ/วิดีโอ (Photoshop, Premiere)</td></tr><tr><td>ผู้ผลิตไฟล์ที่นำไปใช้ต่อได้ทันที (แปะใน Word, ส่ง LINE)</td><td>คลังไฟล์ — ระบบไม่เก็บงานให้ ต้องบันทึกเอง</td></tr><tr><td>ส่วนต่อขยายของบทสนทนา — สั่งงาน แก้ไข พิมพ์คุยต่อได้</td><td>เว็บแอปแยกที่ต้องล็อกอินใหม่ทุกครั้ง</td></tr></tbody></table>
+</div>
+</section>
+<section class="slide" data-n="3">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §1.2">3 / 23</span>
+<h1>แผนผังการทำงานของ Media Tools</h1>
+<div class="flow">
+  <div class="step"><div class="n">1</div><div class="t">ผู้ใช้งานพิมพ์คำสั่ง</div><div class="d">ภาษาธรรมชาติ หรือระบุพารามิเตอร์</div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">2</div><div class="t">thClaws agent</div><div class="d">เลือก Media Tool ที่เหมาะสม</div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">3</div><div class="t">Gateway ขององค์กร</div><div class="d">ไม่ต้องมี API key ส่วนตัว</div></div>
+  <div class="arrow">→</div>
+  <div class="step accent"><div class="n">4</div><div class="t">โมเดล AI + ไฟล์ผลลัพธ์</div><div class="d">แสดงในแชต / บันทึกใน output/</div></div>
+</div>
+<p><strong>ประเด็นสำคัญ:</strong></p>
+<ul><li><strong>ไม่ต้องหา API key เอง</strong> — Enterprise ใช้ gateway ขององค์กรเป็นทางออกเดียว</li><li><strong>ผลลัพธ์เป็นไฟล์จริงบนเครื่อง</strong> ไม่ใช่ลิงก์ชั่วคราว — เปิดใน Explorer ได้เลย</li><li><strong>ค่าใช้จ่ายเกิดขึ้นจริง</strong> ทุกภาพ/ทุกวินาทีของคลิป/ทุกตัวอักษรของเสียง → ต้องตรวจสอบต้นทุนก่อนสั่งงาน</li></ul>
+</div>
+</section>
+<section class="slide" data-n="4">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §1.3">4 / 23</span>
+<h1>ความแตกต่างจากเว็บ AI สำหรับบุคคลทั่วไป</h1>
+<table><thead><tr><th></th><th>เว็บ AI สำหรับบุคคล</th><th>Media Tools ใน thClaws</th></tr></thead><tbody><tr><td>การนำเข้าไฟล์</td><td>ต้องอัปโหลดเองทีละไฟล์</td><td>ชี้ path ได้เลย หรือให้ agent ค้นหาไฟล์ให้</td></tr><tr><td>การต่อยอดงาน</td><td>ทำมือ (ดาวน์โหลดมาประกอบในโปรแกรมอื่น)</td><td>สั่งทำต่อในบทสนทนาเดียว: ภาพ → คลิป → เสียงพากย์</td></tr><tr><td>ข้อมูลออกนอกองค์กรหรือไม่</td><td>ขึ้นกับเงื่อนไขบริการที่สมัคร</td><td>ออกผ่าน gateway ที่องค์กรควบคุม</td></tr><tr><td>ต้นทุน</td><td>สมัครรายเดือนแยกผู้ให้บริการ</td><td>คิดต่อการใช้ ผ่าน gateway ของบริษัท (ตรวจสอบใบเสร็จได้)</td></tr><tr><td>ความสม่ำเสมอ</td><td>เปลี่ยนคน = เปลี่ยนผลลัพธ์</td><td>เขียน workflow/คู่มือไว้ ใช้ซ้ำได้ทั้งทีม</td></tr></tbody></table>
+<blockquote><p>Media Tools ทำให้ AI ทำงานต่อเนื่องจนเป็นไฟล์ที่นำไปใช้ได้จริง โดยข้อมูลยังอยู่ภายใต้การควบคุมขององค์กร</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="5">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §1.4">5 / 23</span>
+<h1>การเปิด/ปิด และการเข้าถึง</h1>
+<table><thead><tr><th>เรื่อง</th><th>ข้อเท็จจริงในระบบ</th><th>ผลต่อผู้ใช้งาน</th></tr></thead><tbody><tr><td>สวิตช์เปิด</td><td>Menu → <strong>Media tools</strong> หรือตั้งค่า <code>"imageToolsEnabled": true</code> ใน <code>.thclaws/settings.json</code></td><td>หากปิดอยู่ เครื่องมือกลุ่มนี้จะไม่มีให้เรียกใช้</td></tr><tr><td>สถานะ "ถูกล็อก"</td><td>เมื่อองค์กรสั่งผ่าน gateway สวิตช์จะแสดงเป็น <strong>locked</strong></td><td>ผู้ใช้กดปิดเองไม่ได้ — เป็นการออกแบบโดยเจตนา</td></tr><tr><td>ขอบเขตโมเดลที่เรียกได้</td><td>Gateway ปล่อยเฉพาะโมเดลที่องค์กรซื้อสิทธิ์</td><td>โมเดลที่ไม่อยู่ในรายชื่อ = ใช้ไม่ได้ แม้จะพิมพ์ชื่อถูกต้อง</td></tr><tr><td>ค่าใช้จ่าย</td><td>คิดผ่าน gateway (metered) ตามอัตราของโมเดล</td><td>ต้องตรวจสอบก่อนสั่งวิดีโอหรือภาพความละเอียดสูง</td></tr></tbody></table>
+<blockquote class="caution"><p>⚠️ <strong>ข้อควรระวัง:</strong> งดถ่ายภาพหน้าจอบทสนทนาแล้วเผยแพร่โดยไม่ตรวจสอบ — งานที่ออกจากระบบอาจมีข้อมูลภายในบริษัทติดไปด้วย</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="6">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §2.1">6 / 23</span>
+<h1>ภาพรวมเครื่องมือ 7 รายการ</h1>
+<table><thead><tr><th>กลุ่ม</th><th>เครื่องมือ</th><th>รับเข้า</th><th>ให้ออก</th><th>ใช้กับงานแบบไหน</th></tr></thead><tbody><tr><td>Image</td><td><code>TextToImage</code></td><td>คำอธิบาย (prompt)</td><td>ไฟล์ <code>.png</code></td><td>โปสเตอร์ ภาพประกอบ ภาพสินค้า mockup</td></tr><tr><td>Image</td><td><code>ImageToImage</code></td><td>ภาพต้นฉบับ + คำสั่งแก้ไข</td><td>ไฟล์ <code>.png</code> ใหม่</td><td>ตัดพื้นหลัง เปลี่ยนสไตล์ ปรับแสง</td></tr><tr><td>Video</td><td><code>TextToVideo</code></td><td>คำอธิบายฉาก</td><td><code>job_id</code> → <code>.mp4</code></td><td>คลิปสั้นเมื่อไม่มี footage เดิม</td></tr><tr><td>Video</td><td><code>ImageToVideo</code></td><td>ภาพนิ่ง + คำสั่งเคลื่อนไหว</td><td><code>job_id</code> → <code>.mp4</code></td><td><strong>ใช้บ่อยที่สุด</strong> — คลิปจากภาพที่มีอยู่แล้ว</td></tr><tr><td>Video</td><td><code>MediaJobStatus</code></td><td><code>job_id</code></td><td>สถานะ running/done/failed</td><td>ตรวจสอบผลคลิป — <strong>ไม่เสียค่าใช้จ่ายเพิ่ม</strong></td></tr><tr><td>Voice</td><td><code>TextToSpeech</code></td><td>ข้อความ + เสียง + โทน</td><td>ไฟล์ <code>.wav</code></td><td>เสียงพากย์ e-learning IVR</td></tr><tr><td>ตรวจ</td><td><code>WatchVideo</code></td><td>ไฟล์วิดีโอหรือเสียง</td><td>คีย์เฟรม + ข้อความถอดเสียง</td><td>QC งาน ถอดเสียงประชุม</td></tr></tbody></table>
+</div>
+</section>
+<section class="slide" data-n="7">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §2.2">7 / 23</span>
+<h1>รูปแบบชื่อไฟล์และตำแหน่งที่จัดเก็บ</h1>
+<table><thead><tr><th>ประเภท</th><th>รูปแบบชื่อไฟล์</th><th>ตัวอย่าง</th></tr></thead><tbody><tr><td>ภาพ</td><td><code>img-ปีเดือนวัน-ชั่วโมงนาทีวินาที-รหัส.png</code></td><td><code>img-20261026-025226-7982a7ce.png</code></td></tr><tr><td>วิดีโอ</td><td><code>vid-ปีเดือนวัน-ชั่วโมงนาทีวินาที-รหัส.mp4</code></td><td><code>vid-20261026-025503-bb890155.mp4</code></td></tr><tr><td>เสียง</td><td><code>tts-ปีเดือนวัน-ชั่วโมงนาทีวินาที-รหัส.wav</code></td><td><code>tts-20261025-025902-d3ace334.wav</code></td></tr></tbody></table>
+<blockquote><p>ไฟล์ทั้งหมดจัดเก็บในโฟลเดอร์ <code>output/</code> · ชื่อไฟล์เรียงตามเวลาที่สร้าง ทำให้ค้นหาและเรียงลำดับได้ง่าย</p></blockquote>
+<p><strong>วิธีอ้างอิงไฟล์ในคำสั่งถัดไป:</strong> ให้ agent เป็นผู้ค้นหา — พิมพ์ว่า <em>"เอาภาพใบล่าสุดมา…"</em>, <em>"ใช้ไฟล์วิดีโอที่เพิ่งสร้าง"</em> แทนการพิมพ์ชื่อไฟล์ยาว ๆ ด้วยตนเอง</p>
+<blockquote><p>ไฟล์ทั้งหมดจัดเก็บในโฟลเดอร์ <code>output/</code> ของ workspace — สามารถเปิดและนำไปใช้ต่อได้ทันที</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="8">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §2.3">8 / 23</span>
+<h1>สิ่งที่แต่ละกลุ่มทำได้ดี และข้อจำกัด</h1>
+<div class="split">
+  <div>
+    <h3>✅ ทำได้ดี</h3>
+    <p><strong>Image:</strong> ภาพสไตล์จัด (โปสเตอร์ ภาพโฆษณา product shot) · งาน repeatable ต้นทุนต่ำ ~$0.03/ภาพ · แก้ภาพเดิมแบบรักษาองค์ประกอบ</p>
+    <p><strong>Video:</strong> คลิปสั้น 4–8 วินาที · จังหวะกล้องช้า ๆ (push-in, orbit) · เปลี่ยนภาพนิ่งเป็นคลิปโฆษณา social</p>
+    <p><strong>Voice:</strong> พากย์ไทย/อังกฤษโทนโฆษณา–เป็นกันเอง · อ่านสคริปต์ e-learning · เลือกเสียงชาย/หญิงและโทนได้</p>
+  </div>
+  <div>
+    <h3>⚠️ ข้อจำกัด</h3>
+    <p><strong>Image:</strong> ❌ ตัวอักษรภาษาไทยมักสะกดเพี้ยน · ❌ ตัวเลข/ตารางที่ต้องการความแม่นยำ · ❌ โลโก้ตาม brand guide 100%</p>
+    <p><strong>Video:</strong> ❌ คลิปยาวหลายฉาก · ❌ Lip-sync แบบเป๊ะ · ❌ ตัวหนังสือไทยในวิดีโอ · ❌ กล้องอาจซูม/ครอปจนวัตถุหลุดเฟรม</p>
+    <p><strong>Voice:</strong> ❌ อ่าน markdown/ตัวเลขรูปแบบพิเศษ · ❌ บังคับจังหวะตรงวินาที · ❌ ร้องเพลง · ❌ สำเนียงไทยถิ่นเจาะจง</p>
+  </div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="9">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §2 Demo 1">9 / 23</span>
+<h1>🔴 การสาธิต — พิมพ์ 1 บรรทัด ได้ไฟล์จริง</h1>
+<p><strong>คำสั่งตัวอย่าง (ต้นทุน ~$0.03):</strong></p>
+<blockquote class="screen">สร้างภาพโปสเตอร์แนวตั้ง 9:16 โทนดำ-ฟ้า เย็น ๆ สำหรับ "Workstation AI สำหรับมืออาชีพ" สไตล์ product photography — เครื่องตั้งบนโต๊ะในห้อง server ฉากหลังเป็นตู้ rack เบลอ ไม่มีตัวอักษรในภาพ</blockquote>
+<p><strong>จุดที่ควรสังเกตบนจอ:</strong></p>
+<div class="cards c3">
+  <div class="card accent"><div class="k">ก</div><div class="t">agent แจ้ง</div><div class="d">ประกาศว่าเรียก tool ใด และใช้โมเดลอะไร</div></div>
+  <div class="card accent"><div class="k">ข</div><div class="t">ภาพปรากฏ</div><div class="d">แสดงในแชททันทีหลังประมวลผลเสร็จ</div></div>
+  <div class="card accent"><div class="k">ค</div><div class="t">path ไฟล์</div><div class="d">ไฟล์จริงใน <code>output/</code> — เปิดใน Explorer ได้</div></div>
+</div>
+<blockquote><p><strong>คำถามเพื่อตรวจสอบความเข้าใจ:</strong> "หากต้องการภาพใบนี้ในรูปแบบ 4:3 เพื่อใส่ในรายงาน ต้องสร้างใหม่ตั้งแต่ต้นหรือไม่?" → ไม่จำเป็น ใช้ <code>ImageToImage</code> จากไฟล์เดิมได้</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="10">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §3.2">10 / 23</span>
+<h1>โมเดล IMAGE ที่ใช้งานได้จริง</h1>
+<table><thead><tr><th>Model</th><th>จุดเด่น</th><th>ราคา</th><th>เลือกเมื่อ</th></tr></thead><tbody><tr><td><strong><code>qwen-image-3.0</code></strong></td><td>คุณภาพ/ราคาสมดุล</td><td><strong>$0.03</strong></td><td>ค่าเริ่มต้น — โปสเตอร์ ภาพประกอบ</td></tr><tr><td><strong><code>qwen-image-3.0-pro</code></strong></td><td>รายละเอียดสูงกว่า งานยาก</td><td><strong>$0.075</strong></td><td>งานส่งลูกค้า</td></tr><tr><td><code>qwen-image-2.0</code> / <code>-pro</code></td><td>รุ่นก่อน ใช้ได้ผลดี</td><td>$0.035 / $0.075</td><td>งานเก่า / เปรียบเทียบ</td></tr><tr><td><code>wan2.7-image</code> / <code>-pro</code></td><td>text→image และ editing</td><td>$0.03 / $0.075</td><td>งาน edit นอกสาย qwen</td></tr><tr><td><code>z-image-turbo</code></td><td>เร็วมาก สเกตช์ไอเดีย</td><td>$0.03</td><td>ลองหลายใบ ก่อนเลือก</td></tr></tbody></table>
+<blockquote><p><strong>หลักเกณฑ์:</strong> เริ่ม <code>qwen-image-3.0</code> → ไม่พอใจ 2 รอบ → <code>-pro</code> · สเกตช์เยอะ → <code>z-image-turbo</code></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="11">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §3.3">11 / 23</span>
+<h1>โมเดล VIDEO ที่ใช้งานได้จริง</h1>
+<table><thead><tr><th>Model</th><th>จุดเด่น</th><th>ราคา/วินาที</th><th>เลือกเมื่อ</th></tr></thead><tbody><tr><td><strong><code>wan2.7-t2v</code></strong> / <strong><code>wan2.7-i2v</code></strong></td><td>ตัวหลัก ภาพสวย เป็นธรรมชาติ</td><td><strong>$0.10/$0.15</strong></td><td>ค่าเริ่มต้น</td></tr><tr><td><code>wan2.6-t2v</code> / <code>wan2.6-i2v</code></td><td>รุ่นก่อน สไตล์ต่างกัน</td><td>$0.10 / $0.15</td><td>เปรียบเทียบ</td></tr><tr><td><code>wan2.2-t2v-plus</code></td><td>SD ราคาถูก ทดสอบ prompt</td><td>$0.02</td><td>ลองผิดลองถูก</td></tr><tr><td><code>wan2.1-t2v-turbo</code></td><td>ถูกที่สุด เร็ว</td><td><strong>$0.036</strong></td><td>สเกตช์ motion</td></tr><tr><td><code>happyhorse-1.0-i2v</code></td><td>คน/ท่าทาง ซับซ้อน</td><td>$0.14 / $0.24</td><td>คลิปมีคน present</td></tr></tbody></table>
+<blockquote class="caution"><p>⚠️ โมเดล <code>omni</code>/<code>ltx</code> ยังไม่เปิดใน deployment นี้ — งานพากย์ไทยใช้ <code>TextToSpeech</code> แยก</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="12">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §3.4">12 / 23</span>
+<h1>โมเดล VOICE (TTS) และการถอดเสียง (ASR)</h1>
+<table><thead><tr><th>Model</th><th>จุดเด่น</th><th>ราคา (USD)</th><th>เลือกเมื่อ</th></tr></thead><tbody><tr><td><strong><code>qwen3-tts-flash</code></strong></td><td>ถูก เร็ว รองรับไทย มีเสียงชาย/หญิงหลายตัวเลือก</td><td><strong>$0.01 / 1,000 ตัวอักษร</strong></td><td>ค่าเริ่มต้นทุกงานเสียง</td></tr><tr><td><strong><code>qwen3-tts-instruct-flash</code></strong></td><td>เคารพพารามิเตอร์ <code>style</code> → สั่งโทนได้ผลดีกว่า</td><td>$0.0115 / 1,000 ตัวอักษร</td><td>งานพากย์ที่ต้องการอารมณ์ — โฆษณา e-learning</td></tr><tr><td><code>qwen3-asr-flash</code> (ถอดเสียง)</td><td>ใช้ผ่าน <code>WatchVideo</code> เพื่อถอดเสียงวิดีโอ/ไฟล์เสียง</td><td>$0.000035 / วินาที ≈ $0.02 ต่อ 10 นาที</td><td>ถอดเสียงประชุม ตรวจบทพากย์</td></tr></tbody></table>
+<p><strong>ข้อควรจำเรื่องเสียง:</strong></p>
+<ul><li>ไฟล์ที่ได้เป็น <strong><code>.wav</code> 16-bit PCM</strong> (ไม่ใช่ mp3) → พร้อมใช้กับ ffmpeg ต่องานวิดีโอ</li><li>เสียงที่มีให้เลือก: หญิง (Cherry, Serena, Chelsie, Jennifer, Katerina, Maia, Momo, Vivian, Sunny, Moon) · ชาย (Ethan, Ryan, Elias, Dylan, Kai, Nofish)</li></ul>
+</div>
+</section>
+<section class="slide" data-n="13">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §3.5">13 / 23</span>
+<h1>ตารางต้นทุนโดยประมาณต่อชิ้นงาน</h1>
+<table><thead><tr><th>งานที่ต้องการ</th><th>เครื่องมือที่ใช้</th><th>ต้นทุนโดยประมาณ</th></tr></thead><tbody><tr><td>ภาพโปสเตอร์ 1 ใบ (2K)</td><td><code>TextToImage</code> qwen-image-3.0</td><td><strong>≈ $0.03</strong></td></tr><tr><td>ภาพ 6 แบบให้เลือก (ลองผิดลองถูก)</td><td>z-image-turbo ×5 + qwen-image-3.0-pro ×1</td><td><strong>≈ $0.23</strong></td></tr><tr><td>คลิป 8 วินาที 720P</td><td><code>ImageToVideo</code> wan2.7-i2v</td><td><strong>≈ $0.80</strong></td></tr><tr><td>คลิป 8 วินาที 1080P</td><td><code>ImageToVideo</code> wan2.7-i2v</td><td><strong>≈ $1.20</strong></td></tr><tr><td>คลิปโฆษณา 1 ชิ้น (ภาพ+คลิป 5s)</td><td>ImageToImage pro + wan2.7-i2v 1080P</td><td><strong>≈ $0.83</strong></td></tr><tr><td>พากย์ไทย 1 นาที (~250 ตัวอักษร)</td><td><code>TextToSpeech</code> qwen3-tts-instruct-flash</td><td>≈ $0.003</td></tr><tr><td>ถอดเสียงประชุม 60 นาที</td><td><code>WatchVideo</code> (ASR)</td><td>≈ $0.13</td></tr></tbody></table>
+<blockquote><p><strong>กฎ 3 ข้อ:</strong> (1) <strong>ภาพถูก — กล้าทดลอง</strong> (2) <strong>วิดีโอแพง — เขียน storyboard ก่อนกด</strong> ทุกวินาทีคือเงิน (3) <code>MediaJobStatus</code> <strong>ไม่คิดเงิน</strong> — ตรวจสอบได้ฟรี</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="14">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §3.6">14 / 23</span>
+<h1>แผนภูมิการเลือกโมเดลใน 20 วินาที</h1>
+<pre><code>งานอะไร?
+<p>├─ ภาพ ──────────────► qwen-image-3.0<br>│                       (ยาก/ส่งลูกค้า → -pro | สเกตช์เยอะ → z-image-turbo)<br>├─ แก้ภาพเดิม ───────► ImageToImage: qwen-image-3.0-pro หรือ wan2.7-image(-pro)<br>├─ คลิปสั้น ─────────► มีภาพนิ่งอยู่แล้ว?<br>│                       ├─ ใช่ → wan2.7-i2v<br>│                       └─ ไม่ → wan2.7-t2v<br>│                       คน/ท่าซับซ้อน → happyhorse-1.0-i2v<br>│                       ลอง prompt → wan2.1/2.2 (ถูกกว่า)<br>├─ เสียงพูด ──────────► qwen3-tts-flash<br>│                       (โทนสำคัญ → qwen3-tts-instruct-flash)<br>└─ ดู/ถอดเสียงวิดีโอ ─► WatchVideo (lang=th)</code></pre></p>
+
+<blockquote><p>พิมพ์แผนภูมินี้แปะข้างโต๊ะทำงาน เพื่อใช้อ้างอิงอย่างรวดเร็ว</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="15">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §4.1">15 / 23</span>
+<h1>วิธีที่ 1 — สั่งงานด้วยภาษาธรรมชาติ</h1>
+<blockquote class="screen">สร้างภาพประกอบโพสต์ 9:16 สไตล์ minimal โทนฟ้าขาว เรื่อง "การประชุมที่มีประสิทธิภาพ"</blockquote>
+<p>ระบบเลือก tool, สัดส่วน, บันทึกไฟล์ และแสดงภาพให้เอง — ไม่ต้องจำชื่อ tool หรือพารามิเตอร์</p>
+<p><strong>เคล็ดลับ: บอกให้ครบ 4 อย่าง</strong></p>
+<table><thead><tr><th>ต้องบอก</th><th>ตัวอย่าง</th></tr></thead><tbody><tr><td><strong>สื่อกับสัดส่วน</strong></td><td>"โปสเตอร์แนวตั้ง 9:16"</td></tr><tr><td><strong>สไตล์/อารมณ์</strong></td><td>"product photography สตูดิโอ"</td></tr><tr><td><strong>องค์ประกอบ/สี</strong></td><td>"โทนดำ-เทา-ฟ้าเย็น ฉากหลังตู้ rack เบลอ"</td></tr><tr><td><strong>ข้อห้าม</strong></td><td>"ไม่มีตัวอักษรในภาพ" · "ห้ามครอปตัวเครื่องหลุดเฟรม"</td></tr></tbody></table>
+</div>
+</section>
+<section class="slide" data-n="16">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §4.2">16 / 23</span>
+<h1>วิธีที่ 2 — ระบุพารามิเตอร์ชัดเจน</h1>
+<p><strong>สำหรับงานที่ต้องการความซ้ำได้ หรือส่งต่อให้ทีม</strong></p>
+<blockquote class="screen">ใช้ qwen-image-3.0-pro, aspect_ratio 9:16, size 2K, input_path = _uploads/asus-ai-expertcenter-pro.jpg — คงตัวเครื่องเดิม 100% ห้าม redesign</blockquote>
+</div>
+</section>
+<section class="slide" data-n="17">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §4.2">17 / 23</span>
+<h1>พารามิเตอร์หลักที่ควรรู้จัก</h1>
+<table><thead><tr><th>พารามิเตอร์</th><th>ใช้กับ</th><th>ค่าที่ใช้ได้</th></tr></thead><tbody><tr><td><code>model</code></td><td>ทุกตัว</td><td>ชื่อในตาราง §3.2–3.4 เท่านั้น</td></tr><tr><td><code>aspect_ratio</code></td><td>Image/Video</td><td><code>1:1</code> <code>3:4</code> <code>4:3</code> <code>9:16</code> <code>16:9</code></td></tr><tr><td><code>size</code></td><td>Image</td><td><code>512</code> <code>1K</code> <code>2K</code></td></tr><tr><td><code>duration</code></td><td>Video</td><td>4–8 วินาที (default 8)</td></tr><tr><td><code>resolution</code></td><td>Video</td><td><code>360P</code> <code>720P</code> <code>1080P</code> <code>4K</code></td></tr><tr><td><code>input_path</code></td><td>ImageToImage / ImageToVideo</td><td>path สัมพัทธ์ใต้ workspace เท่านั้น</td></tr><tr><td><code>voice</code> / <code>style</code></td><td>TextToSpeech</td><td>รายชื่อเสียง + โทนที่ต้องการ</td></tr></tbody></table>
+</div>
+</section>
+<section class="slide" data-n="18">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §4.3">18 / 23</span>
+<h1>วิธีที่ 3 — เข้าใจกระบวนการ async ของวิดีโอ</h1>
+<div class="flow">
+  <div class="step"><div class="n">1</div><div class="t">สั่งงาน</div><div class="d"><code>ImageToVideo(…)</code> → ระบบตอบ <code>job_id</code> ทันที</div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">2</div><div class="t">รอผล</div><div class="d"><code>MediaJobStatus(job_id)</code> → "running" (เช็คซ้ำได้ฟรี)</div></div>
+  <div class="arrow">→</div>
+  <div class="step accent"><div class="n">3</div><div class="t">เสร็จสิ้น</div><div class="d">"done" + ไฟล์เข้า <code>output/vid-….mp4</code></div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">4</div><div class="t">ตรวจสอบ</div><div class="d"><code>WatchVideo(path=…)</code> → เห็นเฟรมจริง</div></div>
+</div>
+<p><strong>คำถามที่พบบ่อย:</strong></p>
+<table><thead><tr><th>คำถาม</th><th>คำตอบ</th></tr></thead><tbody><tr><td>"ระบบค้างหรือไม่ ไม่เห็นตอบสนอง?"</td><td>ไม่ค้าง — วิดีโอสร้างเป็น background job ระบบจะแจ้งเมื่อเสร็จ</td></tr><tr><td>"สั่ง 2 วิดีโอพร้อมกันได้หรือไม่?"</td><td>ได้ (job แยก id) — แต่ต้องทราบต้นทุนต่อ job</td></tr><tr><td>"ไม่ชอบผลลัพธ์ ต้องทำอย่างไร?"</td><td>เขียน prompt ใหม่ (อย่าใช้ prompt เดิมซ้ำ) หรือเปลี่ยน <code>input_path</code> เป็นภาพอื่น</td></tr></tbody></table>
+</div>
+</section>
+<section class="slide" data-n="19">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §4 Hands-on">19 / 23</span>
+<h1>🟢 ฝึกปฏิบัติ (3 นาที · ต้นทุนคนละ ~$0.03)</h1>
+<ul class="checklist">
+  <li>พิมพ์คำสั่ง 1 บรรทัด ให้สร้าง <strong>ภาพ 1 ใบ</strong> ตามงานของตนเอง → บันทึก path ที่ได้</li>
+  <li>พิมพ์ต่อ: <em>"ทำอีก 3 แบบ สไตล์ต่างกัน แต่สินค้าเดิม"</em> → เปรียบเทียบ 4 ภาพ (นี่คือวิธีเลือกงานที่ถูกต้อง: จ่ายถูกเพื่อทดลอง)</li>
+  <li>สั่ง <code>ImageToImage</code> จากภาพที่เลือก: <em>"เปลี่ยนฉากหลังเป็นห้อง server ตู้ rack เบลอ คงรายละเอียดสินค้าไว้ทั้งหมด ห้าม redesign"</em></li>
+  <li><em>(เฉพาะห้องที่อนุมัติงบ)</em> สั่งคลิป 5 s จากภาพข้อ 3 กล้อง orbit รอบสินค้า → สังเกตจังหวะ <code>running → done</code> + ตรวจด้วย <code>WatchVideo</code></li>
+</ul>
+<p><strong>เกณฑ์ผ่าน:</strong> ตอบได้ 3 ข้อ — ไฟล์อยู่ที่ใด / ราคาภาพละเท่าใด / หากต้องการเปลี่ยนเฉพาะฉากหลังต้องสั่งอย่างไร</p>
+<blockquote class="caution"><p>⚠️ <strong>งดทดลองพิมพ์</strong> <code>omni</code>, <code>ltx</code> หรือ <code>iapp</code> — ไม่เปิดให้ใช้ใน deployment นี้</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="20">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §5">20 / 23</span>
+<h1>ตัวอย่างการใช้งานจริง — 4 กรณีศึกษา</h1>
+<div class="cards c2">
+  <div class="card"><div class="k">กรณี A</div><div class="t">โปสเตอร์ e-learning</div><div class="d"><code>TextToImage</code> qwen-image-3.0-pro 9:16 2K · สไตล์ doodle sketchnote · ต้นทุน $0.075/ใบ · <strong>บทเรียน:</strong> ให้ AI สร้างภาพเว้นพื้นที่ว่าง แล้ววางข้อความไทยทับทีหลัง</div></div>
+  <div class="card"><div class="k">กรณี B</div><div class="t">คลิปโฆษณาสินค้า 5 วินาที</div><div class="d"><code>ImageToImage</code> → <code>ImageToVideo</code> wan2.7-i2v 1080P · กล้อง orbit รอบเครื่อง · ต้นทุน ≈ $0.83 · <strong>บทเรียน:</strong> เขียน prompt ล็อกกล้อง "NO zoom NO crop"</div></div>
+  <div class="card"><div class="k">กรณี C</div><div class="t">เสียงพากย์ภาษาไทย</div><div class="d"><code>TextToSpeech</code> qwen3-tts-instruct-flash เสียง Cherry style "สดใสเหมือนรีวิว" · 85 ตัวอักษร → 9.12 วินาที · ต้นทุน ≈ $0.001</div></div>
+  <div class="card"><div class="k">กรณี D</div><div class="t">ถอดเสียงประชุม</div><div class="d"><code>WatchVideo</code> lang=th · ไฟล์เสียง 60 นาที → ข้อความเต็ม · ต้นทุน ≈ $0.13 · ใช้ตรวจบทพากย์หรือสรุปเนื้อหา</div></div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="21">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §5.5">21 / 23</span>
+<h1>ข้อผิดพลาดที่พบบ่อยและแนวทางแก้ไข</h1>
+<table><thead><tr><th>ข้อผิดพลาด</th><th>สาเหตุ</th><th>แนวทางแก้ไข</th></tr></thead><tbody><tr><td><code>unknown image model "iapp"</code></td><td>โมเดล iapp ไม่เปิดใน deployment นี้</td><td>ใช้ <code>qwen-image-3.0</code> หรือ <code>-pro</code> แทน</td></tr><tr><td><code>unknown speech model "flash"</code></td><td>Gemini TTS ไม่เปิดใน deployment นี้</td><td>ใช้ <code>qwen3-tts-flash</code> หรือ <code>qwen3-tts-instruct-flash</code></td></tr><tr><td><code>access denied: outside workspace root</code></td><td><code>input_path</code> ใช้ path absolute หรืออยู่นอก workspace</td><td>ใช้ path สัมพัทธ์ เช่น <code>_uploads/…</code> หรือ <code>output/…</code></td></tr><tr><td><code>'X' is not available on this deployment</code></td><td>โมเดลนั้นองค์กรไม่ได้เปิดสิทธิ์</td><td>ตรวจสอบรายการโมเดลที่ใช้งานได้ หรือติดต่อฝ่าย IT</td></tr><tr><td>ภาพมีตัวอักษรไทยเพี้ยน</td><td>โมเดล diffusion สะกดไทยไม่ถูกต้อง</td><td>ให้ AI สร้างภาพเว้นพื้นที่ว่าง แล้ววางข้อความไทยทับทีหลัง</td></tr><tr><td>คลิปกล้องซูม/ครอปจนวัตถุหลุดเฟรม</td><td>Prompt ไม่ได้ล็อก framing</td><td>เพิ่ม "NO zoom NO crop วัตถุอยู่ครบในเฟรมตลอด"</td></tr></tbody></table>
+</div>
+</section>
+<section class="slide takeaway" data-n="22">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §5 Quiz">22 / 23</span>
+<h1>ประเด็นสำคัญ 5 ข้อที่ควรจดจำ</h1>
+<ul><li><strong>Media Tools คือตัวสร้างไฟล์จริง</strong> (PNG/MP4/WAV) ไม่ใช่แค่แสดงตัวอย่างบนเว็บ — ไฟล์อยู่ใน <code>output/</code> นำไปใช้ได้ทันที</li><li><strong>7 เครื่องมือ:</strong> TextToImage · ImageToImage · TextToVideo · ImageToVideo · MediaJobStatus · TextToSpeech · WatchVideo</li><li><strong>เลือกโมเดลให้ถูกงาน:</strong> ภาพ → <code>qwen-image-3.0</code> (ยาก → <code>-pro</code>) · คลิป → <code>wan2.7-i2v</code> (ถูก → <code>wan2.1-turbo</code>) · เสียง → <code>qwen3-tts-flash</code> (มีอารมณ์ → <code>-instruct</code>)</li><li><strong>ต้นทุนต้องรู้ก่อนสั่ง:</strong> ภาพ ≈ $0.03 · คลิป 8s 1080P ≈ $1.20 · เสียง 1 นาที ≈ $0.003 · <code>MediaJobStatus</code> ฟรี</li><li><strong>ข้อความไทยในภาพ/วิดีโอ:</strong> โมเดลปัจจุบันสะกดไม่ถูกต้อง → ให้ AI สร้างพื้นที่ว่าง แล้ววางข้อความไทยทับด้วยเครื่องมืออื่น</li></ul>
+</div>
+</section>
+<section class="slide" data-n="23">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-media-tools-30min §6">23 / 23</span>
+<h1>เอกสารสรุปย่อ</h1>
+<div class="cards c2">
+  <div class="card"><div class="k">เครื่องมือหลัก</div><div class="d"><code>TextToImage</code> · <code>ImageToImage</code> · <code>TextToVideo</code> · <code>ImageToVideo</code> · <code>TextToSpeech</code> · <code>WatchVideo</code> · <code>MediaJobStatus</code></div></div>
+  <div class="card"><div class="k">โมเดลแนะนำ</div><div class="d">ภาพ: <code>qwen-image-3.0</code> / <code>-pro</code> · คลิป: <code>wan2.7-i2v</code> · เสียง: <code>qwen3-tts-flash</code> / <code>-instruct</code></div></div>
+  <div class="card"><div class="k">ต้นทุนโดยประมาณ</div><div class="d">ภาพ ≈ $0.03 · คลิป 8s 720P ≈ $0.80 · คลิป 8s 1080P ≈ $1.20 · เสียง 1 นาที ≈ $0.003</div></div>
+  <div class="card"><div class="k">ข้อควรระวัง</div><div class="d">ข้อความไทยในภาพมักเพี้ยน → เว้นพื้นที่วางทับ · วิดีโอแพง → storyboard ก่อนกด · งดใช้โมเดลที่ไม่เปิดใน deployment</div></div>
+</div>
+<blockquote><p><strong>ช่วงถาม-ตอบ และขอบคุณครับ</strong> · เอกสารประกอบการอบรมและเอกสารสรุปย่อจะแจกให้เมื่อสิ้นสุดเซสชัน</p></blockquote>
+</div>
+</section>
+</div>
+<nav>
+  <button id="prev" aria-label="ก่อนหน้า">← ก่อนหน้า</button>
+  <button id="next" aria-label="ถัดไป">ถัดไป →</button>
+  <span style="opacity:.6">← → เลื่อน · F เต็มจอ</span>
+</nav>
+<script>
+const slides = Array.from(document.querySelectorAll('section.slide'));
+let cur = 0;
+function fit() {
+  const pad = 90;
+  const s = Math.min((window.innerWidth - 40) / 1280, (window.innerHeight - pad) / 720);
+  slides.forEach(el => { el.style.transform = 'scale(' + s + ')'; });
+}
+function render() {
+  slides.forEach((el, i) => el.classList.toggle('active', i === cur));
+}
+function go(d) { cur = Math.max(0, Math.min(slides.length - 1, cur + d)); render(); }
+document.addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)) { e.preventDefault(); go(1); }
+  else if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key)) { e.preventDefault(); go(-1); }
+  else if (e.key === 'Home') { cur = 0; render(); }
+  else if (e.key === 'End') { cur = slides.length - 1; render(); }
+  else if (e.key === 'f' || e.key === 'F') {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen();
+  }
+});
+document.getElementById('prev').onclick = () => go(-1);
+document.getElementById('next').onclick = () => go(1);
+window.addEventListener('resize', fit);
+fit(); render();
+</script>
+</body>
+</html>

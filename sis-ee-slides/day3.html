@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skills คืออะไร ใช้ได้อย่างไร และติดตั้งเพิ่มจากแหล่งใด — Day 3</title>
+<style>
+/* ---- sis-theme (inherited from the .marp.md inline theme) ---- */
+/* sis-theme.css — Marp theme for the SiS thClaws end-user training (3 days)
+   Design system: output/sis-web-manual/DESIGN.md  (the SiS product's own colours)
+   One accent (teal #00707f) · one red (#a81019, caution only) · light ground only
+   No second hue, no gradient, no dark mode, no webfont, no CDN.
+   Structurally mirrors output/thclaws-ee-video/slides/ee-theme.css. */
+
+
+:root {
+  --teal: #00707f;
+  --teal-deep: #00565f;
+  --teal-wash: #eaf4f5;
+  --teal-line: #cfe1e3;
+
+  --caution-red: #a81019;
+  --caution-wash: #fdf3f3;
+  --caution-line: #efc9cc;
+
+  --ink: #0f1b22;
+  --ink-2: #3d4b55;
+  --ink-3: #5f6b73;
+
+  --ground: #ffffff;
+  --panel: #f7f8f8;
+  --panel-2: #eff2f2;
+  --hairline: #e2e6e7;
+  --hairline-soft: #eef1f1;
+  --rule-mid: #c3cccd;
+
+  --mark: #fff1a8;
+}
+
+section {
+  width: 1280px;
+  height: 720px;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: 'Noto Sans Thai', 'IBM Plex Sans Thai', 'Sukhumvit Set', Thonburi,
+    'Leelawadee UI', Tahoma, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 22px;
+  line-height: 1.7;
+  padding: 44px 64px;
+}
+
+/* ---- Headings ---- */
+
+h1 {
+  color: var(--ink);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+  padding: 0 0 12px 0;
+  border-bottom: 2px solid var(--hairline);
+}
+
+/* The accent rule that marks the current section — a single hairline, never a fill */
+h1::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 4px;
+  margin-top: -14px;
+  margin-bottom: 10px;
+  background: var(--teal);
+}
+
+h2 {
+  color: var(--teal-deep);
+  font-size: 38px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+h3 {
+  color: var(--ink-2);
+  font-size: 21px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+strong { color: var(--teal-deep); font-weight: 700; }
+em { color: var(--ink-2); font-style: normal; }
+
+/* ---- Lists ---- */
+
+ul, ol { font-size: 22px; line-height: 1.7; margin: 8px 0; padding-left: 28px; }
+li { margin: 6px 0; }
+li::marker { color: var(--teal); }
+ol li::marker { color: var(--teal); font-weight: 700; }
+li > ul, li > ol { font-size: 20px; }
+
+/* ---- Tables ---- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 19px;
+  margin: 10px 0;
+}
+th {
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 700;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--rule-mid);
+}
+td {
+  border-bottom: 1px solid var(--hairline);
+  padding: 9px 14px;
+  color: var(--ink-2);
+}
+tr:last-child td { border-bottom: none; }
+td strong { color: var(--teal-deep); }
+table.hl tr.hl-row td { background: var(--teal-wash); }
+
+/* ---- Code ---- */
+
+code {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  background: var(--panel-2);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.88em;
+  color: var(--ink);
+}
+pre {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--teal);
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-size: 17px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 17px;
+}
+
+/* ---- Blockquote: neutral callout (default) ---- */
+
+blockquote {
+  background: var(--panel);
+  border-left: 4px solid var(--rule-mid);
+  color: var(--ink-2);
+  padding: 12px 18px;
+  border-radius: 0 6px 6px 0;
+  font-size: 20px;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+blockquote p { margin: 0; }
+blockquote strong { color: var(--teal-deep); }
+
+/* A quote lifted verbatim from the product screen — still neutral, marked as a quote */
+blockquote.screen {
+  background: var(--teal-wash);
+  border-left-color: var(--teal);
+  color: var(--ink);
+  font-size: 19px;
+}
+blockquote.screen strong { color: var(--teal-deep); }
+
+/* ---- Caution callout: the ONLY place red appears ---- */
+
+section.caution blockquote,
+blockquote.caution {
+  background: var(--caution-wash);
+  border-left-color: var(--caution-red);
+  color: var(--ink);
+}
+section.caution blockquote strong,
+blockquote.caution strong {
+  color: var(--caution-red);
+}
+
+/* ---- Title slide ---- */
+
+section.lead {
+  background: var(--ground);
+  color: var(--ink);
+  justify-content: center;
+  padding: 0 96px;
+  text-align: left;
+}
+section.lead h1 {
+  color: var(--ink);
+  font-size: 52px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 4px;
+}
+section.lead h1::after {
+  width: 88px;
+  height: 5px;
+  margin: 20px 0 24px 0;
+}
+section.lead h2 {
+  color: var(--teal-deep);
+  font-size: 40px;
+  font-weight: 500;
+}
+section.lead p { color: var(--ink-3); font-size: 21px; }
+section.lead strong { color: var(--teal-deep); }
+
+/* ---- Day badge on leads ---- */
+
+section.lead .day-badge {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  background: var(--teal-wash);
+  border: 1px solid var(--teal-line);
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin-bottom: 20px;
+}
+
+/* ---- Takeaways slide ---- */
+
+section.takeaway {
+  background: var(--panel);
+}
+section.takeaway h1 {
+  font-size: 34px;
+  border-bottom: none;
+}
+section.takeaway h1::after {
+  margin-top: 2px;
+  margin-bottom: 20px;
+}
+section.takeaway ul { font-size: 23px; }
+section.takeaway li { margin: 12px 0; }
+
+/* ---- Source anchor line ---- */
+
+.src {
+  position: absolute;
+  right: 64px;
+  bottom: 20px;
+  font-size: 13px;
+  color: var(--ink-3);
+  letter-spacing: 0.01em;
+}
+
+/* ---- Pagination ----
+   A presentation is not a document: no page number on the slide. */
+
+section::after, footer { display: none !important; }
+
+/* ---- Cards grid ---- */
+
+.cards { display: grid; gap: 14px; margin-top: 6px; }
+.cards.c2 { grid-template-columns: repeat(2, 1fr); }
+.cards.c3 { grid-template-columns: repeat(3, 1fr); }
+.cards.c4 { grid-template-columns: repeat(4, 1fr); }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.card .k {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  margin-bottom: 6px;
+}
+.card .t { font-size: 21px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.card .d { font-size: 17px; color: var(--ink-2); line-height: 1.55; }
+.card.accent { background: var(--teal-wash); border-color: var(--teal-line); }
+/* A card whose content is still pending a real source — dashed, never filled in */
+.card.pending {
+  background: var(--ground);
+  border: 2px dashed var(--rule-mid);
+  color: var(--ink-3);
+}
+.card.pending .d { color: var(--ink-3); }
+
+/* ---- Flow: numbered steps in a row ---- */
+
+.flow { display: flex; align-items: stretch; gap: 10px; margin-top: 14px; }
+.flow .step {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 14px 16px;
+  position: relative;
+}
+.flow .step.accent { background: var(--teal-wash); border-color: var(--teal-line); }
+.flow .step .n {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--teal-deep);
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.flow .step .t { font-size: 19px; font-weight: 700; color: var(--ink); }
+.flow .step .d { font-size: 16px; color: var(--ink-2); line-height: 1.55; margin-top: 2px; }
+.flow .arrow {
+  align-self: center;
+  color: var(--teal);
+  font-size: 24px;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+/* ---- Checklist ---- */
+
+.checklist { list-style: none; padding-left: 0; margin-top: 10px; }
+.checklist li {
+  position: relative;
+  padding-left: 34px;
+  margin: 10px 0;
+  font-size: 21px;
+}
+.checklist li::before {
+  content: '☐';
+  position: absolute;
+  left: 0;
+  color: var(--teal);
+  font-size: 22px;
+}
+.checklist.done li::before { content: '☑'; }
+
+/* ---- Progress bar (a UI element, not a data chart) ---- */
+
+.pbar {
+  margin-top: 18px;
+  background: var(--panel-2);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  height: 26px;
+  overflow: hidden;
+  position: relative;
+}
+.pbar .fill {
+  height: 100%;
+  background: var(--teal);
+  border-radius: 999px 0 0 999px;
+}
+.pbar .lbl {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ---- Stat cards (small numeric facts) ---- */
+
+.stats { display: grid; gap: 14px; margin-top: 8px; }
+.stats.s2 { grid-template-columns: repeat(2, 1fr); }
+.stats.s3 { grid-template-columns: repeat(3, 1fr); }
+.stats.s4 { grid-template-columns: repeat(4, 1fr); }
+.stat {
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.stat .v {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--teal-deep);
+  line-height: 1.1;
+}
+.stat .l { font-size: 15px; color: var(--ink-2); margin-top: 4px; }
+
+/* ---- Real screenshot slides ----
+   A captured screen of the product. Presented as one object: hairline border
+   and a soft shadow, on the ground, never cropped. */
+
+section.shot { padding: 34px 52px 40px 52px; }
+
+section.shot h1 {
+  font-size: 30px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 2px;
+}
+section.shot h1::after { margin-top: 2px; margin-bottom: 12px; width: 52px; height: 3px; }
+
+.shot-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 470px;
+}
+.shot-frame img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  box-shadow: 0 6px 22px rgba(15, 27, 34, 0.14);
+}
+/* two images per row. `max-width:49%` each + the 20px gap is >100% of the frame,
+   so the pair used to bleed ~5px out of its column on both sides; wrap keeps
+   extra images on a second row instead of squeezing them into one. */
+.shot-frame.pair { gap: 20px; flex-wrap: wrap; }
+.shot-frame.pair img { max-width: calc(50% - 10px); }
+
+.shot-cap {
+  margin-top: 12px;
+  font-size: 17px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.shot-cap strong { color: var(--teal-deep); }
+
+section.shot .src { bottom: 16px; }
+
+/* ---- Two-column split (text left, figure/shot right) ---- */
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; margin-top: 6px; }
+.split .shot-frame { height: 400px; }
+/* ---- deck chrome: the HTML presentation shell ---- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #10161a; }
+body { font-family: 'Noto Sans Thai','IBM Plex Sans Thai','Sukhumvit Set',Thonburi,'Leelawadee UI',Tahoma,system-ui,sans-serif; }
+#stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+section.slide {
+  position: absolute; display: none; transform-origin: center center;
+  background: #ffffff; overflow: hidden;
+}
+section.slide.active { display: flex; flex-direction: column; }
+/* The theme's `section { padding: … }` (44px 64px · 0 96px for .lead ·
+   34px 52px 40px 52px for .shot) was written when the <section> WAS the slide box.
+   The shell now wraps the body in `.slide-inner`, which carries that same padding —
+   so the section must NOT pad again, or the inner box is pushed right/down by
+   64/96px and the overflow is clipped by `overflow: hidden` (asymmetric margins).
+   Reset here (later in source order than the theme, so it wins) and move each
+   variant's padding onto `.slide-inner`. */
+section.slide { padding: 0; }
+section.lead .slide-inner { padding: 0 96px; }
+section.shot .slide-inner { padding: 34px 52px 40px 52px; }
+.slide-inner { padding: 44px 64px; width: 1280px; height: 720px; overflow: hidden;
+  display: flex; flex-direction: column; }
+section.lead .slide-inner, section.takeaway .slide-inner { justify-content: center; }
+.slide-inner > h1:first-child, .slide-inner > h2:first-child { margin-top: 0; }
+nav { position: fixed; bottom: 14px; left: 0; right: 0; display: flex; gap: 14px;
+  align-items: center; justify-content: center; color: #c3cccd; font-size: 13px;
+  font-family: system-ui, sans-serif; }
+nav button { font: inherit; background: #1d262c; color: #e8edee; border: 1px solid #333f46;
+  border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+nav button:hover { background: #263238; }
+#hint { position: fixed; top: 12px; right: 16px; color: #7b8a92; font-size: 12px;
+  font-family: system-ui, sans-serif; }
+/* keep the accent rule on h1 as in the theme */
+section.slide h1 { font-size: 38px; }
+section.shot h1, section.lead h1 { font-size: 52px; }
+section.lead h1 { font-size: 52px; }
+/* bottom-right corner: slide number (`n / total`) inherits .src's position */
+.src.page-num { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+@media print {
+  #stage, nav, #hint { position: static; }
+  nav, #hint { display: none; }
+  section.slide { display: flex !important; position: relative; transform: none !important;
+    page-break-after: always; }
+  .slide-inner { transform: none !important; }
+}
+</style>
+</head>
+<body>
+<div id="hint">← → เลื่อน · Home/End · F เต็มจอ</div>
+<div id="stage">
+<section class="slide lead" data-n="1">
+<div class="slide-inner">
+<span class="day-badge">วัน 3 / 3</span>
+<h1>Skills คืออะไร ใช้ได้อย่างไร และติดตั้งเพิ่มจากแหล่งใด</h1>
+<p>วันที่ 3 · 26 ต.ค. 2026 · 30 นาที</p>
+<p>บรรยาย สาธิตสด และฝึกปฏิบัติไปพร้อมกัน</p>
+<span class="src page-num">1 / 25</span>
+</div>
+</section>
+<section class="slide" data-n="2">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §0">2 / 25</span>
+<h1>ทำไมผลลัพธ์จาก AI จึงไม่ตรงกับมาตรฐานขององค์กร?</h1>
+<div class="cards c2">
+  <div class="card"><div class="t">ปัญหาที่พบเป็นประจำ</div><div class="d">เมื่อส่งไฟล์ใบเสร็จให้ AI สรุป จะได้รายงานที่ใช้งานได้ แต่<strong>รูปแบบไม่สอดคล้องกันระหว่างบุคคล</strong> แต่ละครั้งได้โครงสร้างต่างกัน เมื่อนำส่งระบบจริงจึงถูกตีกลับ</div></div>
+  <div class="card accent"><div class="t">สาเหตุหลัก</div><div class="d">AI มีความสามารถเพียงพอ แต่<strong>ไม่ทราบมาตรฐานการทำงานเฉพาะขององค์กร</strong> · Skill เป็นเครื่องมือที่แก้ไขปัญหานี้โดยตรง</div></div>
+</div>
+<blockquote><p><strong>เนื้อหาในวันนี้ประกอบด้วย 4 ส่วน:</strong> นิยามของ Skill · รายการ Skill ที่ติดตั้งอยู่ · วิธีการติดตั้งเพิ่มเติม · แหล่งค้นหา Skill ที่เชื่อถือได้ · ใช้เวลา 30 นาที ไม่จำเป็นต้องมีพื้นฐานการเขียนโปรแกรม</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="3">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §1.1">3 / 25</span>
+<h1>Skill คือคู่มือปฏิบัติงานที่ AI สามารถอ่านและปฏิบัติตามได้</h1>
+<p><strong>นิยาม:</strong> คู่มือการทำงาน (SOP) ในรูปแบบที่ AI เปิดใช้งานโดยอัตโนมัติ เมื่อลักษณะงานในบทสนทนาตรงกับเงื่อนไขการเรียกใช้ (trigger) ของคู่มือฉบับนั้น</p>
+<table><thead><tr><th>องค์ประกอบ</th><th>คำอธิบาย</th></tr></thead><tbody><tr><td>ชื่อ (name)</td><td>ชื่อเรียก เช่น <code>office-apps</code>, <code>meeting-minutes-th</code></td></tr><tr><td>คำอธิบาย / trigger</td><td>ข้อความที่กำหนดว่า "งานประเภทใดควรเรียกใช้ Skill นี้"</td></tr><tr><td>เนื้อหาคู่มือ (SKILL.md)</td><td>ขั้นตอน รูปแบบรายงาน ข้อห้าม และการตั้งชื่อไฟล์ผลลัพธ์</td></tr><tr><td>ไฟล์ประกอบ (ถ้ามี)</td><td>สคริปต์ แม่แบบ (template) และตัวอย่าง ซึ่งจัดเก็บไว้ในโฟลเดอร์เดียวกับ Skill</td></tr></tbody></table>
+<blockquote><p>กล่าวอย่างง่าย: <strong>Skill คือชุดความรู้เกี่ยวกับวิธีการทำงานที่มอบให้กับ AI</strong> ไม่ใช่ความสามารถใหม่ในระดับโปรแกรม แต่เป็น <em>มาตรฐานการทำงานขององค์กร</em> ที่ฝังไว้ในระบบ</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="4">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §1.2">4 / 25</span>
+<h1>การเปรียบเทียบเพื่อช่วยให้เข้าใจแนวคิด</h1>
+<div class="cards c2">
+  <div class="card"><div class="k">ตำราอาหาร</div><div class="t">พ่อครัวฝีมือดี + สูตรเฉพาะของคุณ</div><div class="d">AI เปรียบเสมือนพ่อครัวที่มีความสามารถสูง แต่ไม่มีสูตรเฉพาะของคุณ · Skill คือการ์ดสูตรที่ใส่เข้าไปในสมุด — เมื่อระบุว่า "ต้มยำต้องใส่น้ำพริกเผา" พ่อครัวก็จะทำตามนั้นทุกครั้ง</div></div>
+  <div class="card"><div class="k">คู่มือ ISO / SOP</div><div class="t">SOP ที่ AI เปิดใช้งานเอง</div><div class="d">คล้ายกับแฟ้ม SOP ที่บริษัทใช้ปฏิบัติงาน ปกติเจ้าหน้าที่ต้องเปิดค้นหาเอง · Skill คือ SOP ที่ AI เปิดอ่านเองเมื่อเข้าเงื่อนไขที่กำหนด</div></div>
+  <div class="card"><div class="k">ช่างเทคนิคที่มีกล่องเครื่องมือ</div><div class="t">ชุดเครื่องมือ + คู่มือการใช้งาน</div><div class="d">Skill คือชุดเครื่องมือพร้อมคู่มือการใช้งานที่จัดเก็บไว้ในกล่องของช่าง</div></div>
+  <div class="card"><div class="k">แอปพลิเคชันในโทรศัพท์มือถือ</div><div class="t">ตัวเครื่อง + แอปที่ติดตั้งเพิ่ม</div><div class="d">thClaws คือตัวเครื่อง ส่วน Skill คือแอปพลิเคชันที่ติดตั้งเพิ่มเติม — ตัวเครื่องไม่สามารถทำงานเพิ่มเติมได้หากไม่มีแอปที่เหมาะสม</div></div>
+</div>
+<blockquote><p>เลือกการเปรียบเทียบที่เหมาะสมกับกลุ่มผู้เรียน โดยนำเสนอเพียงหนึ่งตัวอย่างให้ชัดเจน</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="5">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §1.3">5 / 25</span>
+<h1>ความแตกต่างระหว่างการพิมพ์สั่ง AI ทั่วไปกับการใช้ Skill</h1>
+<table><thead><tr><th></th><th>ไม่มี Skill</th><th>มี Skill</th></tr></thead><tbody><tr><td>การสั่งงาน</td><td>ต้องเขียนคำสั่งยาวเพื่อระบุรูปแบบเองทุกครั้ง</td><td>บรรยายงานเป็นภาษาธรรมชาติ ระบบเลือก Skill ให้เอง</td></tr><tr><td>ความสม่ำเสมอ</td><td>รูปแบบเปลี่ยนตามผู้สั่งหรือสถานการณ์</td><td>ได้รูปแบบเดียวกันทุกครั้งตามคู่มือ</td></tr><tr><td>มาตรฐานองค์กร</td><td>AI ไม่ทราบกฎเกณฑ์เฉพาะขององค์กร</td><td>กฎเกณฑ์ถูกกำหนดไว้ใน Skill แล้ว</td></tr><tr><td>การส่งต่องาน</td><td>ขึ้นกับทักษะการเขียนคำสั่งของแต่ละคน</td><td>ทุกคนได้ผลลัพธ์คุณภาพเท่าเทียมกัน</td></tr><tr><td>ความเสี่ยงลืมข้อกำหนด</td><td>ลืมระบุ → งานผิด</td><td>ข้อกำหนดถูกฝังไว้ใน Skill แล้ว</td></tr></tbody></table>
+<blockquote><p><strong>สรุป:</strong> Skill เปลี่ยนทักษะส่วนบุคคลให้เป็นสินทรัพย์ขององค์กร ที่ทุกคนใช้ได้เท่าเทียม</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="6">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §1.4">6 / 25</span>
+<h1>หลักการทำงานของ Skill</h1>
+<div class="flow">
+  <div class="step"><div class="n">1</div><div class="t">ผู้ใช้งานพิมพ์คำสั่ง</div><div class="d">"รวมใบเสร็จ 5 ใบเป็นรายงาน..."</div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">2</div><div class="t">ระบบตรวจสอบ trigger</div><div class="d">ค้นหา Skill ที่มีเงื่อนไขตรงกับงาน</div></div>
+  <div class="arrow">→</div>
+  <div class="step accent"><div class="n">3</div><div class="t">เปิดคู่มือและปฏิบัติตาม</div><div class="d">สร้างไฟล์ .xlsx ตามรูปแบบที่กำหนด</div></div>
+</div>
+<p><strong>ประเด็นสำคัญที่ควรทราบ:</strong></p>
+<ul><li><strong>ไม่จำเป็นต้องพิมพ์ชื่อ Skill ด้วยตนเอง</strong> — เพียงบรรยายงานเป็นภาษาธรรมชาติ ระบบจะจับคู่ Skill ที่เหมาะสมให้โดยอัตโนมัติ</li><li><strong>ระบบอ่านเฉพาะส่วน "คำอธิบาย" ก่อน</strong> แล้วจึงเปิดเนื้อหาคู่มือเมื่อจำเป็นต้องใช้เท่านั้น การติดตั้ง Skill จำนวนมากจึงไม่ส่งผลต่อประสิทธิภาพของระบบ</li><li><strong>Skill ที่ติดตั้งใหม่จะปรากฏเมื่อ agent โหลดชุดคำสั่งรอบถัดไป</strong> — หากติดตั้งแล้วไม่เห็นในรายการ ให้เริ่ม session ใหม่ หรือสอบถามอีกครั้งว่า "ขณะนี้มี Skill อะไรติดตั้งอยู่บ้าง"</li></ul>
+</div>
+</section>
+<section class="slide" data-n="7">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §1.5">7 / 25</span>
+<h1>ความแตกต่างระหว่าง Tool, Skill และ MCP</h1>
+<table><thead><tr><th></th><th><strong>Tool</strong></th><th><strong>Skill</strong></th><th><strong>MCP server</strong></th></tr></thead><tbody><tr><td>นิยาม</td><td>ความสามารถพื้นฐานที่มาพร้อมกับ thClaws เช่น การอ่าน/เขียนไฟล์ การค้นหาบนเว็บ การสร้างเอกสาร Word/Excel/PDF</td><td>คู่มือ "วิธีการทำงาน" ที่กำหนดลำดับและรูปแบบการใช้ Tool ต่าง ๆ</td><td>ช่องทางเชื่อมต่อกับระบบภายนอก เช่น ฐานข้อมูลหรือระบบภายในองค์กร</td></tr><tr><td>ผู้พัฒนา</td><td>ทีมพัฒนา thClaws</td><td>องค์กร ผู้เผยแพร่ หรือผู้ดูแลระบบ</td><td>นักพัฒนาภายนอก (third-party)</td></tr><tr><td>ผู้ใช้งานทั่วไปสามารถจัดการได้หรือไม่</td><td>ไม่ได้ (มาพร้อมกับโปรแกรม)</td><td><strong>ได้</strong> — สามารถดู ติดตั้ง อัปเดต และลบได้</td><td>โดยปกติต้องดำเนินการโดยผู้ดูแลระบบ</td></tr></tbody></table>
+<blockquote><p>สรุปอย่างย่อ: <strong>Tool คือมือและตา · Skill คือความรู้เกี่ยวกับวิธีการทำงาน · MCP คือสายเชื่อมต่อไปยังระบบอื่น</strong> · เนื้อหาในวันนี้มุ่งเน้นที่ Skill</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="8">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §1.6">8 / 25</span>
+<h1>ขอบเขตที่สำคัญใน Enterprise Edition</h1>
+<ul class="checklist">
+  <li>thClaws Enterprise ดึงแคตตาล็อกจาก <strong>Marketplace ขององค์กรเป็นหลัก</strong> ไม่ใช่จากแหล่งสาธารณะ — ผู้ดูแลระบบเป็นผู้กำหนดแหล่งข้อมูลที่อนุญาต</li>
+  <li>สิทธิ์ในการ <strong>ดู</strong> กับ <strong>ติดตั้ง/ลบ</strong> อยู่คนละระดับกัน (<code>skills.read</code> กับ <code>skills.write</code>) บางตำแหน่งอาจดูได้อย่างเดียว ซึ่งเป็นไปตามการออกแบบของระบบ</li>
+  <li>บาง Skill อาจถูกระงับตามนโยบายความปลอดภัยขององค์กร เช่น Skill ที่มีสคริปต์ <code>.sh</code>/<code>.py</code> แนบมา ระบบจะแสดงข้อความ <code>skill install blocked by org policy</code> <strong>กรุณาหยุดดำเนินการและติดต่อฝ่าย IT ทันที ห้ามพยายามติดตั้งซ้ำ</strong></li>
+  <li>Built-in Skill ของ thClaws ไม่สามารถแก้ไขได้ (read-only) — Skill ที่สามารถแก้ไขหรือลบได้คือ Skill ระดับ project หรือระดับผู้ใช้ที่ติดตั้งเพิ่มเติมเท่านั้น</li>
+</ul>
+<blockquote class="caution"><p>⚠️ ข้อควรระวังด้านความปลอดภัย: การติดตั้ง Skill เท่ากับการนำคำสั่งหรือแนวทางการทำงานจากแหล่งภายนอกมาให้ AI ปฏิบัติตาม ดังนั้น <strong>ควรติดตั้งเฉพาะจาก Marketplace ขององค์กร หรือแหล่งที่ฝ่าย IT รับรองเท่านั้น</strong></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="9">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §1 Demo 1">9 / 25</span>
+<h1>🔴 การสาธิตที่ 1 — เปรียบเทียบผลลัพธ์เมื่อมีและไม่มี Skill</h1>
+<p><strong>สาธิตเปรียบเทียบด้วยงานชนิดเดียวกัน:</strong></p>
+<div class="split">
+  <div>
+    <h3>❌ กรณีไม่มี Skill</h3>
+    <p>เปิด session ใหม่ แล้วพิมพ์:</p>
+    <blockquote class="screen">อ่านไฟล์ meeting_notes.txt แล้วเขียนรายงานการประชุมให้หน่อย</blockquote>
+    <p>→ ได้รับรายงานที่ใช้งานได้ แต่โครงสร้างเป็นไปตามการตัดสินใจของ AI</p>
+  </div>
+  <div>
+    <h3>✅ กรณีมี Skill</h3>
+    <p>เปิด session ใหม่ แล้วพิมพ์คำสั่งเดียวกัน:</p>
+    <blockquote class="screen">อ่านไฟล์ meeting_notes.txt แล้วทำรายงานการประชุม</blockquote>
+    <p>→ ระบบแจ้งว่ากำลังใช้ Skill ใด → ผลลัพธ์เป็นไปตามโครงร่างที่กำหนดในคู่มือ (วาระ / มติที่ประชุม / ตารางงาน–ผู้รับผิดชอบ–กำหนดเสร็จ)</p>
+  </div>
+</div>
+<blockquote><p><strong>คำถามเพื่อตรวจสอบความเข้าใจ:</strong> "จากรอบที่สอง สิ่งใดที่ <em>ไม่ได้</em> มาจากความสามารถของ AI แต่มาจาก Skill?" → <em>รูปแบบรายงาน ชื่อไฟล์ และกฎเกณฑ์ที่ไม่สนับสนุนข้อมูล</em></p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="10">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §2">10 / 25</span>
+<h1>วิธีการเรียกดู Skills ที่ติดตั้งแล้ว (3 ช่องทาง)</h1>
+<div class="cards c3">
+  <div class="card accent"><div class="k">ช่องทาง A</div><div class="t">สอบถาม agent โดยตรง</div><div class="d">พิมพ์ในช่องแชท: <code>ตอนนี้มี Skills อะไรติดตั้งอยู่บ้าง?</code> · เหมาะสำหรับผู้ที่เริ่มต้นใช้งาน ไม่จำเป็นต้องจำคำสั่ง</div></div>
+  <div class="card"><div class="k">ช่องทาง B</div><div class="t">คำสั่ง Slash</div><div class="d"><code>/skills</code> แสดงรายการทั้งหมด · <code>/skill show &lt;name&gt;</code> แสดงรายละเอียด · รวดเร็ว แม่นยำ และสามารถตรวจสอบได้</div></div>
+  <div class="card"><div class="k">ช่องทาง C</div><div class="t">GUI Settings → Skills</div><div class="d">เหมาะสำหรับผู้ที่ใช้วิธีคลิกเลือกผ่านหน้าจอ · แสดง scope ชื่อ และคำอธิบาย · สามารถลบได้เฉพาะ Skill ระดับ project</div></div>
+</div>
+<blockquote><p>เบื้องหลังการทำงาน: ระบบใช้ <code>SkillList</code> (แสดงรายชื่อทั้งหมด), <code>SkillSearch</code> (ค้นหาด้วยข้อความ), และ <code>Skill(name)</code> (เปิดเนื้อหาคู่มือ) — ไม่จำเป็นต้องจำชื่อฟังก์ชันเหล่านี้ แต่ควรรู้ว่ามีกลไกดังกล่าวอยู่</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="11">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §2.4">11 / 25</span>
+<h1>การอ่านและทำความเข้าใจผลลัพธ์</h1>
+<table><thead><tr><th>คอลัมน์/คำที่ปรากฏ</th><th>ความหมาย</th><th>เหตุผลที่ต้องให้ความสำคัญ</th></tr></thead><tbody><tr><td><strong>name</strong></td><td>ชื่อที่ใช้เรียกผ่าน <code>Skill(name)</code> / <code>skill show</code></td><td>จำชื่อนี้ไว้สำหรับการสั่งงาน</td></tr><tr><td><strong>description / trigger</strong></td><td>ประเภทงานที่ Skill นี้รองรับ</td><td>หาก trigger ตรงกับงานที่ต้องการ = เลือกใช้ Skill ถูกต้อง</td></tr><tr><td><strong>scope: project</strong></td><td>จัดเก็บอยู่ใน workspace นี้ (<code>.thclaws/skills/…</code>)</td><td>สามารถแก้ไข/ลบได้ มีผลต่อผู้ใช้งานในโปรเจกต์นี้</td></tr><tr><td><strong>scope: user</strong></td><td>ติดตั้งในระดับผู้ใช้ (<code>~/.config/thclaws/skills/…</code>)</td><td>ติดตามผู้ใช้ไปในทุก workspace</td></tr><tr><td><strong>scope: built-in</strong></td><td>มาพร้อมกับโปรแกรม thClaws</td><td><strong>ห้ามแก้ไข</strong> — read-only</td></tr><tr><td><strong>path</strong></td><td>ตำแหน่งโฟลเดอร์จริงของ SKILL.md</td><td>ใช้เมื่อต้องการขอความช่วยเหลือจากฝ่าย IT</td></tr><tr><td><strong>license</strong></td><td>สัญญาอนุญาต เช่น Apache-2.0, MIT, proprietary</td><td>เกี่ยวข้องกับประเด็นด้านกฎหมายและการจัดซื้อ</td></tr><tr><td><strong>category</strong></td><td>หมวดหมู่ เช่น productivity, research, creative</td><td>ใช้สำหรับกรองค้นหา Skill ที่ต้องการ</td></tr></tbody></table>
+</div>
+</section>
+<section class="slide" data-n="12">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §2 Hands-on 1">12 / 25</span>
+<h1>🟢 ฝึกปฏิบัติที่ 1 (2 นาที)</h1>
+<ul class="checklist">
+  <li>พิมพ์ <code>/skills</code> แล้วนับจำนวน Skill ที่ติดตั้งอยู่ในเครื่อง → <strong>บันทึกจำนวนไว้</strong></li>
+  <li>พิมพ์ <code>/skill show &lt;ชื่อ Skill 1 ตัวจากรายการ&gt;</code> แล้วระบุข้อมูล 3 อย่าง: <em>scope</em>, <em>path</em>, <em>ประเภทงานที่ trigger รองรับ</em></li>
+  <li>พิมพ์สอบถามเป็นภาษาธรรมชาติ: <code>"สรุปให้หน่อยว่า Skill ตัวไหนที่เหมาะกับงานเอกสาร Word/Excel/PDF"</code> → เปรียบเทียบว่าคำตอบสอดคล้องกับรายการจาก <code>/skills</code> หรือไม่</li>
+</ul>
+<p><strong>เกณฑ์ผ่าน:</strong> สามารถระบุได้ว่าเครื่องของตนเองมี Skill กี่ตัว และ Skill ที่เลือกไว้รองรับงานประเภทใด</p>
+<blockquote><p><strong>ตรวจสอบระหว่างฝึกปฏิบัติ:</strong> "ท่านใดที่ <code>/skills</code> แล้วได้ผลลัพธ์เป็น 0 ตัว?" โดยปกติใน Enterprise จะมี built-in Skill แสดงอยู่เสมอ หากได้ 0 กรุณาแจ้งฝ่าย IT (อาจเกี่ยวข้องกับสิทธิ์การอ่าน)</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="13">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §3.1">13 / 25</span>
+<h1>การติดตั้ง Skills เพิ่มเติม — กระบวนการมาตรฐาน 5 ขั้นตอน</h1>
+<div class="flow">
+  <div class="step"><div class="n">1</div><div class="t">Browse</div><div class="d"><code>/skill marketplace</code></div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">2</div><div class="t">Search</div><div class="d"><code>/skill search &lt;คำค้น&gt;</code></div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">3</div><div class="t">Info</div><div class="d"><code>/skill info &lt;name&gt;</code></div></div>
+  <div class="arrow">→</div>
+  <div class="step accent"><div class="n">4</div><div class="t">Install</div><div class="d"><code>/skill install &lt;name&gt;</code></div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">5</div><div class="t">Use</div><div class="d">พิมพ์สั่งงานตามปกติ</div></div>
+</div>
+<blockquote><p><strong>ลำดับขั้นตอน:</strong> Browse → Search → Info → Install → Use · หลังติดตั้งเสร็จสิ้น ควรเริ่ม session ใหม่ก่อนใช้งาน</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="14">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §3.1">14 / 25</span>
+<h1>ตัวเลือกเสริมสำหรับการติดตั้ง</h1>
+<table><thead><tr><th>รูปแบบ</th><th>ความหมาย</th></tr></thead><tbody><tr><td><code>/skill install --user &amp;lt;name&amp;gt;</code></td><td>ติดตั้งในระดับผู้ใช้ (ติดตามผู้ใช้ไปในทุก workspace)</td></tr><tr><td><code>/skill install &amp;lt;git-URL&amp;gt; [name]</code></td><td>ติดตั้งจาก repository โดยตรง — ใช้เฉพาะ URL ที่เชื่อถือได้</td></tr><tr><td><code>/skill install &amp;lt;path.zip&amp;gt;</code></td><td>ติดตั้งจากไฟล์ zip ที่ได้รับ เช่น จากฝ่าย IT</td></tr><tr><td><code>/skill update &amp;lt;name&amp;gt;</code></td><td>แทนที่ Skill เดิมด้วยเวอร์ชันล่าสุดจาก marketplace</td></tr><tr><td><code>/skill marketplace --refresh</code></td><td>ดึงแคตตาล็อกใหม่ (ใน GUI มีปุ่ม ↻ Refresh)</td></tr></tbody></table>
+<blockquote class="caution"><p>⚠️ คำสั่งหลักที่ควรจำ: <code>/skill marketplace</code>, <code>/skill search</code>, <code>/skill info</code>, <code>/skill install</code> — คำสั่งอื่นเป็นตัวเลือกเสริม</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="15">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §3.2">15 / 25</span>
+<h1>ข้อความแสดงข้อผิดพลาดที่ควรจดจำ</h1>
+<table><thead><tr><th>ข้อความที่ปรากฏ</th><th>ความหมาย</th><th>แนวทางปฏิบัติ</th></tr></thead><tbody><tr><td><code>no skill named '&amp;lt;x&amp;gt;' in marketplace</code></td><td>พิมพ์ชื่อผิด หรือยังไม่มีในแหล่งข้อมูล</td><td>ใช้ <code>/skill search</code> เพื่อค้นหาก่อน</td></tr><tr><td><code>no matches for '&amp;lt;x&amp;gt;'</code></td><td>คำค้นไม่ตรงกับรายการใดเลย</td><td>ปรับคำค้นให้กว้างขึ้น หรือเรียกดูรายการทั้งหมด</td></tr><tr><td><code>skill install blocked by org policy</code></td><td><strong>นโยบายองค์กรไม่อนุญาตให้ติดตั้ง</strong></td><td>หยุดดำเนินการทันที แจ้งฝ่าย IT — ห้ามพยายามติดตั้งซ้ำหรือหาทางหลีกเลี่ยง</td></tr><tr><td><code>ships a scripts/ directory; org policy disallows external scripts</code></td><td>Skill มีสคริปต์แนบมา ซึ่งองค์กรไม่อนุญาตให้นำเข้า</td><td>แจ้งฝ่าย IT พร้อมระบุชื่อนโยบายที่เกี่ยวข้อง</td></tr><tr><td><code>could not derive a name from URL</code></td><td>ติดตั้งจาก URL โดยไม่ได้ระบุชื่อ</td><td>เพิ่มชื่อต่อท้ายคำสั่ง: <code>/skill install &amp;lt;URL&amp;gt; &amp;lt;ชื่อ&amp;gt;</code></td></tr><tr><td><code>warning: no SKILL.md found anywhere in the archive</code></td><td>ไฟล์ไม่มีคู่มือ = ไม่ใช่ Skill ที่ใช้งานได้</td><td>งดใช้แหล่งข้อมูลดังกล่าว ติดต่อผู้ส่งไฟล์</td></tr></tbody></table>
+</div>
+</section>
+<section class="slide" data-n="16">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §3.3">16 / 25</span>
+<h1>สิทธิ์ การอัปเดต และการถอนการติดตั้ง</h1>
+<table><thead><tr><th>เรื่อง</th><th>ข้อเท็จจริงในระบบ</th><th>ผลต่อผู้ใช้งาน</th></tr></thead><tbody><tr><td>สิทธิ์ในการ <strong>ดู</strong> รายชื่อ/เนื้อหา</td><td>ต้องมีสิทธิ์ <code>skills.read</code></td><td>หากไม่มีสิทธิ์ → panel จะว่างเปล่าหรือถูกบล็อก → ขอสิทธิ์จากฝ่าย IT</td></tr><tr><td>สิทธิ์ในการ <strong>ติดตั้ง/บันทึก/ลบ</strong></td><td>ต้องมีสิทธิ์ <code>skills.write</code></td><td>ตำแหน่งที่ไม่มีสิทธิ์จะมองเห็นรายการแต่ไม่สามารถติดตั้งได้ — เป็นการออกแบบโดยเจตนา</td></tr><tr><td>การลบ / ถอนการติดตั้ง</td><td>ดำเนินการผ่าน <strong>Settings → Skills panel → Delete</strong> (ยืนยันผ่านกล่องข้อความ) — <strong>ไม่มีคำสั่ง <code>/skill remove</code></strong></td><td>สามารถลบ/แก้ไขได้เฉพาะ Skill ของ project; built-in และ user skill จะเป็น read-only บน panel ของ project</td></tr><tr><td>การอัปเดต</td><td><code>/skill update &amp;lt;name&amp;gt;</code> — ใช้กับ Skill ที่ติดตั้งจาก marketplace เท่านั้น</td><td>ควร refresh marketplace ก่อน หากทราบว่าฝ่าย IT เผยแพร่เวอร์ชันใหม่</td></tr><tr><td>ผลหลังการติดตั้ง</td><td>Skill จะพร้อมใช้งานเมื่อ agent โหลดชุดคำสั่งในรอบถัดไป (session ใหม่)</td><td>หากติดตั้งแล้วไม่เห็นในรายการ → <strong>เริ่ม session ใหม่ก่อนสรุปว่า "Skill ไม่ทำงาน"</strong></td></tr></tbody></table>
+</div>
+</section>
+<section class="slide" data-n="17">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §3.4">17 / 25</span>
+<h1>รายการตรวจสอบก่อนกด Install (5 ข้อ)</h1>
+<ul class="checklist">
+  <li>มาจาก <strong>Enterprise marketplace</strong> หรือแหล่งที่ฝ่าย IT รับรองหรือไม่? (หากเป็น URL จากภายนอก → ส่งให้ฝ่าย IT พิจารณาก่อน)</li>
+  <li>ได้อ่าน <code>description</code> จนมั่นใจว่า <strong>รองรับงานที่ต้องการจะทำจริง</strong> ไม่ใช่เพียงชื่อที่ใกล้เคียง?</li>
+  <li><code>license</code> ยอมรับได้หรือไม่? (<code>proprietary</code> ขององค์กร = ใช้ภายในได้ / <code>Apache-2.0</code>, <code>MIT</code> = มีสัญญาอนุญาตแนบมา ต้องไม่ลบไฟล์ LICENSE/NOTICE)</li>
+  <li>Skill นี้มี <strong>external scripts</strong> แนบมาด้วยหรือไม่? (หากมี โอกาสถูกบล็อกโดยนโยบายองค์กรสูง → เตรียมแจ้งฝ่าย IT)</li>
+  <li>ต้องการติดตั้งในระดับ <strong>project</strong> (ทีม/ใช้ร่วมกัน) หรือ <strong>user</strong> (ส่วนตัว)? — งานเชิงทีมหรือมาตรฐานองค์กรควรติดตั้งในระดับ project</li>
+</ul>
+</div>
+</section>
+<section class="slide" data-n="18">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §3 Hands-on 2">18 / 25</span>
+<h1>🟢 ฝึกปฏิบัติที่ 2 (3 นาที)</h1>
+<ul class="checklist">
+  <li><code>/skill marketplace</code> → ค้นหาว่าองค์กรมี Skill ให้ติดตั้งได้กี่ตัว <strong>บันทึกจำนวนไว้</strong></li>
+  <li><code>/skill search &lt;คำที่เกี่ยวข้องกับงานของตน&gt;</code> เช่น <code>ประชุม</code>, <code>เอกสาร</code>, <code>quotation</code>, <code>excel</code></li>
+  <li><code>/skill info &lt;Skill ที่สนใจ&gt;</code> → อ่าน license และ category</li>
+  <li><code>/skill install &lt;Skill นั้น&gt;</code> (หากติดขัดเนื่องจากนโยบายองค์กรหรือไม่มีสิทธิ์ → <strong>ถ่ายภาพหน้าจอข้อความผิดพลาดแล้วยกมือแจ้งวิทยากร</strong> เพื่อแก้ไขปัญหาบนจอให้ทั้งห้อง)</li>
+  <li>เปิด session ใหม่ แล้วพิมพ์ <code>/skills</code> เพื่อยืนยันว่ารายการเพิ่มขึ้นจากฝึกปฏิบัติที่ 1</li>
+</ul>
+<p><strong>เกณฑ์ผ่าน:</strong> สามารถอธิบายได้ว่า Skill ที่ติดตั้งใหม่ปรากฏอยู่ในตำแหน่งใดของรายการ และหากติดตั้งไม่สำเร็จ สามารถแยกแยะได้ว่าสาเหตุเกิดจากนโยบาย/สิทธิ์ หรือเกิดจากการพิมพ์ชื่อผิด</p>
+</div>
+</section>
+<section class="slide" data-n="19">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §4.1">19 / 25</span>
+<h1>แหล่งค้นหา Skills — เรียงตามลำดับความน่าเชื่อถือ</h1>
+<table><thead><tr><th>#</th><th>แหล่ง</th><th>ใช้เมื่อ</th><th>ความน่าเชื่อถือ</th></tr></thead><tbody><tr><td>1</td><td><strong>Enterprise Marketplace ขององค์กร</strong></td><td><strong>เป็นแหล่งแรกเสมอ</strong></td><td>★★★★★ ผ่านการตรวจขององค์กร</td></tr><tr><td>2</td><td>Baseline catalogue ของ thClaws</td><td>ต้องการ Skill ค่าเริ่มต้น</td><td>★★★☆☆ ผู้เผยแพร่ภายนอก</td></tr><tr><td>3</td><td>Git repository (URL)</td><td>ฝ่าย IT ส่ง URL มาให้</td><td>★★☆☆☆ ต้องรู้เจ้าของ repo</td></tr><tr><td>4</td><td>ไฟล์ .zip</td><td>ฝ่าย IT แจกแบบ offline</td><td>★★☆☆☆ จากผู้ส่งที่เชื่อถือได้</td></tr><tr><td>5</td><td>ฝ่าย IT / CoE</td><td><strong>สอบถามก่อนสร้างใหม่</strong></td><td>★★★★★</td></tr></tbody></table>
+<blockquote><p><strong>หลักการ:</strong> ใช้แหล่งภายในองค์กรก่อนเสมอ (1 → 5) จึงพิจารณาแหล่งภายนอก — เพราะ Skill คือแนวทางที่ AI ต้องเชื่อถือ และสิ่งที่อยู่นอกการควบคุมของฝ่ายความปลอดภัยเป็นความเสี่ยงต่อข้อมูลองค์กร</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="20">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §4.2">20 / 25</span>
+<h1>เทคนิคการค้นหาที่มีประสิทธิภาพ</h1>
+<div class="cards c3">
+  <div class="card"><div class="k">เทคนิค 1</div><div class="t">ใช้คำค้นที่หลากหลาย ทั้งภาษาไทยและอังกฤษ</div><div class="d">ทดลองทั้ง <code>expense</code> และ <code>ค่าใช้จ่าย</code>, ทั้ง <code>minutes</code> และ <code>รายงานประชุม</code> — หาก Skill เขียนคำอธิบายเป็นภาษาอังกฤษ การค้นหาด้วยภาษาไทยอาจไม่พบผลลัพธ์</div></div>
+  <div class="card"><div class="k">เทคนิค 2</div><div class="t">ค้นหาจากหลายมุมมองสำหรับความต้องการเดียวกัน</div><div class="d">"ทำเอกสาร", "ร่างบันทึกข้อความ", "ตาราง", "สรุปรายงาน" — Skill ที่มี trigger กว้างจะปรากฏในผลลัพธ์ที่แตกต่างกัน</div></div>
+  <div class="card"><div class="k">เทคนิค 3</div><div class="t">เรียกดูรายการทั้งหมดเมื่อไม่แน่ใจว่ามีอะไรบ้าง</div><div class="d"><code>/skill marketplace</code> แล้วอ่าน short_description ทีละบรรทัด (มีประมาณหลักสิบรายการ สามารถอ่านจบได้ใน 2 นาที) — ช่วยให้ทราบว่าระบบสามารถสนับสนุนงานใดได้บ้าง</div></div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="21">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §4.4">21 / 25</span>
+<h1>กรณีไม่พบ Skill ที่ต้องการ (3 ทางเลือก)</h1>
+<div class="flow">
+  <div class="step"><div class="n">1</div><div class="t">ปรับคำค้นหรือเปลี่ยนมุมมอง</div><div class="d">ใช้เทคนิค 3 ข้อข้างต้น (ส่วนใหญ่จะพบผลลัพธ์ในขั้นตอนนี้)</div></div>
+  <div class="arrow">→</div>
+  <div class="step"><div class="n">2</div><div class="t">สอบถาม agent</div><div class="d">"งาน [...] มี Skill ใดช่วยได้บ้าง หรือควรทำแบบไม่มี Skill?" — ระบบจะทำการค้นหาและแจ้งโดยตรงหากไม่มี Skill ที่เกี่ยวข้อง</div></div>
+  <div class="arrow">→</div>
+  <div class="step accent"><div class="n">3</div><div class="t">ร้องขอต่อฝ่าย IT / CoE</div><div class="d">ส่งข้อมูล 3 ส่วน: งานคืออะไร · ข้อมูลนำเข้าคืออะไร · ผลลัพธ์ที่ต้องการมีลักษณะอย่างไร → ฝ่าย IT จะพิจารณาว่าควรสร้าง Skill ใหม่หรือมีอยู่แล้ว</div></div>
+</div>
+<blockquote><p>การสร้าง Skill ด้วยตนเอง <strong>อยู่นอกเหนือขอบเขตของการอบรมในวันนี้</strong> — กรุณาอ้างอิงหลักสูตร "การสร้าง Skill" ในครั้งถัดไป</p></blockquote>
+</div>
+</section>
+<section class="slide" data-n="22">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §4 Drill">22 / 25</span>
+<h1>🟡 แบบฝึกหัดท้ายบท (ตอบพร้อมกันทั้งห้อง)</h1>
+<p><strong>วิทยากรกล่าวถึงลักษณะงาน 3 กรณี → ผู้เรียนระบุว่าควรใช้ช่องทางใดในการค้นหา:</strong></p>
+<table><thead><tr><th>งาน</th><th>คำตอบที่ถูกต้อง</th></tr></thead><tbody><tr><td>"ต้องส่งรายงานสรุปใบเสนอราคาจากไฟล์ Excel ทุกสัปดาห์"</td><td><code>/skill marketplace</code> + <code>/skill search</code> ด้วยคำ <code>quotation</code> / <code>ราคา</code> / <code>excel</code> (ค้นหาจากหลายมุม)</td></tr><tr><td>"เพื่อนร่วมงานส่งลิงก์ GitHub มาแนะนำว่ามี Skill ที่ดี"</td><td><strong>ไม่ควรติดตั้งทันที</strong> — ส่งให้ฝ่าย IT ตรวจสอบก่อน; หากฝ่าย IT อนุมัติ ใช้ <code>/skill install &amp;lt;URL&amp;gt; &amp;lt;ชื่อ&amp;gt;</code></td></tr><tr><td>"ติดตั้งเรียบร้อยแล้ว แต่เมื่อพิมพ์เรียกใช้ดูเหมือนไม่มีอะไรเกิดขึ้น"</td><td>เปิด session ใหม่ / สอบถาม "ตอนนี้มี Skill อะไรบ้าง" เพื่อตรวจสอบว่าระบบรับรู้ Skill นี้แล้วจริง</td></tr></tbody></table>
+</div>
+</section>
+<section class="slide takeaway" data-n="23">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §5.1">23 / 25</span>
+<h1>ประเด็นสำคัญ 4 ข้อที่ควรนำไปปฏิบัติ</h1>
+<ul><li><strong>Skill คือคู่มือวิธีการทำงานที่ AI เปิดใช้งานเองเมื่อพบงานที่ตรงกับเงื่อนไข</strong> → ได้รับผลลัพธ์ที่มีมาตรฐานเดียวกันทุกครั้ง โดยไม่ต้องอาศัยทักษะการเขียนคำสั่งระดับสูง</li><li><strong>เรียกดูได้ 3 วิธี:</strong> พิมพ์สอบถาม ("มี Skill อะไรบ้าง") สะดวกที่สุด · <code>/skills</code> + <code>/skill show</code> แม่นยำที่สุด · Settings → Skills panel เหมาะสำหรับผู้ที่ไม่สะดวกใช้คำสั่ง</li><li><strong>การติดตั้งเพิ่มเติม:</strong> <code>marketplace → search → info → install</code> (แล้วเริ่ม session ใหม่) · อัปเดตด้วย <code>/skill update</code> · ลบผ่าน GUI · หากพบข้อความ <code>blocked by org policy</code> = หยุดดำเนินการ + แจ้งฝ่าย IT</li><li><strong>แหล่งค้นหา:</strong> Enterprise marketplace เป็นแหล่งแรกเสมอ · baseline catalogue ของ thClaws · Git URL / zip <strong>เฉพาะแหล่งที่องค์กรรับรอง</strong> · และ <strong>สอบถามฝ่าย IT ก่อนเสมอ</strong></li></ul>
+</div>
+</section>
+<section class="slide" data-n="24">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §5.2">24 / 25</span>
+<h1>สิ่งที่ควรทำและไม่ควรทำ</h1>
+<div class="split">
+  <div>
+    <h3>✅ สิ่งที่ควรทำ</h3>
+    <ul>
+      <li>บรรยายงานเป็นภาษาธรรมชาติ แล้วให้ระบบเลือก Skill ที่เหมาะสม</li>
+      <li>ติดตั้งจาก Enterprise marketplace หรือแหล่งที่ฝ่าย IT รับรอง</li>
+      <li>อ่าน description และ license ก่อนกด install</li>
+      <li>เริ่ม session ใหม่หลังการติดตั้ง แล้วจึงทดสอบการใช้งาน</li>
+      <li>เมื่อพบข้อความผิดพลาดเกี่ยวกับนโยบาย → แจ้งฝ่าย IT ทันที</li>
+    </ul>
+  </div>
+  <div>
+    <h3>❌ สิ่งที่ไม่ควรทำ</h3>
+    <ul>
+      <li>พิมพ์ชื่อ Skill ผิดแล้วสรุปว่าระบบมีปัญหา — ใช้ <code>/skills</code> ตรวจสอบก่อน</li>
+      <li>ติดตั้งจาก URL ที่ไม่คุ้นเคย / กลุ่มแชท / บล็อกส่วนตัว</li>
+      <li>พยายามหลีกเลี่ยงนโยบายองค์กร — การถูกบล็อกมีเหตุผลด้านความปลอดภัย</li>
+      <li>ลบ built-in Skill — ระบบกำหนดเป็น read-only เพื่อรักษาเสถียรภาพ</li>
+      <li>สรุปว่า "Skill ไม่ทำงาน" โดยยังไม่เริ่ม session ใหม่</li>
+    </ul>
+  </div>
+</div>
+</div>
+</section>
+<section class="slide" data-n="25">
+<div class="slide-inner">
+<span class="src page-num" title="แหล่งอ้างอิง: training-thclaws-skills-30min §6">25 / 25</span>
+<h1>เอกสารสรุปย่อ (แจกหลังจบการอบรม)</h1>
+<div class="cards c2">
+  <div class="card"><div class="k">ดูรายการที่มีอยู่</div><div class="d"><code>/skills</code> · <code>/skill show &lt;name&gt;</code> · สอบถามผ่านแชท · Settings → Skills</div></div>
+  <div class="card"><div class="k">ค้นหา</div><div class="d"><code>/skill marketplace</code> · <code>/skill search &lt;คำค้น&gt;</code> · ทดลองทั้งภาษาไทยและอังกฤษ · สอบถามฝ่าย IT</div></div>
+  <div class="card"><div class="k">ติดตั้ง / อัปเดต / ลบ</div><div class="d"><code>/skill install &lt;name&gt;</code> · <code>/skill update &lt;name&gt;</code> · ลบผ่าน GUI · เริ่ม session ใหม่หลังการติดตั้ง</div></div>
+  <div class="card"><div class="k">ความปลอดภัย</div><div class="d">ติดตั้งจากแหล่งที่องค์กรรับรองเท่านั้น · พบข้อความ <code>blocked by org policy</code> = หยุด + แจ้งฝ่าย IT · ห้ามลบ built-in</div></div>
+</div>
+<blockquote><p><strong>ช่วงถาม-ตอบ และขอบคุณครับ</strong> · เอกสารประกอบการอบรมและเอกสารสรุปย่อจะแจกให้เมื่อสิ้นสุดเซสชัน</p></blockquote>
+</div>
+</section>
+</div>
+<nav>
+  <button id="prev" aria-label="ก่อนหน้า">← ก่อนหน้า</button>
+  <button id="next" aria-label="ถัดไป">ถัดไป →</button>
+  <span style="opacity:.6">← → เลื่อน · F เต็มจอ</span>
+</nav>
+<script>
+const slides = Array.from(document.querySelectorAll('section.slide'));
+let cur = 0;
+function fit() {
+  const pad = 90;
+  const s = Math.min((window.innerWidth - 40) / 1280, (window.innerHeight - pad) / 720);
+  slides.forEach(el => { el.style.transform = 'scale(' + s + ')'; });
+}
+function render() {
+  slides.forEach((el, i) => el.classList.toggle('active', i === cur));
+}
+function go(d) { cur = Math.max(0, Math.min(slides.length - 1, cur + d)); render(); }
+document.addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)) { e.preventDefault(); go(1); }
+  else if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key)) { e.preventDefault(); go(-1); }
+  else if (e.key === 'Home') { cur = 0; render(); }
+  else if (e.key === 'End') { cur = slides.length - 1; render(); }
+  else if (e.key === 'f' || e.key === 'F') {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen();
+  }
+});
+document.getElementById('prev').onclick = () => go(-1);
+document.getElementById('next').onclick = () => go(1);
+window.addEventListener('resize', fit);
+fit(); render();
+</script>
+</body>
+</html>
